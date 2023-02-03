@@ -14,8 +14,8 @@ public class EstadosHabitacion {
     private int idEstado;
     private String NombreEstado;
 
-    /*@OneToMany(mappedBy = "idEstHab")
-    private List<Habitacion> habitaciones;*/
+    @OneToMany(mappedBy = "idEstHab",cascade = CascadeType.ALL)
+    private List<Habitacion> habitaciones;
 
     public EstadosHabitacion() {
     }
@@ -24,13 +24,13 @@ public class EstadosHabitacion {
         NombreEstado = nombreEstado;
     }
 
-    /*public List<Habitacion> getHabitaciones() {
+    public List<Habitacion> getHabitaciones() {
         return habitaciones;
     }
 
     public void setHabitaciones(List<Habitacion> habitaciones) {
         this.habitaciones = habitaciones;
-    }*/
+    }
 
     public void setIdEstado(int idEstado) {
         this.idEstado = idEstado;

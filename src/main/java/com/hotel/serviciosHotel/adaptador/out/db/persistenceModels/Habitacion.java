@@ -8,13 +8,17 @@ public class Habitacion {
 
     private int numHabitacion;
 
-    @ManyToOne
-    @JoinColumn(name = "id_est_hab",insertable = false,updatable = false)
+    /*@ManyToOne
+    @JoinColumn(name = "fk_id_est_hab",insertable = false,updatable = false,referencedColumnName = "id_estado")*/
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idEstHab", nullable = false)
     private EstadosHabitacion idEstHab;
 
 
-    @ManyToOne
-    @JoinColumn(name = "tipo_habitacion",insertable = false,updatable = false)
+    /*@ManyToOne
+    @JoinColumn(name = "fk_tipo_habitacion",insertable = false,updatable = false,referencedColumnName = "idTipoHabitacion")*/
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tipoHabitacion",nullable = false)
     private TipoHabitacion tipoHabitacion;
     private int numeroCamas;
     @Id
@@ -63,4 +67,16 @@ public class Habitacion {
     public void setNumeroCamas(int numeroCamas) {
         this.numeroCamas = numeroCamas;
     }
+
+    @Override
+    public String toString() {
+        return "id habitacion: "+this.idHabitacion+"\n"+
+                "numero habitacion: "+this.numHabitacion+"\n"+
+                "estado habitacion:[ "+this.idEstHab.getIdEstado()+",\n"+
+                this.idEstHab.getNombreEstado()+"]\n"+
+                "tipo habitacion: ["+this.tipoHabitacion.getIdTipoHabitacion()+",\n"+
+                this.tipoHabitacion.getDescripcionTipoHabitacion()+"]\n"+
+                "numero camas: "+this.getNumeroCamas();
+    }
+
 }

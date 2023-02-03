@@ -15,7 +15,7 @@ public class Servicio {
     @JoinColumn(name = "idRecep",referencedColumnName = "idRecep")
     private Recepcionista idRecep;
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "idCliente",referencedColumnName = "idCliente")
+    @JoinColumn(name = "idCliente",referencedColumnName = "id_cliente")
     private Cliente idCliente;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "idHabitacion",referencedColumnName = "idHabitacion")

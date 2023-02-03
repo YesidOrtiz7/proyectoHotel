@@ -13,8 +13,8 @@ public class TipoHabitacion {
     private int idTipoHabitacion;
     private String descripcionTipoHabitacion;
 
-    /*@OneToMany(mappedBy = "tipoHabitacion")
-    private List<Habitacion> habitaciones;*/
+    @OneToMany(mappedBy = "tipoHabitacion",cascade = CascadeType.ALL)
+    private List<Habitacion> habitaciones;
 
     public TipoHabitacion() {
     }
@@ -22,18 +22,17 @@ public class TipoHabitacion {
     public TipoHabitacion(String descripcionTipoHabitacion) {
         this.descripcionTipoHabitacion = descripcionTipoHabitacion;
     }
-
-    public void setIdTipoHabitacion(int idTipoHabitacion) {
-        this.idTipoHabitacion = idTipoHabitacion;
-    }
-
-    /*public List<Habitacion> getHabitaciones() {
+    public List<Habitacion> getHabitaciones() {
         return habitaciones;
     }
 
     public void setHabitaciones(List<Habitacion> habitaciones) {
         this.habitaciones = habitaciones;
-    }*/
+    }
+
+    public void setIdTipoHabitacion(int idTipoHabitacion) {
+        this.idTipoHabitacion = idTipoHabitacion;
+    }
 
     public int getIdTipoHabitacion() {
         return idTipoHabitacion;
@@ -46,4 +45,5 @@ public class TipoHabitacion {
     public void setDescripcionTipoHabitacion(String descripcionTipoHabitacion) {
         this.descripcionTipoHabitacion = descripcionTipoHabitacion;
     }
+
 }

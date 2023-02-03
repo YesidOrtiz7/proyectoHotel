@@ -21,7 +21,7 @@ public class RoomRepository implements RoomPortOut {
     public Room saveRoom(Room room) {
         if (repository.existsById(room.getIdRoom())||room.getIdRoom()==0){
             Habitacion hab = mapper.toHabitacion(room);
-            System.out.println(hab.getIdEstHab().getIdEstado());
+            System.out.println(hab.toString());
             return mapper.toRoom(
                     repository.save(hab)
             );
