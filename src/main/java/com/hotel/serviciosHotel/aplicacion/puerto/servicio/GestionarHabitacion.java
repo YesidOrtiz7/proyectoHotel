@@ -27,11 +27,12 @@ public class GestionarHabitacion implements GestionarHabitacionPortIn {
     @Override
     public Room getRoomByNumber(Integer number) {
         Optional<Room> room=portOut.getRoomByNumber(number);
-        return room.isEmpty()?room.get():null;
+        return room.isEmpty()||room==null?null:room.get();
     }
 
     @Override
     public Room updateRoom(Room room) {
-        return portOut.updateRoom(room);
+        Room response=portOut.updateRoom(room);
+        return response.equals(null)?null:response;
     }
 }

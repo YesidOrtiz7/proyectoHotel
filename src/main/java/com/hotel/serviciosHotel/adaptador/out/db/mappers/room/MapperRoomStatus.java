@@ -16,5 +16,6 @@ public interface MapperRoomStatus {
     RoomStatus toRoomStatus(EstadosHabitacion estado);
 
     @InheritInverseConfiguration
+    //@Mapping(target = "habitaciones",ignore = true)
     EstadosHabitacion toEstadosHabitacion(RoomStatus status);
 }

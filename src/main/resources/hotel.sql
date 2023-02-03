@@ -88,8 +88,8 @@ CREATE TABLE `tblhabitacion` (
   `id_habitacion` int(11) NOT NULL ,
   `num_habitacion` int(11) NOT NULL,
   `numero_camas` int(11) NOT NULL,
-  `id_est_hab` int(11) DEFAULT NULL,
-  `tipo_habitacion` int(11) DEFAULT NULL
+  `id_est_hab` int(11) NOT NULL,
+  `tipo_habitacion` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 ALTER TABLE `tblhabitacion`
   ADD PRIMARY KEY (`id_habitacion`),

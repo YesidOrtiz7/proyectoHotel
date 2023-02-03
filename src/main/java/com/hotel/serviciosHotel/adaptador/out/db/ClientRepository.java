@@ -32,8 +32,13 @@ public class ClientRepository implements ClientPortOut {
 
     @Override
     public Client updateClient(Client client) {
-        Cliente cli=mapper.toCliente(client);
-        return mapper.toClient(repository.save(cli));
+        if (repository.existsById(client.getIdCliente())){
+            Cliente cli=mapper.toCliente(client);
+            return mapper.toClient(repository.save(cli));
+        }else {
+            return null;
+        }
+
     }
 
     @Override
@@ -51,8 +56,8 @@ public class ClientRepository implements ClientPortOut {
 
     @Override
     public Optional<Client> getClientByDocument(String document) {
-        Optional<Cliente> cli=repository.findBydocumentoCliente(document);
-        if (cli.isEmpty()){
+        Optional<Cliente> cli=repository.findByDocumentoCliente(document);
+        if (cli.isEmpty()||cli==null){
             return Optional.empty();
         }else{
             return Optional.of(

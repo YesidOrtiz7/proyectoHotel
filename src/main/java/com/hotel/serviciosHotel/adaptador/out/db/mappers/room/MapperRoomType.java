@@ -16,5 +16,6 @@ public interface MapperRoomType {
     RoomType toRoomType(TipoHabitacion tipoHabitacion);
 
     @InheritInverseConfiguration
+    //@Mapping(target = "habitaciones",ignore = true)
     TipoHabitacion toTipoHabitacion(RoomType type);
 }

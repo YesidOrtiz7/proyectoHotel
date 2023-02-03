@@ -42,13 +42,13 @@ public class GestionarCliente implements GestionarClienteInterface {
     @Override
     public Client consultarClientePorId(Integer id) {
         Optional<Client> client=portOut.getClientById(id);
-        return client.isEmpty()?client.get():null;
+        return client.isEmpty()||client==null?null:client.get();
     }
 
     @Override
     public Client consultarClientePorDocumento(String documento) {
         Optional<Client> client=portOut.getClientByDocument(documento);
-        return client.isEmpty()?client.get():null;
+        return client.isEmpty()||client==null?null:client.get();
     }
 
 }

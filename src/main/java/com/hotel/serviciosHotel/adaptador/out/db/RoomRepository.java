@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -20,22 +19,29 @@ public class RoomRepository implements RoomPortOut {
     private MapperRoom mapper;
     @Override
     public Room saveRoom(Room room) {
-        if (repository.existsById(room.getIdRoom())){
-            return null;
-        }else {
+        if (repository.existsById(room.getIdRoom())||room.getIdRoom()==0){
             Habitacion hab = mapper.toHabitacion(room);
+            System.out.println(hab.getIdEstHab().getIdEstado());
             return mapper.toRoom(
                     repository.save(hab)
             );
+        }else {
+            return null;
         }
     }
 
     @Override
     public Room updateRoom(Room room) {
-        Habitacion hab = mapper.toHabitacion(room);
-        return mapper.toRoom(
-                repository.save(hab)
-        );
+        if (repository.existsById(room.getIdRoom())){
+            System.out.println(room.getIdRoom());
+            Habitacion hab = mapper.toHabitacion(room);
+            return mapper.toRoom(
+                    repository.save(hab)
+            );
+        }else {
+            return null;
+        }
+
     }
 
     @Override

@@ -23,4 +23,6 @@ public interface HabitacionCrudRepository extends CrudRepository<Habitacion,Inte
     @Override
     void delete(Habitacion habitacion);
 
+    @Override
+    <S extends Habitacion> S save(S entity);
 }

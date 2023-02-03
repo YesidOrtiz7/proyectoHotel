@@ -21,5 +21,6 @@ public interface ClientesCrudRepository extends CrudRepository<Cliente,Integer> 
 
     @Override
     void delete(Cliente entity);
-    Optional<Cliente> findBydocumentoCliente(String document);
+    Optional<Cliente> findByDocumentoCliente(String document);
+
 }

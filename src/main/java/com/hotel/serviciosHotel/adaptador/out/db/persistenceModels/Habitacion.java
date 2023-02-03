@@ -8,25 +8,18 @@ public class Habitacion {
 
     private int numHabitacion;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "idEstHab",referencedColumnName = "idEstado")
+    @ManyToOne
+    @JoinColumn(name = "id_est_hab",insertable = false,updatable = false)
     private EstadosHabitacion idEstHab;
 
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "TipoHabitacion",referencedColumnName = "idTipoHabitacion")
+    @ManyToOne
+    @JoinColumn(name = "tipo_habitacion",insertable = false,updatable = false)
     private TipoHabitacion tipoHabitacion;
     private int numeroCamas;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idHabitacion;
-
-    public Habitacion(int numHabitacion, EstadosHabitacion idEstHab, TipoHabitacion tipoHabitacion, int numeroCamas) {
-        this.numHabitacion = numHabitacion;
-        this.idEstHab = idEstHab;
-        this.tipoHabitacion = tipoHabitacion;
-        this.numeroCamas = numeroCamas;
-    }
 
     public Habitacion() {
     }

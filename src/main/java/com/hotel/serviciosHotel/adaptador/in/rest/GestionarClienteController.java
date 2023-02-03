@@ -16,8 +16,8 @@ public class GestionarClienteController {
     @Autowired
     private GestionarClienteInterface service;
 
-    @PostMapping("/documento")
-    public ResponseEntity<Client> obtenerClientePorDocumento(@PathVariable String documento) {
+    @GetMapping("/documento/{document}")
+    public ResponseEntity<Client> obtenerClientePorDocumento(@PathVariable("document") String documento) {
         Client cli = service.consultarClientePorDocumento(documento);
         if (cli != null){
             return new ResponseEntity<>(service.consultarClientePorDocumento(documento), HttpStatus.OK);
@@ -26,7 +26,7 @@ public class GestionarClienteController {
         }
     }
 
-    @PostMapping("/id")
+    @GetMapping("/id")
     public ResponseEntity<Client> obtenerClientePorId(@PathVariable int id){
         Client cli = service.consultarClientePorId(id);
         if (cli != null){
@@ -41,8 +41,8 @@ public class GestionarClienteController {
         return new ResponseEntity<>(service.actualizarCliente(client),HttpStatus.OK);
     }
 
-    @DeleteMapping("/eliminar")
-    public ResponseEntity eliminarCliente(int id){
+    @DeleteMapping("/eliminar/{id}")
+    public ResponseEntity eliminarCliente(@PathVariable("id") int id){
         return service.eliminarCliente(id)?new ResponseEntity<>(HttpStatus.OK):new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
@@ -57,7 +57,7 @@ public class GestionarClienteController {
     }
 
     @PostMapping("/registrarCliente")
-    public ResponseEntity<Client> registrarCliente(Client client){
+    public ResponseEntity<Client> registrarCliente(@RequestBody Client client){
         return new ResponseEntity<>(service.registrarCliente(client),HttpStatus.CREATED);
     }
 
