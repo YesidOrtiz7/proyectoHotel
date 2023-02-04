@@ -20,6 +20,11 @@ public class GestionarHabitacionesController {
         return new ResponseEntity<>(service.getRoomByNumber(num), HttpStatus.OK);
     }
 
+    @GetMapping("/idHabitacion/{num}")
+    public ResponseEntity<Room> obtenerHabitacionPorId(@PathVariable("num") int num){
+        return new ResponseEntity<>(service.getRoomById(num), HttpStatus.OK);
+    }
+
     @GetMapping("/todas")
     public ResponseEntity<ArrayList<Room>> obtenerHabitaciones(){
         ArrayList<Room> habitaciones=service.getRooms();
@@ -68,5 +73,21 @@ public class GestionarHabitacionesController {
             return new ResponseEntity<>(response,HttpStatus.OK);
         }
 
+    }
+    @DeleteMapping("/eliminarHabitacion")
+    public ResponseEntity eliminarHabitacion(@RequestBody Room room){
+        if (service.deleteRoom(room)) {
+            return new ResponseEntity(HttpStatus.OK);
+        }else {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+    }
+    @DeleteMapping("/eliminarHabitacionPorId/{id}")
+    public ResponseEntity eliminarHabitacionPorId(@PathVariable("id") int id){
+        if (service.deleteRoomById(id)) {
+            return new ResponseEntity(HttpStatus.OK);
+        }else {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
     }
 }

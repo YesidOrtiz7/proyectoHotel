@@ -71,7 +71,18 @@ public class RoomRepository implements RoomPortOut {
                     mapper.toRoom(habitacion.get())
             );
         }
+    }
 
+    @Override
+    public Optional<Room> getRoomById(Integer id) {
+        Optional<Habitacion> habitacion=repository.findById(id);
+        if (habitacion.isEmpty()){
+            return Optional.empty();
+        }else {
+            return Optional.of(
+                    mapper.toRoom(habitacion.get())
+            );
+        }
     }
 
     @Override
@@ -110,7 +121,7 @@ public class RoomRepository implements RoomPortOut {
     @Override
     public Room changeRoomType(int idroom, int idState) {
         Optional<Room> roomByNumber=this.getRoomByNumber(idroom);
-        Room room=roomByNumber.isEmpty()||roomByNumber==null?null:roomByNumber.get();
+        Room room=(roomByNumber.isEmpty()||roomByNumber==null)?null:roomByNumber.get();
 
         if (repositoryTipoHab.existsById(idState)&&room!=null){
             RoomType type=mapperRoomType.toRoomType(
@@ -127,7 +138,7 @@ public class RoomRepository implements RoomPortOut {
     @Override
     public Room changeStateRoom(int idroom, int state) {
         Optional<Room> roomByNumber=this.getRoomByNumber(idroom);
-        Room room=roomByNumber.isEmpty()||roomByNumber==null?null:roomByNumber.get();
+        Room room=(roomByNumber.isEmpty()||roomByNumber==null)?null:roomByNumber.get();
         if (repositoryEstadoHab.existsById(state)&&room!=null){
             RoomStatus roomStatus=mapperRoomStatus.toRoomStatus(
                     repositoryEstadoHab.findByIdEstado(state)

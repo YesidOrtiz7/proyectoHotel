@@ -31,6 +31,12 @@ public class GestionarHabitacion implements GestionarHabitacionPortIn {
     }
 
     @Override
+    public Room getRoomById(Integer id) {
+        Optional<Room> room=portOut.getRoomById(id);
+        return room.isEmpty()||room==null?null:room.get();
+    }
+
+    @Override
     public Room updateRoom(Room room) {
         Room response=portOut.updateRoom(room);
         return response.equals(null)?null:response;
@@ -44,5 +50,15 @@ public class GestionarHabitacion implements GestionarHabitacionPortIn {
     @Override
     public Room changeRoomStatus(int room, int state) {
         return portOut.changeStateRoom(room,state);
+    }
+
+    @Override
+    public boolean deleteRoomById(int idRoom) {
+        return portOut.deleteRoomById(idRoom);
+    }
+
+    @Override
+    public boolean deleteRoom(Room room) {
+        return portOut.deleteRoom(room);
     }
 }

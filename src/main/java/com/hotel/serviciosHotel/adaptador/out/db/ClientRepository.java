@@ -20,7 +20,8 @@ public class ClientRepository implements ClientPortOut {
     private MapperClient mapper;
     @Override
     public Client saveClient(Client client) {
-        if (repository.existsById(client.getIdCliente())){
+        Optional<Cliente> query=repository.findByDocumentoCliente(client.getDocumentoCliente());
+        if (repository.existsById(client.getIdCliente())&&((!query.isEmpty())||query!=null)){
             return null;
         }else {
             Cliente cli=mapper.toCliente(client);

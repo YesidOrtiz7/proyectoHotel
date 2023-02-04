@@ -26,8 +26,8 @@ public class GestionarClienteController {
         }
     }
 
-    @GetMapping("/id")
-    public ResponseEntity<Client> obtenerClientePorId(@PathVariable int id){
+    @GetMapping("/id/{id}")
+    public ResponseEntity<Client> obtenerClientePorId(@PathVariable("id") int id){
         Client cli = service.consultarClientePorId(id);
         if (cli != null){
             return new ResponseEntity<>(service.consultarClientePorId(id), HttpStatus.OK);
@@ -35,17 +35,6 @@ public class GestionarClienteController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
-
-    @PostMapping("/actualizar")
-    public ResponseEntity<Client> actualizarCliente(@RequestBody Client client){
-        return new ResponseEntity<>(service.actualizarCliente(client),HttpStatus.OK);
-    }
-
-    @DeleteMapping("/eliminar/{id}")
-    public ResponseEntity eliminarCliente(@PathVariable("id") int id){
-        return service.eliminarCliente(id)?new ResponseEntity<>(HttpStatus.OK):new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    }
-
     @GetMapping("/clientes")
     public ResponseEntity<List<Client>> obtenerClientes(){
         List<Client> clients= service.obtenerClientes();
@@ -56,9 +45,27 @@ public class GestionarClienteController {
         }
     }
 
+    @PostMapping("/actualizar")
+    public ResponseEntity<Client> actualizarCliente(@RequestBody Client client){
+        Client clientResponse=service.actualizarCliente(client);
+        if (clientResponse==null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }else {
+            return new ResponseEntity<>(clientResponse,HttpStatus.OK);
+        }
+    }
     @PostMapping("/registrarCliente")
     public ResponseEntity<Client> registrarCliente(@RequestBody Client client){
-        return new ResponseEntity<>(service.registrarCliente(client),HttpStatus.CREATED);
+        Client clientResponse=service.registrarCliente(client);
+        if (clientResponse==null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }else {
+            return new ResponseEntity<>(clientResponse,HttpStatus.CREATED);
+        }
     }
 
+    @DeleteMapping("/eliminar/{id}")
+    public ResponseEntity eliminarCliente(@PathVariable("id") int id){
+        return service.eliminarCliente(id)?new ResponseEntity<>(HttpStatus.OK):new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
 }
