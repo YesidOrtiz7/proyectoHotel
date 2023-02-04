@@ -12,4 +12,6 @@ public interface RoomPortOut {
     public ArrayList<Room> getRooms();
     public boolean deleteRoomById(Integer id);
     public boolean deleteRoom(Room room);
+    public Room changeRoomType(int room,int roomType);
+    public Room changeStateRoom(int room,int state);
 }

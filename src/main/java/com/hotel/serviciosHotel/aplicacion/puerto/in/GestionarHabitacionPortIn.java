@@ -9,4 +9,6 @@ public interface GestionarHabitacionPortIn {
     public ArrayList<Room> getRooms();
     public Room getRoomByNumber(Integer number);
     public Room updateRoom(Room room);
+    public Room changeRoomType(int room, int type);
+    public Room changeRoomStatus(int room, int state);
 }

@@ -1,6 +1,6 @@
 package com.hotel.serviciosHotel.adaptador.out.db;
 
-import com.hotel.serviciosHotel.adaptador.out.db.interfaces.ClientesCrudRepository;
+import com.hotel.serviciosHotel.adaptador.out.db.persistence.ClientesCrudRepository;
 import com.hotel.serviciosHotel.adaptador.out.db.mappers.MapperClient;
 import com.hotel.serviciosHotel.adaptador.out.db.persistenceModels.Cliente;
 import com.hotel.serviciosHotel.aplicacion.puerto.out.persistance.ClientPortOut;

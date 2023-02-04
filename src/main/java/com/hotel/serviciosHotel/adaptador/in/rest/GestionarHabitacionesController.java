@@ -49,4 +49,24 @@ public class GestionarHabitacionesController {
         }
 
     }
+    @PostMapping("/cambiarTipoHabitacion/{type}/{room}")
+    public ResponseEntity<Room> cambiarTipoHabitacion(@PathVariable("type") int state,@PathVariable("room") int room){
+        Room response=service.changeRoomType(room, state);
+        if (response==null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }else {
+            return new ResponseEntity<>(response,HttpStatus.OK);
+        }
+
+    }
+    @PostMapping("/cambiarEstado/{state}/{room}")
+    public ResponseEntity<Room> cambiarEstadoHabitacion(@PathVariable("state") int state,@PathVariable("room") int room){
+        Room response=service.changeRoomStatus(room, state);
+        if (response==null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }else {
+            return new ResponseEntity<>(response,HttpStatus.OK);
+        }
+
+    }
 }

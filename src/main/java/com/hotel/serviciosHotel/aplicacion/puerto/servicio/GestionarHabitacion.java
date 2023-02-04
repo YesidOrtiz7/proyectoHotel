@@ -35,4 +35,14 @@ public class GestionarHabitacion implements GestionarHabitacionPortIn {
         Room response=portOut.updateRoom(room);
         return response.equals(null)?null:response;
     }
+
+    @Override
+    public Room changeRoomType(int room, int type) {
+        return portOut.changeRoomType(room,type);
+    }
+
+    @Override
+    public Room changeRoomStatus(int room, int state) {
+        return portOut.changeStateRoom(room,state);
+    }
 }
