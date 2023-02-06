@@ -2,10 +2,10 @@ package com.hotel.serviciosHotel.adaptador.out.db;
 
 import com.hotel.serviciosHotel.adaptador.out.db.mappers.room.MapperRoomStatus;
 import com.hotel.serviciosHotel.adaptador.out.db.mappers.room.MapperRoomType;
-import com.hotel.serviciosHotel.adaptador.out.db.persistence.EstadoHabCrudRepository;
-import com.hotel.serviciosHotel.adaptador.out.db.persistence.HabitacionCrudRepository;
+import com.hotel.serviciosHotel.adaptador.out.db.persistence.room.EstadoHabCrudRepository;
+import com.hotel.serviciosHotel.adaptador.out.db.persistence.room.HabitacionCrudRepository;
 import com.hotel.serviciosHotel.adaptador.out.db.mappers.room.MapperRoom;
-import com.hotel.serviciosHotel.adaptador.out.db.persistence.TipoHabCrudRepository;
+import com.hotel.serviciosHotel.adaptador.out.db.persistence.room.TipoHabCrudRepository;
 import com.hotel.serviciosHotel.adaptador.out.db.persistenceModels.Habitacion;
 import com.hotel.serviciosHotel.aplicacion.puerto.out.persistance.RoomPortOut;
 import com.hotel.serviciosHotel.dominio.entidades.Room;

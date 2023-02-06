@@ -45,7 +45,7 @@ public class ClientRepository implements ClientPortOut {
     @Override
     public Optional<Client> getClientById(Integer id) {
         Optional<Cliente> cli=repository.findById(id);
-        if (cli.isEmpty()){
+        if (cli.isEmpty()||cli==null){
             return Optional.empty();
         }else{
             return Optional.of(

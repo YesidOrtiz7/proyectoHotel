@@ -4,7 +4,7 @@ import com.hotel.serviciosHotel.dominio.entidades.Client;
 
 import java.util.List;
 
-public interface GestionarClienteInterface {
+public interface ClientePortIn {
     public List<Client>obtenerClientes();
     public Client registrarCliente(Client client);
     public Client actualizarCliente(Client client);

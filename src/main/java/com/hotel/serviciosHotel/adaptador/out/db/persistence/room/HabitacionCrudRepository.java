@@ -1,4 +1,4 @@
-package com.hotel.serviciosHotel.adaptador.out.db.persistence;
+package com.hotel.serviciosHotel.adaptador.out.db.persistence.room;
 
 import com.hotel.serviciosHotel.adaptador.out.db.persistenceModels.Habitacion;
 import org.springframework.data.repository.CrudRepository;

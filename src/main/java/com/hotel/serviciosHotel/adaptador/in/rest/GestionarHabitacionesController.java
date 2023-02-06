@@ -1,6 +1,6 @@
 package com.hotel.serviciosHotel.adaptador.in.rest;
 
-import com.hotel.serviciosHotel.aplicacion.puerto.in.GestionarHabitacionPortIn;
+import com.hotel.serviciosHotel.aplicacion.puerto.in.HabitacionPortIn;
 import com.hotel.serviciosHotel.dominio.entidades.Room;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 @RequestMapping("/habitaciones")
 public class GestionarHabitacionesController {
     @Autowired
-    private GestionarHabitacionPortIn service;
+    private HabitacionPortIn service;
 
     @GetMapping("/numeroHabitacion/{num}")
     public ResponseEntity<Room> obtenerHabitacionPorNumero(@PathVariable("num") int num){

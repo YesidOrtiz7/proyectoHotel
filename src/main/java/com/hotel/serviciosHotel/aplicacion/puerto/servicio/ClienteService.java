@@ -1,6 +1,6 @@
 package com.hotel.serviciosHotel.aplicacion.puerto.servicio;
 
-import com.hotel.serviciosHotel.aplicacion.puerto.in.GestionarClienteInterface;
+import com.hotel.serviciosHotel.aplicacion.puerto.in.ClientePortIn;
 import com.hotel.serviciosHotel.aplicacion.puerto.out.persistance.ClientPortOut;
 import com.hotel.serviciosHotel.dominio.entidades.Client;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class GestionarCliente implements GestionarClienteInterface {
+public class ClienteService implements ClientePortIn {
     @Autowired
     private ClientPortOut portOut;
 

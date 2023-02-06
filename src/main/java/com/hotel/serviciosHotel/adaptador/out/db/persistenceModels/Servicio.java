@@ -7,30 +7,52 @@ import java.util.Date;
 @Entity
 @Table(name="tblservicio")
 public class Servicio {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false,unique = true)
     private int idServicio;
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "idRecep",referencedColumnName = "idRecep")
+
+    /*@OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "idRecep",referencedColumnName = "idRecep")*/
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idRecep",nullable = false)
     private Recepcionista idRecep;
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "idCliente",referencedColumnName = "id_cliente")
+
+    /*@OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "idCliente",referencedColumnName = "id_cliente")*/
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idCliente",nullable = false)
     private Cliente idCliente;
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "idHabitacion",referencedColumnName = "idHabitacion")
+
+    /*@OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "idHabitacion",referencedColumnName = "idHabitacion")*/
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idHabitacion", nullable = false)
     private Habitacion idHabitacion;
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "idTipoTarifa",referencedColumnName = "idTipoTarifa")
+
+    /*@OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "idTipoTarifa",referencedColumnName = "idTipoTarifa")*/
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idTipoTarifa", nullable = false)
     private TipoTarifa idTipoTarifa;
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "cliProcedencia",referencedColumnName = "idMunicipios")
+
+    /*@OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "cliProcedencia",referencedColumnName = "idMunicipios")*/
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idMunicipios", nullable = false,insertable = false,updatable = false)
     private Municipios cliProcedencia;
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "cliDestino",referencedColumnName = "idMunicipios")
+
+    /*@OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "cliDestino",referencedColumnName = "idMunicipios")*/
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idMunicipios", nullable = false,insertable = false,updatable = false)
     private Municipios cliDestino;
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "idTipoPago",referencedColumnName = "idPago")
+
+    /*@OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "idTipoPago",referencedColumnName = "idPago")*/
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idTipoPago", nullable = false)
     private TipoPago idTipoPago;
     private int pago;
     private Date fechaEntrada;
@@ -50,6 +72,9 @@ public class Servicio {
         this.pago = pago;
         this.fechaEntrada = fechaEntrada;
         this.fechaSalida = fechaSalida;
+    }
+    public void setIdServicio(int idServicio) {
+        this.idServicio = idServicio;
     }
 
     public int getIdServicio() {

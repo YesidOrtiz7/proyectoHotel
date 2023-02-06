@@ -18,6 +18,10 @@ public class TipoPago {
         this.descripcionPago = descripcionPago;
     }
 
+    public void setIdPago(int idPago) {
+        this.idPago = idPago;
+    }
+
     public int getIdPago() {
         return idPago;
     }

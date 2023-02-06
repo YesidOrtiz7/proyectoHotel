@@ -1,9 +1,9 @@
 package com.hotel.serviciosHotel.aplicacion.puerto.servicio;
 
-import com.hotel.serviciosHotel.aplicacion.puerto.in.HospedajeInterface;
+import com.hotel.serviciosHotel.aplicacion.puerto.in.HospedajePortIn;
 import com.hotel.serviciosHotel.dominio.entidades.Service;
 
-public class Hospedaje implements HospedajeInterface {
+public class HospedajeService implements HospedajePortIn {
     @Override
     public Service generarServicio() {
         return null;

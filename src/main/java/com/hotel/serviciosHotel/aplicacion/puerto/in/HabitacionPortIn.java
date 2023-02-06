@@ -4,7 +4,7 @@ import com.hotel.serviciosHotel.dominio.entidades.Room;
 
 import java.util.ArrayList;
 
-public interface GestionarHabitacionPortIn {
+public interface HabitacionPortIn {
     public Room createRoom(Room room);
     public ArrayList<Room> getRooms();
     public Room getRoomByNumber(Integer number);

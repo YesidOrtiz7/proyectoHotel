@@ -17,6 +17,10 @@ public class TipoTarifa {
         this.descripcionTarifa = descripcionTarifa;
     }
 
+    public void setIdTipoTarifa(int idTipoTarifa) {
+        this.idTipoTarifa = idTipoTarifa;
+    }
+
     public int getIdTipoTarifa() {
         return idTipoTarifa;
     }

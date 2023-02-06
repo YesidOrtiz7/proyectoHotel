@@ -1,17 +1,16 @@
 package com.hotel.serviciosHotel.aplicacion.puerto.servicio;
 
-import com.hotel.serviciosHotel.aplicacion.puerto.in.GestionarHabitacionPortIn;
+import com.hotel.serviciosHotel.aplicacion.puerto.in.HabitacionPortIn;
 import com.hotel.serviciosHotel.aplicacion.puerto.out.persistance.RoomPortOut;
 import com.hotel.serviciosHotel.dominio.entidades.Room;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Service
-public class GestionarHabitacion implements GestionarHabitacionPortIn {
+public class HabitacionService implements HabitacionPortIn {
     @Autowired
     private RoomPortOut portOut;
     @Override

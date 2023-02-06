@@ -1,0 +1,46 @@
+package com.hotel.serviciosHotel.aplicacion.puerto.servicio;
+
+import com.hotel.serviciosHotel.aplicacion.puerto.in.TarifaPortIn;
+import com.hotel.serviciosHotel.aplicacion.puerto.out.persistance.TarifasPortOut;
+import com.hotel.serviciosHotel.dominio.entidades.RateType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class TarifasService implements TarifaPortIn {
+    @Autowired
+    private TarifasPortOut portOut;
+    @Override
+    public RateType registrarTarifa(RateType rate) {
+        return portOut.saveRate(rate);
+    }
+
+    @Override
+    public List<RateType> obtenerTarifas() {
+        List<RateType> rates=portOut.getRates();
+        if (rates.isEmpty()||rates==null){
+            return null;
+        }else {
+            return rates;
+        }
+    }
+
+    @Override
+    public RateType obtenerTarifaPorId(int id) {
+        Optional<RateType> rate=portOut.getRateById(id);
+        return (rate.isEmpty()||rate==null)?null:rate.get();
+    }
+
+    @Override
+    public RateType actualizarTarifa(RateType rate) {
+        return portOut.updateRate(rate);
+    }
+
+    @Override
+    public boolean eliminarTarifa(RateType rate) {
+        return portOut.deleteRate(rate);
+    }
+}

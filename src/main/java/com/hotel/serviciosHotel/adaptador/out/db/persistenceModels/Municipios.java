@@ -21,6 +21,10 @@ public class Municipios {
         return idMunicipios;
     }
 
+    public void setIdMunicipios(int idMunicipios) {
+        this.idMunicipios = idMunicipios;
+    }
+
     public String getNombreMun() {
         return nombreMun;
     }

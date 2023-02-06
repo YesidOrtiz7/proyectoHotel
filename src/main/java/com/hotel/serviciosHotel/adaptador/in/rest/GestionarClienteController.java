@@ -1,10 +1,9 @@
 package com.hotel.serviciosHotel.adaptador.in.rest;
 
-import com.hotel.serviciosHotel.aplicacion.puerto.in.GestionarClienteInterface;
+import com.hotel.serviciosHotel.aplicacion.puerto.in.ClientePortIn;
 import com.hotel.serviciosHotel.dominio.entidades.Client;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,13 +13,13 @@ import java.util.List;
 @RequestMapping("/cliente")
 public class GestionarClienteController {
     @Autowired
-    private GestionarClienteInterface service;
+    private ClientePortIn service;
 
     @GetMapping("/documento/{document}")
     public ResponseEntity<Client> obtenerClientePorDocumento(@PathVariable("document") String documento) {
         Client cli = service.consultarClientePorDocumento(documento);
         if (cli != null){
-            return new ResponseEntity<>(service.consultarClientePorDocumento(documento), HttpStatus.OK);
+            return new ResponseEntity<>(cli, HttpStatus.OK);
         }else{
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -30,7 +29,7 @@ public class GestionarClienteController {
     public ResponseEntity<Client> obtenerClientePorId(@PathVariable("id") int id){
         Client cli = service.consultarClientePorId(id);
         if (cli != null){
-            return new ResponseEntity<>(service.consultarClientePorId(id), HttpStatus.OK);
+            return new ResponseEntity<>(cli, HttpStatus.OK);
         }else{
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }

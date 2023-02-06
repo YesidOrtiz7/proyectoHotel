@@ -2,6 +2,8 @@ package com.hotel.serviciosHotel.adaptador.out.db.persistenceModels;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "tblrecepcionista")
 public class Recepcionista {
@@ -15,6 +17,9 @@ public class Recepcionista {
     private String contrasena;
     private int recepEstado;
 
+    @OneToMany(mappedBy = "idRecep",cascade = CascadeType.ALL)
+    private List<Servicio> servicios;
+
     public Recepcionista(String docRecep, String nombresRecep, String apellidosRecep, String nombreUsuario, String contrasena, int recepEstado) {
         this.docRecep = docRecep;
         this.nombresRecep = nombresRecep;
@@ -26,6 +31,10 @@ public class Recepcionista {
 
     public int getIdRecep() {
         return idRecep;
+    }
+
+    public void setIdRecep(int idRecep) {
+        this.idRecep = idRecep;
     }
 
     public String getDocRecep() {
