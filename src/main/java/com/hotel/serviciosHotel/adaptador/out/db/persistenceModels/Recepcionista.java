@@ -29,6 +29,9 @@ public class Recepcionista {
         this.recepEstado = recepEstado;
     }
 
+    public Recepcionista() {
+    }
+
     public int getIdRecep() {
         return idRecep;
     }
@@ -83,5 +86,13 @@ public class Recepcionista {
 
     public void setRecepEstado(int recepEstado) {
         this.recepEstado = recepEstado;
+    }
+
+    public List<Servicio> getServicios() {
+        return servicios;
+    }
+
+    public void setServicios(List<Servicio> servicios) {
+        this.servicios = servicios;
     }
 }

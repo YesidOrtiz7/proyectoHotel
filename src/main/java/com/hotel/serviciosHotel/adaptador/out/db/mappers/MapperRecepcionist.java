@@ -24,5 +24,6 @@ public interface MapperRecepcionist {
     Receptionist toReceptionist(Recepcionista cliente);
 
     @InheritInverseConfiguration
+    @Mapping(target = "servicios",ignore = true)
     Recepcionista toRecepcionista(Receptionist client);
 }

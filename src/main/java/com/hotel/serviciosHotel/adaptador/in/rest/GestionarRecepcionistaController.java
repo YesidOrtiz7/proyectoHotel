@@ -37,11 +37,11 @@ public class GestionarRecepcionistaController {
 
     @GetMapping("/recepcionistas")
     public ResponseEntity<List<Receptionist>> obtenerRecepcionistas(){
-        List<Receptionist> receptionists=service.obtenerRecepcionistas();
-        if (receptionists.isEmpty()||receptionists==null){
+        List<Receptionist> receptionistEntities =service.obtenerRecepcionistas();
+        if (receptionistEntities.isEmpty()|| receptionistEntities ==null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }else {
-            return new ResponseEntity<>(receptionists,HttpStatus.OK);
+            return new ResponseEntity<>(receptionistEntities,HttpStatus.OK);
         }
     }
 

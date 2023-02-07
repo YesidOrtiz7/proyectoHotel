@@ -38,11 +38,11 @@ public class RecepcionistaService implements RecepcionistaPortIn {
 
     @Override
     public List<Receptionist> obtenerRecepcionistas() {
-        List<Receptionist> receptionists=portOut.getRecepcionist();
-        if (receptionists.isEmpty()||receptionists==null){
+        List<Receptionist> receptionistEntities =portOut.getRecepcionist();
+        if (receptionistEntities.isEmpty()|| receptionistEntities ==null){
             return null;
         }else {
-            return receptionists;
+            return receptionistEntities;
         }
     }
 

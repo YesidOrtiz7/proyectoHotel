@@ -21,7 +21,7 @@ public class ReceptionistRepository implements ReceptionistPortOut {
     @Override
     public Receptionist saveRecepcionist(Receptionist receptionist) {
         Optional<Recepcionista> query=repository.findByDocRecep(receptionist.getDocRecep());
-        if (repository.existsById(receptionist.getIdRecep())&&(!query.isEmpty()||query==null)){
+        if (repository.existsById(receptionist.getIdRecep())&&(!query.isEmpty()||query!=null)){
             return null;
         }else {
             Recepcionista recep=mapper.toRecepcionista(receptionist);
@@ -72,13 +72,13 @@ public class ReceptionistRepository implements ReceptionistPortOut {
     @Override
     public List<Receptionist> getRecepcionist() {
         Iterable<Recepcionista> recepcionistas=repository.findAll();
-        List<Receptionist> receptionists=new ArrayList<>();
+        List<Receptionist> receptionistEntities =new ArrayList<>();
         for (Recepcionista recep:recepcionistas){
-            receptionists.add(
+            receptionistEntities.add(
                     mapper.toReceptionist(recep)
             );
         }
-        return receptionists;
+        return receptionistEntities;
     }
 
     @Override

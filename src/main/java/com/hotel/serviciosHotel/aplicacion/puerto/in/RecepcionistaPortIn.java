@@ -3,7 +3,6 @@ package com.hotel.serviciosHotel.aplicacion.puerto.in;
 import com.hotel.serviciosHotel.dominio.entidades.Receptionist;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface RecepcionistaPortIn {
     public Receptionist registrarRecepcionista(Receptionist receptionist);

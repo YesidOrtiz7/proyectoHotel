@@ -40,13 +40,13 @@ public class Servicio {
     /*@OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "cliProcedencia",referencedColumnName = "idMunicipios")*/
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idMunicipios", nullable = false,insertable = false,updatable = false)
+    @JoinColumn(name = "cli_procedencia", nullable = false/*,insertable = false*/,updatable = false)
     private Municipios cliProcedencia;
 
     /*@OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "cliDestino",referencedColumnName = "idMunicipios")*/
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idMunicipios", nullable = false,insertable = false,updatable = false)
+    @JoinColumn(name = "cli_destino", nullable = false/*,insertable = false*/,updatable = false)
     private Municipios cliDestino;
 
     /*@OneToOne(cascade = CascadeType.ALL)
