@@ -27,6 +27,17 @@ dependencies {
 	implementation 'org.mapstruct:mapstruct:1.5.3.Final'
 	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
 
+	/*-----------------------------test-----------------------------*/
+	// https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
+	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.1'
+
+	// https://mvnrepository.com/artifact/org.mockito/mockito-core
+	testImplementation group: 'org.mockito', name: 'mockito-core', version: '4.11.0'
+
+	// https://mvnrepository.com/artifact/org.jacoco/jacoco-maven-plugin
+	implementation 'org.jacoco:jacoco-maven-plugin:0.8.8'
+
+
 }
 
 tasks.named('test') {

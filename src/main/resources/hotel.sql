@@ -121,17 +121,27 @@ INSERT INTO `tblmunicipios` (`id_municipios`, `nombre_mun`) VALUES (NULL, 'Arbel
 CREATE TABLE `tblrecepcionista` (
   `id_recep` int(11) NOT NULL ,
   `apellidos_recep` varchar(255) NOT NULL,
-  `contrasena` varchar(255) NOT NULL,
   `doc_recep` varchar(255) NOT NULL,
-  `nombre_usuario` varchar(255) NOT NULL,
-  `nombres_recep` varchar(255) NOT NULL,
-  `recep_estado` int(11) NOT NULL
+  `nombres_recep` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 ALTER TABLE `tblrecepcionista`
   ADD PRIMARY KEY (`id_recep`),
   MODIFY `id_recep` int(2) NOT NULL AUTO_INCREMENT;
 
-INSERT INTO `tblrecepcionista` (`id_recep`, `apellidos_recep`, `contrasena`, `doc_recep`, `nombre_usuario`, `nombres_recep`, `recep_estado`) VALUES (NULL, 'Ortega Ordoñez', 'asdfasdf', '456123', 'mariaOrte', 'Maria', '1'), (NULL, 'Gutierrez', 'asdfasdf', '789546', 'elisaGutierrez', 'Elisa', '2');
+INSERT INTO `tblrecepcionista` (`id_recep`, `apellidos_recep`, `doc_recep`, `nombres_recep`) VALUES (NULL, 'Ortega Ordoñez', '456123', 'Maria');
+
+CREATE TABLE `tblrecepcionista_login`(
+    `id_recep_login` int(11) NOT NULL ,
+    `recep` int(2) NOT NULL ,
+    `nombre_usuario` varchar(255) NOT NULL,
+    `contrasena` varchar(255) NOT NULL,
+    `recep_estado` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+ALTER TABLE `tblrecepcionista_login`
+  ADD PRIMARY KEY (`id_recep_login`),
+  MODIFY `id_recep_login` int(2) NOT NULL AUTO_INCREMENT,
+  ADD FOREIGN KEY (`recep`) REFERENCES `tblrecepcionista`(`id_recep`);
+INSERT INTO `tblrecepcionista_login` (`id_recep_login`, `recep`, `nombre_usuario`, `contrasena`, `recep_estado`) VALUES (NULL, 1, 'mariaOrte', 'asdfasdf', '1');
 
 -- --------------------------------------------------------
 

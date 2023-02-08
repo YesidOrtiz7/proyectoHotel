@@ -1,4 +1,4 @@
-package com.hotel.serviciosHotel.aplicacion.puerto.servicio;
+package com.hotel.serviciosHotel.aplicacion.servicio;
 
 import com.hotel.serviciosHotel.aplicacion.puerto.in.ClientePortIn;
 import com.hotel.serviciosHotel.aplicacion.puerto.out.persistance.ClientPortOut;
