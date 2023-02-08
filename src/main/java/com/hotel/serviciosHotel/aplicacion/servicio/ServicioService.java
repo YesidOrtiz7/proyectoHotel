@@ -41,7 +41,7 @@ public class ServicioService implements ServicioPortIn {
 
     @Override
     public Service registrarServicio(Service service) {
-        Receptionist recepcionista=this.obtenerRecepcionista(service);
+        ReceptionistEntity recepcionista=this.obtenerRecepcionista(service);
         if (recepcionista!=null && !this.determinarOcupacionHabitacion(service)){
             service.setIdRecep(recepcionista);
             habitacionService.changeRoomStatus(
@@ -56,7 +56,7 @@ public class ServicioService implements ServicioPortIn {
 
     @Override
     public Service actualizarServicio(Service service) {
-        Receptionist recepcionista= this.obtenerRecepcionista(service);
+        ReceptionistEntity recepcionista= this.obtenerRecepcionista(service);
         if (recepcionista!=null && this.determinarOcupacionHabitacion(service)){
             service.setIdRecep(recepcionista);
             return portOut.actualizarServicio(service);
@@ -93,7 +93,7 @@ public class ServicioService implements ServicioPortIn {
     }
 
     public Service restringirRecepcionista(Service service){
-        Receptionist receptionist=service.getIdRecep();
+        ReceptionistEntity receptionist=service.getIdRecep();
         Receptionist recep=new Receptionist();
 
         recep.setIdRecep(receptionist.getIdRecep());
@@ -104,7 +104,7 @@ public class ServicioService implements ServicioPortIn {
         service.setIdRecep(recep);
         return service;
     }
-    public Receptionist obtenerRecepcionista(Service service){
+    public ReceptionistEntity obtenerRecepcionista(Service service){
         return recepcionistaService.obtenerRecepcionistaPorId(
                 service.getIdRecep().getIdRecep()
         );

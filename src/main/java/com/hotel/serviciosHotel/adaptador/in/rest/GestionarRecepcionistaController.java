@@ -1,7 +1,7 @@
 package com.hotel.serviciosHotel.adaptador.in.rest;
 
 import com.hotel.serviciosHotel.aplicacion.puerto.in.RecepcionistaPortIn;
-import com.hotel.serviciosHotel.dominio.entidades.Receptionist;
+import com.hotel.serviciosHotel.dominio.entidades.ReceptionistEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,8 +16,8 @@ public class GestionarRecepcionistaController {
     private RecepcionistaPortIn service;
 
     @GetMapping("/documento/{documento}")
-    public ResponseEntity<Receptionist> obtenerRecepcionistaPorDocumento(@PathVariable("documento") String documento){
-        Receptionist recep=service.obtenerRecepcionistaPorDocumento(documento);
+    public ResponseEntity<ReceptionistEntity> obtenerRecepcionistaPorDocumento(@PathVariable("documento") String documento){
+        ReceptionistEntity recep=service.obtenerRecepcionistaPorDocumento(documento);
         if (recep==null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }else {
@@ -26,8 +26,8 @@ public class GestionarRecepcionistaController {
     }
 
     @GetMapping("id/{id}")
-    public ResponseEntity<Receptionist> obtenerRecepcionistaPorId(@PathVariable("id")int id){
-        Receptionist recep=service.obtenerRecepcionistaPorId(id);
+    public ResponseEntity<ReceptionistEntity> obtenerRecepcionistaPorId(@PathVariable("id")int id){
+        ReceptionistEntity recep=service.obtenerRecepcionistaPorId(id);
         if (recep==null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }else {
@@ -36,8 +36,8 @@ public class GestionarRecepcionistaController {
     }
 
     @GetMapping("/recepcionistas")
-    public ResponseEntity<List<Receptionist>> obtenerRecepcionistas(){
-        List<Receptionist> receptionistEntities =service.obtenerRecepcionistas();
+    public ResponseEntity<List<ReceptionistEntity>> obtenerRecepcionistas(){
+        List<ReceptionistEntity> receptionistEntities =service.obtenerRecepcionistas();
         if (receptionistEntities.isEmpty()|| receptionistEntities ==null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }else {
@@ -46,8 +46,8 @@ public class GestionarRecepcionistaController {
     }
 
     @PostMapping("/actualizar")
-    public ResponseEntity<Receptionist> actualizarRecepcionistas(@RequestBody Receptionist receptionist){
-        Receptionist response=service.actualizarRecepcionista(receptionist);
+    public ResponseEntity<ReceptionistEntity> actualizarRecepcionistas(@RequestBody ReceptionistEntity receptionist){
+        ReceptionistEntity response=service.actualizarRecepcionista(receptionist);
         if (response==null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }else {
@@ -56,8 +56,8 @@ public class GestionarRecepcionistaController {
     }
 
     @PostMapping("/registrar")
-    public ResponseEntity<Receptionist> registrarRecepcionista(@RequestBody Receptionist receptionist){
-        Receptionist response=service.registrarRecepcionista(receptionist);
+    public ResponseEntity<ReceptionistEntity> registrarRecepcionista(@RequestBody ReceptionistEntity receptionist){
+        ReceptionistEntity response=service.registrarRecepcionista(receptionist);
         if (response==null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }else {

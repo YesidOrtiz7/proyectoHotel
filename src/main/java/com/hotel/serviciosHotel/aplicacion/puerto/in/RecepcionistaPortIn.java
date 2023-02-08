@@ -1,15 +1,15 @@
 package com.hotel.serviciosHotel.aplicacion.puerto.in;
 
-import com.hotel.serviciosHotel.dominio.entidades.Receptionist;
+import com.hotel.serviciosHotel.dominio.entidades.ReceptionistEntity;
 
 import java.util.List;
 
 public interface RecepcionistaPortIn {
-    public Receptionist registrarRecepcionista(Receptionist receptionist);
-    public Receptionist actualizarRecepcionista(Receptionist receptionist);
-    public Receptionist obtenerRecepcionistaPorId(Integer id);
-    public Receptionist obtenerRecepcionistaPorDocumento(String document);
-    public List<Receptionist> obtenerRecepcionistas();
+    public ReceptionistEntity registrarRecepcionista(ReceptionistEntity receptionist);
+    public ReceptionistEntity actualizarRecepcionista(ReceptionistEntity receptionist);
+    public ReceptionistEntity obtenerRecepcionistaPorId(Integer id);
+    public ReceptionistEntity obtenerRecepcionistaPorDocumento(String document);
+    public List<ReceptionistEntity> obtenerRecepcionistas();
     public boolean eliminarRecepcionistaPorId(Integer id);
-    public boolean eliminarRecepcionista(Receptionist receptionist);
+    public boolean eliminarRecepcionista(ReceptionistEntity receptionist);
 }

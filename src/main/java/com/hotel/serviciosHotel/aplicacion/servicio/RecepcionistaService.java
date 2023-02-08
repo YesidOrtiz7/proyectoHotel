@@ -2,7 +2,7 @@ package com.hotel.serviciosHotel.aplicacion.servicio;
 
 import com.hotel.serviciosHotel.aplicacion.puerto.in.RecepcionistaPortIn;
 import com.hotel.serviciosHotel.aplicacion.puerto.out.persistance.ReceptionistPortOut;
-import com.hotel.serviciosHotel.dominio.entidades.Receptionist;
+import com.hotel.serviciosHotel.dominio.entidades.ReceptionistEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,30 +15,30 @@ public class RecepcionistaService implements RecepcionistaPortIn {
     private ReceptionistPortOut portOut;
 
     @Override
-    public Receptionist registrarRecepcionista(Receptionist receptionist) {
+    public ReceptionistEntity registrarRecepcionista(ReceptionistEntity receptionist) {
         return portOut.saveRecepcionist(receptionist);
     }
 
     @Override
-    public Receptionist actualizarRecepcionista(Receptionist receptionist) {
+    public ReceptionistEntity actualizarRecepcionista(ReceptionistEntity receptionist) {
         return portOut.updateRecepcionist(receptionist);
     }
 
     @Override
-    public Receptionist obtenerRecepcionistaPorId(Integer id) {
-        Optional<Receptionist> receptionist=portOut.getRecepcionistById(id);
+    public ReceptionistEntity obtenerRecepcionistaPorId(Integer id) {
+        Optional<ReceptionistEntity> receptionist=portOut.getRecepcionistById(id);
         return receptionist.isEmpty()||receptionist==null?null:receptionist.get();
     }
 
     @Override
-    public Receptionist obtenerRecepcionistaPorDocumento(String document) {
-        Optional<Receptionist> receptionist=portOut.getRecepcionistByDocument(document);
+    public ReceptionistEntity obtenerRecepcionistaPorDocumento(String document) {
+        Optional<ReceptionistEntity> receptionist=portOut.getRecepcionistByDocument(document);
         return receptionist.isEmpty()||receptionist==null?null:receptionist.get();
     }
 
     @Override
-    public List<Receptionist> obtenerRecepcionistas() {
-        List<Receptionist> receptionistEntities =portOut.getRecepcionist();
+    public List<ReceptionistEntity> obtenerRecepcionistas() {
+        List<ReceptionistEntity> receptionistEntities =portOut.getRecepcionist();
         if (receptionistEntities.isEmpty()|| receptionistEntities ==null){
             return null;
         }else {
@@ -52,7 +52,7 @@ public class RecepcionistaService implements RecepcionistaPortIn {
     }
 
     @Override
-    public boolean eliminarRecepcionista(Receptionist receptionist) {
+    public boolean eliminarRecepcionista(ReceptionistEntity receptionist) {
         return portOut.deleteRecepcionist(receptionist);
     }
 }

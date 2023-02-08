@@ -5,7 +5,7 @@ import java.util.Date;
 
 public class Service {
     private int idService;
-    private Receptionist idRecep;
+    private ReceptionistEntity idRecep;
     private Client idClient;
     private Room idRoom;
     private RateType idRateType;
@@ -16,7 +16,7 @@ public class Service {
     private Date fechaEntrada;
     private Date fechaSalida;
 
-    public Service(int idService, Receptionist idRecep, Client idClient, Room idRoom, RateType idRateType, Municipios cliProcedencia, Municipios cliDestino, PaymentType idTipoPago, int payment, Date fechaEntrada, Date fechaSalida) {
+    public Service(int idService, ReceptionistEntity idRecep, Client idClient, Room idRoom, RateType idRateType, Municipios cliProcedencia, Municipios cliDestino, PaymentType idTipoPago, int payment, Date fechaEntrada, Date fechaSalida) {
         this.idService = idService;
         this.idRecep = idRecep;
         this.idClient = idClient;
@@ -41,11 +41,11 @@ public class Service {
         this.idService = idService;
     }
 
-    public Receptionist getIdRecep() {
+    public ReceptionistEntity getIdRecep() {
         return idRecep;
     }
 
-    public void setIdRecep(Receptionist idRecep) {
+    public void setIdRecep(ReceptionistEntity idRecep) {
         this.idRecep = idRecep;
     }
 
