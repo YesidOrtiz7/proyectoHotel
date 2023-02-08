@@ -11,13 +11,12 @@ import java.util.Optional;
 
 @Service
 public class ClienteService implements ClientePortIn {
-    @Autowired
     private ClientPortOut portOut;
 
     @Override
     public List<Client> obtenerClientes() {
         List<Client> clients=portOut.getClients();
-        if (clients.isEmpty()||clients==null){
+        if (clients==null||clients.isEmpty()){
             return null;
         }else {
             return clients;
@@ -42,13 +41,17 @@ public class ClienteService implements ClientePortIn {
     @Override
     public Client consultarClientePorId(Integer id) {
         Optional<Client> client=portOut.getClientById(id);
-        return client.isEmpty()||client==null?null:client.get();
+        return client==null||client.isEmpty()?null:client.get();
     }
 
     @Override
     public Client consultarClientePorDocumento(String documento) {
         Optional<Client> client=portOut.getClientByDocument(documento);
-        return client.isEmpty()||client==null?null:client.get();
+        return client==null||client.isEmpty()?null:client.get();
     }
 
+    @Autowired
+    public void setPortOut(ClientPortOut portOut) {
+        this.portOut = portOut;
+    }
 }

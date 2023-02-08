@@ -24,7 +24,7 @@ public class ServicioService implements ServicioPortIn {
     @Override
     public Service consultarServicioPorId(int id) {
         Service s=portOut.consultarServicioPorId(id);
-        return this.restringirRecepcionista(s);
+        return s;
     }
 
     @Override
@@ -33,7 +33,7 @@ public class ServicioService implements ServicioPortIn {
         List<Service> response=new ArrayList<>();
         for (Service service:s){
             response.add(
-                    this.restringirRecepcionista(service)
+                    service
             );
         }
         return response;
@@ -92,18 +92,7 @@ public class ServicioService implements ServicioPortIn {
         return null;/*<----------*/
     }
 
-    public Service restringirRecepcionista(Service service){
-        ReceptionistEntity receptionist=service.getIdRecep();
-        Receptionist recep=new Receptionist();
 
-        recep.setIdRecep(receptionist.getIdRecep());
-        recep.setDocRecep(receptionist.getDocRecep());
-        recep.setReceptionistNames(receptionist.getReceptionistNames());
-        recep.setReceptionistLastNames(receptionist.getReceptionistLastNames());
-
-        service.setIdRecep(recep);
-        return service;
-    }
     public ReceptionistEntity obtenerRecepcionista(Service service){
         return recepcionistaService.obtenerRecepcionistaPorId(
                 service.getIdRecep().getIdRecep()

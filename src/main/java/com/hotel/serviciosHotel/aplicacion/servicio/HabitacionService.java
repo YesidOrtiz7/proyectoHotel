@@ -11,7 +11,6 @@ import java.util.Optional;
 
 @Service
 public class HabitacionService implements HabitacionPortIn {
-    @Autowired
     private RoomPortOut portOut;
     @Override
     public Room createRoom(Room room) {
@@ -26,13 +25,13 @@ public class HabitacionService implements HabitacionPortIn {
     @Override
     public Room getRoomByNumber(Integer number) {
         Optional<Room> room=portOut.getRoomByNumber(number);
-        return room.isEmpty()||room==null?null:room.get();
+        return room==null||room.isEmpty()?null:room.get();
     }
 
     @Override
     public Room getRoomById(Integer id) {
         Optional<Room> room=portOut.getRoomById(id);
-        return room.isEmpty()||room==null?null:room.get();
+        return room==null||room.isEmpty()?null:room.get();
     }
 
     @Override
@@ -59,5 +58,10 @@ public class HabitacionService implements HabitacionPortIn {
     @Override
     public boolean deleteRoom(Room room) {
         return portOut.deleteRoom(room);
+    }
+
+    @Autowired
+    public void setPortOut(RoomPortOut portOut) {
+        this.portOut = portOut;
     }
 }
