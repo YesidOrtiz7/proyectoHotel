@@ -12,13 +12,18 @@ import java.util.List;
 @RestController
 @RequestMapping("/tarifas")
 public class GestionarTarifasController {
-    @Autowired
+
     private TarifaPortIn service;
+
+    @Autowired
+    public void setService(TarifaPortIn service) {
+        this.service = service;
+    }
 
     @GetMapping("/todas")
     public ResponseEntity<List<RateType>> obtenerTarifas(){
         List<RateType> response=service.obtenerTarifas();
-        if (response.isEmpty()||response==null){
+        if (response==null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }else {
             return new ResponseEntity<>(response,HttpStatus.OK);
@@ -41,7 +46,7 @@ public class GestionarTarifasController {
         if (response==null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }else {
-            return new ResponseEntity<>(response,HttpStatus.CREATED);
+            return new ResponseEntity<>(response,HttpStatus.OK);
         }
     }
 
@@ -51,7 +56,7 @@ public class GestionarTarifasController {
         if (response==null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }else {
-            return new ResponseEntity<>(response,HttpStatus.CREATED);
+            return new ResponseEntity<>(response,HttpStatus.OK);
         }
     }
 

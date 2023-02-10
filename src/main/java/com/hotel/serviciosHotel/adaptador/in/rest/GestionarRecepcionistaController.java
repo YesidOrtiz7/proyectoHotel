@@ -12,8 +12,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/recepcionista")
 public class GestionarRecepcionistaController {
-    @Autowired
+
     private RecepcionistaPortIn service;
+
+    @Autowired
+    public void setService(RecepcionistaPortIn service) {
+        this.service = service;
+    }
 
     @GetMapping("/documento/{documento}")
     public ResponseEntity<ReceptionistEntity> obtenerRecepcionistaPorDocumento(@PathVariable("documento") String documento){
@@ -38,7 +43,7 @@ public class GestionarRecepcionistaController {
     @GetMapping("/recepcionistas")
     public ResponseEntity<List<ReceptionistEntity>> obtenerRecepcionistas(){
         List<ReceptionistEntity> receptionistEntities =service.obtenerRecepcionistas();
-        if (receptionistEntities.isEmpty()|| receptionistEntities ==null){
+        if (receptionistEntities ==null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }else {
             return new ResponseEntity<>(receptionistEntities,HttpStatus.OK);

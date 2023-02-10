@@ -17,13 +17,14 @@ public interface MapperService {
             @Mapping(source = "idRecep",target = "idRecep"),
             @Mapping(source = "idCliente",target = "idClient"),
             @Mapping(source = "idHabitacion",target = "idRoom"),
-            @Mapping(source = "idTipoTarifa",target = "idTipoTarifa"),
+            @Mapping(source = "idTipoTarifa",target = "idRateType"),
             @Mapping(source = "cliProcedencia",target = "cliProcedencia"),
             @Mapping(source = "cliDestino",target = "cliDestino"),
             @Mapping(source = "idTipoPago",target = "idTipoPago"),
             @Mapping(source = "pago",target = "payment"),
             @Mapping(source = "fechaEntrada",target = "fechaEntrada"),
-            @Mapping(source = "fechaSalida",target = "fechaSalida")
+            @Mapping(source = "fechaSalida",target = "fechaSalida"),
+            @Mapping(source = "estado",target = "state")
 
     })
     Service toService(Servicio servicio);

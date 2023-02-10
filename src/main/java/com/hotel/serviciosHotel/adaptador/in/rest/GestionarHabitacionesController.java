@@ -12,8 +12,13 @@ import java.util.ArrayList;
 @RestController()
 @RequestMapping("/habitaciones")
 public class GestionarHabitacionesController {
-    @Autowired
+
     private HabitacionPortIn service;
+
+    @Autowired
+    public void setService(HabitacionPortIn service) {
+        this.service = service;
+    }
 
     @GetMapping("/numeroHabitacion/{num}")
     public ResponseEntity<Room> obtenerHabitacionPorNumero(@PathVariable("num") int num){
@@ -28,7 +33,7 @@ public class GestionarHabitacionesController {
     @GetMapping("/todas")
     public ResponseEntity<ArrayList<Room>> obtenerHabitaciones(){
         ArrayList<Room> habitaciones=service.getRooms();
-        if (habitaciones.isEmpty()||habitaciones == null){
+        if (habitaciones == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }else {
             return new ResponseEntity<>(service.getRooms(), HttpStatus.OK);

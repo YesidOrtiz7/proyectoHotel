@@ -65,6 +65,18 @@ class HabitacionServiceTest {
 
         Assertions.assertEquals(roomMock1, service.getRoomByNumber(301));
     }
+    @Test
+    void getRoomByNumberNull() {
+        Mockito.when(portOutMock.getRoomByNumber(301)).thenReturn(null);
+
+        Assertions.assertEquals(null, service.getRoomByNumber(301));
+    }
+    @Test
+    void getRoomByNumberEmpty() {
+        Mockito.when(portOutMock.getRoomByNumber(301)).thenReturn(Optional.empty());
+
+        Assertions.assertEquals(null, service.getRoomByNumber(301));
+    }
 
     @Test
     void getRoomById() {
@@ -72,11 +84,28 @@ class HabitacionServiceTest {
 
         Assertions.assertEquals(roomMock1, service.getRoomById(1));
     }
+    @Test
+    void getRoomByIdNull() {
+        Mockito.when(portOutMock.getRoomById(1)).thenReturn(null);
+
+        Assertions.assertEquals(null, service.getRoomById(1));
+    }
+    @Test
+    void getRoomByIdEmpty() {
+        Mockito.when(portOutMock.getRoomById(1)).thenReturn(Optional.empty());
+
+        Assertions.assertEquals(null, service.getRoomById(1));
+    }
 
     @Test
     void updateRoom() {
         Mockito.when(portOutMock.updateRoom(roomMock1)).thenReturn(roomMock1);
         Assertions.assertEquals(roomMock1, service.updateRoom(roomMock1));
+    }
+    @Test
+    void updateRoomNull() {
+        Mockito.when(portOutMock.updateRoom(roomMock1)).thenReturn(null);
+        Assertions.assertEquals(null, service.updateRoom(roomMock1));
     }
 
     @Test

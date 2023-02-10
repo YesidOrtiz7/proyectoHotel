@@ -11,8 +11,13 @@ import java.util.Optional;
 
 @Service
 public class RecepcionistaService implements RecepcionistaPortIn {
-    @Autowired
+
     private ReceptionistPortOut portOut;
+
+    @Autowired
+    public void setPortOut(ReceptionistPortOut portOut) {
+        this.portOut = portOut;
+    }
 
     @Override
     public ReceptionistEntity registrarRecepcionista(ReceptionistEntity receptionist) {
@@ -27,19 +32,19 @@ public class RecepcionistaService implements RecepcionistaPortIn {
     @Override
     public ReceptionistEntity obtenerRecepcionistaPorId(Integer id) {
         Optional<ReceptionistEntity> receptionist=portOut.getRecepcionistById(id);
-        return receptionist.isEmpty()||receptionist==null?null:receptionist.get();
+        return receptionist==null||receptionist.isEmpty()?null:receptionist.get();
     }
 
     @Override
     public ReceptionistEntity obtenerRecepcionistaPorDocumento(String document) {
         Optional<ReceptionistEntity> receptionist=portOut.getRecepcionistByDocument(document);
-        return receptionist.isEmpty()||receptionist==null?null:receptionist.get();
+        return receptionist==null||receptionist.isEmpty()?null:receptionist.get();
     }
 
     @Override
     public List<ReceptionistEntity> obtenerRecepcionistas() {
         List<ReceptionistEntity> receptionistEntities =portOut.getRecepcionist();
-        if (receptionistEntities.isEmpty()|| receptionistEntities ==null){
+        if (receptionistEntities ==null||receptionistEntities.isEmpty()){
             return null;
         }else {
             return receptionistEntities;

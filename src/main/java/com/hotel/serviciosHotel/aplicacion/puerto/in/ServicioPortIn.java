@@ -12,5 +12,6 @@ public interface ServicioPortIn {
     Service actualizarServicio(Service service);
     Service actualizarHabitacionServicio(Service service, int numeroHabitacion);
     Service actualizarTarifaServicio(Service service,int idTarifa);
-    Service actualizarTipoPagoServicio(Service service,int idTipoPago);
+    Service cerrarServicio(Service service);
+    Service ampliarServicio(Service service);
 }

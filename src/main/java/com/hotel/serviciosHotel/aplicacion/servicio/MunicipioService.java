@@ -11,8 +11,14 @@ import java.util.Optional;
 
 @Service
 public class MunicipioService implements MunicipioPortIn {
-    @Autowired
+
     private MunicipioPortOut portOut;
+
+    @Autowired
+    public void setPortOut(MunicipioPortOut portOut) {
+        this.portOut = portOut;
+    }
+
     @Override
     public Municipios registrarMunicipio(Municipios municipios) {
         return portOut.registrarMunicipio(municipios);
@@ -26,7 +32,7 @@ public class MunicipioService implements MunicipioPortIn {
     @Override
     public Municipios obtenerMunicipioPorId(int id) {
         Optional<Municipios> response=portOut.obtenerMunicipioPorId(id);
-        return (response.isEmpty()||response==null)?null:response.get();
+        return (response==null||response.isEmpty())?null:response.get();
     }
 
     @Override

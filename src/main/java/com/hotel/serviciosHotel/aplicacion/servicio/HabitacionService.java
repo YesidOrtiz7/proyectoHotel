@@ -37,7 +37,7 @@ public class HabitacionService implements HabitacionPortIn {
     @Override
     public Room updateRoom(Room room) {
         Room response=portOut.updateRoom(room);
-        return response.equals(null)?null:response;
+        return response==null?null:response;
     }
 
     @Override

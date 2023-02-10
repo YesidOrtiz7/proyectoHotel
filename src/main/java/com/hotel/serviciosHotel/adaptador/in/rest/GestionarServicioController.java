@@ -12,8 +12,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/servicio")
 public class GestionarServicioController {
-    @Autowired
+
     private ServicioPortIn servicePortIn;
+
+    @Autowired
+    public void setServicePortIn(ServicioPortIn servicePortIn) {
+        this.servicePortIn = servicePortIn;
+    }
 
     @GetMapping("/id/{id}")
     public ResponseEntity<Service> obtenerServicioPorId(@PathVariable("id")int id){
@@ -48,7 +53,7 @@ public class GestionarServicioController {
         if (response==null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }else {
-            return new ResponseEntity<>(response,HttpStatus.CREATED);
+            return new ResponseEntity<>(response,HttpStatus.OK);
         }
     }
     @PostMapping("/nuevaTarifa/{idTarifa}")
@@ -57,7 +62,7 @@ public class GestionarServicioController {
         if (response==null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }else {
-            return new ResponseEntity<>(response,HttpStatus.CREATED);
+            return new ResponseEntity<>(response,HttpStatus.OK);
         }
     }
 

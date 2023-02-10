@@ -11,8 +11,14 @@ import java.util.Optional;
 
 @Service
 public class TarifasService implements TarifaPortIn {
-    @Autowired
+
     private TarifasPortOut portOut;
+
+    @Autowired
+    public void setPortOut(TarifasPortOut portOut) {
+        this.portOut = portOut;
+    }
+
     @Override
     public RateType registrarTarifa(RateType rate) {
         return portOut.saveRate(rate);
@@ -21,7 +27,7 @@ public class TarifasService implements TarifaPortIn {
     @Override
     public List<RateType> obtenerTarifas() {
         List<RateType> rates=portOut.getRates();
-        if (rates.isEmpty()||rates==null){
+        if (rates==null||rates.isEmpty()){
             return null;
         }else {
             return rates;
@@ -31,7 +37,7 @@ public class TarifasService implements TarifaPortIn {
     @Override
     public RateType obtenerTarifaPorId(int id) {
         Optional<RateType> rate=portOut.getRateById(id);
-        return (rate.isEmpty()||rate==null)?null:rate.get();
+        return (rate==null||rate.isEmpty())?null:rate.get();
     }
 
     @Override

@@ -12,13 +12,18 @@ import java.util.List;
 @RestController
 @RequestMapping("/municipio")
 public class GestionarMunicipiosController {
-    @Autowired
+
     private MunicipioPortIn service;
+
+    @Autowired
+    public void setService(MunicipioPortIn service) {
+        this.service = service;
+    }
 
     @GetMapping("/municipios")
     public ResponseEntity<List<Municipios>> obtenerMunicipios(){
         List<Municipios> response=service.obtenerMunicipios();
-        if (response.isEmpty()||response==null){
+        if (response==null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }else {
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -41,7 +46,7 @@ public class GestionarMunicipiosController {
         if (response==null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }else {
-            return new ResponseEntity<>(response,HttpStatus.CREATED);
+            return new ResponseEntity<>(response,HttpStatus.OK);
         }
     }
 
@@ -51,10 +56,11 @@ public class GestionarMunicipiosController {
         if (response==null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }else {
-            return new ResponseEntity<>(response,HttpStatus.CREATED);
+            return new ResponseEntity<>(response,HttpStatus.OK);
         }
     }
 
+    @DeleteMapping("/eliminar")
     public ResponseEntity eliminarMunicipio(@RequestBody Municipios municipio){
         if (service.eliminarMunicipio(municipio)){
             return new ResponseEntity(HttpStatus.OK);

@@ -58,10 +58,13 @@ public class Servicio {
     private Date fechaEntrada;
     private Date fechaSalida;
 
+    private byte estado;
+
     public Servicio() {
     }
 
-    public Servicio(Recepcionista idRecep, Cliente idCliente, Habitacion idHabitacion, TipoTarifa idTipoTarifa, Municipios cliProcedencia, Municipios cliDestino, TipoPago idTipoPago, int pago, Date fechaEntrada, Date fechaSalida) {
+    public Servicio(int idServicio, Recepcionista idRecep, Cliente idCliente, Habitacion idHabitacion, TipoTarifa idTipoTarifa, Municipios cliProcedencia, Municipios cliDestino, TipoPago idTipoPago, int pago, Date fechaEntrada, Date fechaSalida, byte estado) {
+        this.idServicio = idServicio;
         this.idRecep = idRecep;
         this.idCliente = idCliente;
         this.idHabitacion = idHabitacion;
@@ -72,7 +75,17 @@ public class Servicio {
         this.pago = pago;
         this.fechaEntrada = fechaEntrada;
         this.fechaSalida = fechaSalida;
+        this.estado = estado;
     }
+
+    public byte getEstado() {
+        return estado;
+    }
+
+    public void setEstado(byte estado) {
+        this.estado = estado;
+    }
+
     public void setIdServicio(int idServicio) {
         this.idServicio = idServicio;
     }

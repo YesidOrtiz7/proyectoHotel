@@ -190,7 +190,8 @@ CREATE TABLE `tblservicio` (
   `id_habitacion` int(11) NOT NULL,
   `id_recep` int(11) NOT NULL,
   `id_tipo_pago` int(11) NOT NULL,
-  `id_tipo_tarifa` int(11) NOT NULL
+  `id_tipo_tarifa` int(11) NOT NULL,
+  `estado` int(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 ALTER TABLE `tblservicio`
   ADD PRIMARY KEY (`id_servicio`),

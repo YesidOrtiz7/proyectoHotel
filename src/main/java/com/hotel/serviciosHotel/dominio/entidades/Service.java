@@ -16,7 +16,9 @@ public class Service {
     private Date fechaEntrada;
     private Date fechaSalida;
 
-    public Service(int idService, ReceptionistEntity idRecep, Client idClient, Room idRoom, RateType idRateType, Municipios cliProcedencia, Municipios cliDestino, PaymentType idTipoPago, int payment, Date fechaEntrada, Date fechaSalida) {
+    private int state;
+
+    public Service(int idService, ReceptionistEntity idRecep, Client idClient, Room idRoom, RateType idRateType, Municipios cliProcedencia, Municipios cliDestino, PaymentType idTipoPago, int payment, Date fechaEntrada, Date fechaSalida, byte state) {
         this.idService = idService;
         this.idRecep = idRecep;
         this.idClient = idClient;
@@ -28,9 +30,26 @@ public class Service {
         this.payment = payment;
         this.fechaEntrada = fechaEntrada;
         this.fechaSalida = fechaSalida;
+        this.state = state;
     }
 
     public Service() {
+    }
+
+    public RateType getIdRateType() {
+        return idRateType;
+    }
+
+    public void setIdRateType(RateType idRateType) {
+        this.idRateType = idRateType;
+    }
+
+    public int getState() {
+        return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
     }
 
     public int getIdService() {
