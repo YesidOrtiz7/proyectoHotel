@@ -8,6 +8,7 @@ import com.hotel.serviciosHotel.aplicacion.puerto.out.persistance.ServicePortOut
 import com.hotel.serviciosHotel.dominio.entidades.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -60,7 +61,10 @@ public class ServicioService implements ServicioPortIn {
             habitacionService.changeRoomStatus(
                     service.getIdRoom().getRoomNumber(),3
             );
-            return portOut.registrarServicio(service);
+            //return portOut.registrarServicio(service);
+            return portOut.registrarServicio(
+                    this.establecerEstadia(service)
+            );
         }else {
             return null;
         }
@@ -128,17 +132,23 @@ public class ServicioService implements ServicioPortIn {
 
     /** if the date of checkout of the service is null, it set one day later
      * than date of checkin*/
-    public Service diaEstadia(Service service){
-        //SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z");
+    public Service establecerEstadia(Service service){
+        LocalDateTime entrada=service.getFechaEntrada();
+        LocalDateTime salida=service.getFechaSalida();
 
-        Date entrada=service.getFechaEntrada();
-        Date salida=service.getFechaSalida();
-
-        if (entrada!=null&&salida!=null&& salida.after(entrada)){
+        if (entrada!=null&&salida!=null&& salida.isAfter(entrada)){
             return service;
         }else {
-            //service.setFechaEntrada();
+            service.setFechaEntrada(LocalDateTime.now());
+            service.setFechaSalida(
+                    LocalDateTime.of(entrada.getYear(),
+                            entrada.getMonth(),
+                            entrada.getDayOfMonth()+1,
+                            entrada.getHour(),
+                            entrada.getMinute(),
+                            entrada.getSecond())
+            );
+            return service;
         }
-        return null;
     }
 }

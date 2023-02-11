@@ -1,5 +1,6 @@
 package com.hotel.serviciosHotel.dominio.entidades;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 
@@ -13,12 +14,12 @@ public class Service {
     private Municipios cliDestino;
     private PaymentType idTipoPago;
     private int payment;
-    private Date fechaEntrada;
-    private Date fechaSalida;
+    private LocalDateTime fechaEntrada;
+    private LocalDateTime fechaSalida;
 
     private int state;
 
-    public Service(int idService, ReceptionistEntity idRecep, Client idClient, Room idRoom, RateType idRateType, Municipios cliProcedencia, Municipios cliDestino, PaymentType idTipoPago, int payment, Date fechaEntrada, Date fechaSalida, byte state) {
+    public Service(int idService, ReceptionistEntity idRecep, Client idClient, Room idRoom, RateType idRateType, Municipios cliProcedencia, Municipios cliDestino, PaymentType idTipoPago, int payment, LocalDateTime fechaEntrada, LocalDateTime fechaSalida, int state) {
         this.idService = idService;
         this.idRecep = idRecep;
         this.idClient = idClient;
@@ -124,19 +125,19 @@ public class Service {
         this.payment = payment;
     }
 
-    public Date getFechaEntrada() {
+    public LocalDateTime getFechaEntrada() {
         return fechaEntrada;
     }
 
-    public void setFechaEntrada(Date fechaEntrada) {
+    public void setFechaEntrada(LocalDateTime fechaEntrada) {
         this.fechaEntrada = fechaEntrada;
     }
 
-    public Date getFechaSalida() {
+    public LocalDateTime getFechaSalida() {
         return fechaSalida;
     }
 
-    public void setFechaSalida(Date fechaSalida) {
+    public void setFechaSalida(LocalDateTime fechaSalida) {
         this.fechaSalida = fechaSalida;
     }
 }

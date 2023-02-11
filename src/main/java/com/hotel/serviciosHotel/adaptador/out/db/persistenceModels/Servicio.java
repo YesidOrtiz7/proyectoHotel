@@ -2,6 +2,7 @@ package com.hotel.serviciosHotel.adaptador.out.db.persistenceModels;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -55,15 +56,15 @@ public class Servicio {
     @JoinColumn(name = "idTipoPago", nullable = false)
     private TipoPago idTipoPago;
     private int pago;
-    private Date fechaEntrada;
-    private Date fechaSalida;
+    private LocalDateTime fechaEntrada;
+    private LocalDateTime fechaSalida;
 
     private byte estado;
 
     public Servicio() {
     }
 
-    public Servicio(int idServicio, Recepcionista idRecep, Cliente idCliente, Habitacion idHabitacion, TipoTarifa idTipoTarifa, Municipios cliProcedencia, Municipios cliDestino, TipoPago idTipoPago, int pago, Date fechaEntrada, Date fechaSalida, byte estado) {
+    public Servicio(int idServicio, Recepcionista idRecep, Cliente idCliente, Habitacion idHabitacion, TipoTarifa idTipoTarifa, Municipios cliProcedencia, Municipios cliDestino, TipoPago idTipoPago, int pago, LocalDateTime fechaEntrada, LocalDateTime fechaSalida, byte estado) {
         this.idServicio = idServicio;
         this.idRecep = idRecep;
         this.idCliente = idCliente;
@@ -158,19 +159,19 @@ public class Servicio {
         this.pago = pago;
     }
 
-    public Date getFechaEntrada() {
+    public LocalDateTime getFechaEntrada() {
         return fechaEntrada;
     }
 
-    public void setFechaEntrada(Date fechaEntrada) {
+    public void setFechaEntrada(LocalDateTime fechaEntrada) {
         this.fechaEntrada = fechaEntrada;
     }
 
-    public Date getFechaSalida() {
+    public LocalDateTime getFechaSalida() {
         return fechaSalida;
     }
 
-    public void setFechaSalida(Date fechaSalida) {
+    public void setFechaSalida(LocalDateTime fechaSalida) {
         this.fechaSalida = fechaSalida;
     }
 }

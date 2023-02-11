@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -39,9 +40,9 @@ class ServicioServiceTest {
             new Municipios(2,"municipio2"),
             new PaymentType(3,"efectivo"),
             1,
-            new Date(),
-            new Date(),
-            (byte) 0);
+            LocalDateTime.now(),
+            LocalDateTime.now(),
+            0);
     private Service responseMock2=new Service(1,
             new ReceptionistEntity(1,"789","maria","delmar"),
             new Client(1,"456","juan","","perez","","32123"),
@@ -56,9 +57,9 @@ class ServicioServiceTest {
             new Municipios(2,"municipio2"),
             new PaymentType(3,"efectivo"),
             1,
-            new Date(),
-            new Date(),
-            (byte) 0);
+            LocalDateTime.now(),
+            LocalDateTime.now(),
+            0);
     private ReceptionistEntity receptionistMock=new ReceptionistEntity(1,"789","maria","delmar");
     private Room roomMock =new Room(302,new RoomStatus(3,"ocupada"),
                     new RoomType(3,"doble"),

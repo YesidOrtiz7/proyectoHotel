@@ -10,6 +10,7 @@ import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -33,9 +34,9 @@ class GestionarServicioControllerTest {
             new Municipios(2,"municipio2"),
             new PaymentType(3,"efectivo"),
             1,
-            new Date(),
-            new Date(),
-            (byte) 0);
+            LocalDateTime.now(),
+            LocalDateTime.now(),
+            0);
     private Service serviceMock2=new Service(1,
             new ReceptionistEntity(1,"789","maria","delmar"),
             new Client(1,"456","juan","","perez","","32123"),
@@ -50,8 +51,8 @@ class GestionarServicioControllerTest {
             new Municipios(2,"municipio2"),
             new PaymentType(3,"efectivo"),
             1,
-            new Date(),
-            new Date(),
+            LocalDateTime.now(),
+            LocalDateTime.now(),
             (byte) 0);
     private List<Service> listServiceMock=new ArrayList<>();
 
