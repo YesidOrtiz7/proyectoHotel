@@ -32,6 +32,11 @@ public class ServiceRepository implements ServicePortOut {
     }
 
     @Override
+    public boolean servicioExiste(Service service) {
+        return repository.existsById(service.getIdService());
+    }
+
+    @Override
     public List<Service> consultarServicios() {
         Iterable<Servicio>query=repository.findAll();
         System.out.println(query);

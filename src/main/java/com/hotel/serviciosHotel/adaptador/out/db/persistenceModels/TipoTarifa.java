@@ -9,20 +9,22 @@ public class TipoTarifa {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idTipoTarifa;
     private String descripcionTarifa;
+    private int porcentajeTarifa;
 
     public TipoTarifa() {
     }
 
-    public TipoTarifa(String descripcionTarifa) {
+    public TipoTarifa(String descripcionTarifa, int porcentajeTarifa) {
         this.descripcionTarifa = descripcionTarifa;
-    }
-
-    public void setIdTipoTarifa(int idTipoTarifa) {
-        this.idTipoTarifa = idTipoTarifa;
+        this.porcentajeTarifa = porcentajeTarifa;
     }
 
     public int getIdTipoTarifa() {
         return idTipoTarifa;
+    }
+
+    public void setIdTipoTarifa(int idTipoTarifa) {
+        this.idTipoTarifa = idTipoTarifa;
     }
 
     public String getDescripcionTarifa() {
@@ -31,5 +33,13 @@ public class TipoTarifa {
 
     public void setDescripcionTarifa(String descripcionTarifa) {
         this.descripcionTarifa = descripcionTarifa;
+    }
+
+    public int getPorcentajeTarifa() {
+        return porcentajeTarifa;
+    }
+
+    public void setPorcentajeTarifa(int porcentajeTarifa) {
+        this.porcentajeTarifa = porcentajeTarifa;
     }
 }

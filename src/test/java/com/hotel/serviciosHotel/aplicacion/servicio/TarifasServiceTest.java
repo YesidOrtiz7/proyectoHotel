@@ -16,8 +16,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TarifasServiceTest {
     private TarifasPortOut portOutMock;
-    private RateType rateTypeMock1=new RateType(1,"normal");
-    private RateType rateTypeMock2=new RateType(2,"transportador");
+    private RateType rateTypeMock1=new RateType(1,"normal",0);
+    private RateType rateTypeMock2=new RateType(2,"transportador",15);
     private List<RateType> listRateTipe=new ArrayList<>();
 
     private TarifasService service;

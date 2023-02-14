@@ -1,5 +1,8 @@
 package com.hotel.serviciosHotel.adaptador.in.rest;
 
+import com.hotel.serviciosHotel.adaptador.modelResponse.ExtendServicesRequestModel;
+import com.hotel.serviciosHotel.adaptador.modelResponse.UpdateRateServiceRequest;
+import com.hotel.serviciosHotel.adaptador.modelResponse.UpdateRoomServiceRequest;
 import com.hotel.serviciosHotel.aplicacion.puerto.in.ServicioPortIn;
 import com.hotel.serviciosHotel.aplicacion.servicio.ServicioService;
 import com.hotel.serviciosHotel.dominio.entidades.*;
@@ -12,10 +15,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class GestionarServicioControllerTest {
     private ServicioPortIn portInMock;
@@ -28,8 +28,9 @@ class GestionarServicioControllerTest {
                     new RoomStatus(3,"ocupada"),
                     new RoomType(1,"doble"),
                     4,
-                    2),
-            new RateType(1,"normal"),
+                    2,
+                    1),
+            new RateType(1,"normal",0),
             new Municipios(1,"municipio1"),
             new Municipios(2,"municipio2"),
             new PaymentType(3,"efectivo"),
@@ -45,8 +46,9 @@ class GestionarServicioControllerTest {
                     new RoomStatus(1,"lipia"),
                     new RoomType(1,"doble"),
                     4,
-                    2),
-            new RateType(1,"normal"),
+                    2,
+                    0),
+            new RateType(1,"normal",15),
             new Municipios(1,"municipio1"),
             new Municipios(2,"municipio2"),
             new PaymentType(3,"efectivo"),
@@ -103,18 +105,44 @@ class GestionarServicioControllerTest {
 
     @Test
     void actualizarHabitacionServicio() {
-        Mockito.when(portInMock.actualizarHabitacionServicio(serviceMock1,301)).thenReturn(serviceMock1);
-        Assertions.assertEquals(new ResponseEntity<>(serviceMock1,HttpStatus.OK),controller.actualizarHabitacionServicio(serviceMock1,301));
+        UpdateRoomServiceRequest request=new UpdateRoomServiceRequest(1,301);
+
+        Mockito.when(portInMock.actualizarHabitacionServicio(1,301)).thenReturn(serviceMock1);
+        Assertions.assertEquals(new ResponseEntity<>(serviceMock1,HttpStatus.OK),controller.actualizarHabitacionServicio(request));
     }
     @Test
     void actualizarHabitacionServicioNull() {
-        Mockito.when(portInMock.actualizarHabitacionServicio(serviceMock1,301)).thenReturn(null);
-        Assertions.assertEquals(new ResponseEntity<>(HttpStatus.BAD_REQUEST),controller.actualizarHabitacionServicio(serviceMock1,301));
+        UpdateRoomServiceRequest request=new UpdateRoomServiceRequest(1,301);
+
+        Mockito.when(portInMock.actualizarHabitacionServicio(1,301)).thenReturn(null);
+        Assertions.assertEquals(new ResponseEntity<>(HttpStatus.BAD_REQUEST),controller.actualizarHabitacionServicio(request));
     }
 
     @Test
     void actualizarTarifaServicio() {
-        Mockito.when(portInMock.actualizarTarifaServicio(serviceMock2,2)).thenReturn(serviceMock2);
-        Assertions.assertEquals(new ResponseEntity<>(serviceMock2,HttpStatus.OK),controller.actualizarTarifaServicio(serviceMock2,2));
+        UpdateRateServiceRequest request=new UpdateRateServiceRequest(1,2);
+
+        Mockito.when(portInMock.actualizarTarifaServicio(1,2)).thenReturn(serviceMock2);
+        Assertions.assertEquals(new ResponseEntity<>(serviceMock2,HttpStatus.OK),controller.actualizarTarifaServicio(request));
+    }
+
+    @Test
+    void ampliarServicio() {
+        ExtendServicesRequestModel request=new ExtendServicesRequestModel(serviceMock2,1,0,0);
+
+        Mockito.when(portInMock.ampliarServicio(request.getService(),request.getDia(),request.getHora(),request.getMinuto())).thenReturn(serviceMock2);
+        Assertions.assertEquals(new ResponseEntity<>(serviceMock2,HttpStatus.OK),controller.ampliarServicio(request));
+    }
+
+    @Test
+    void cerrarServicioPorId() {
+        Mockito.when(portInMock.cerrarServicioPorIdServicio(1)).thenReturn(serviceMock1);
+        Assertions.assertEquals(new ResponseEntity<>(serviceMock1,HttpStatus.OK),controller.cerrarServicioPorId(1));
+    }
+
+    @Test
+    void cerrarServicioPorIdNull() {
+        Mockito.when(portInMock.cerrarServicioPorIdServicio(1)).thenReturn(null);
+        Assertions.assertEquals(new ResponseEntity<>(HttpStatus.BAD_REQUEST),controller.cerrarServicioPorId(1));
     }
 }

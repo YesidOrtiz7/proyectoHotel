@@ -31,12 +31,15 @@ class GestionarHabitacionesControllerTest {
                 302,
                 new RoomStatus(3,"ocupada"),
                 new RoomType(1,"doble"),
+                100000,
                 4,
-                1);
+                1
+                );
         roomMock2=new Room(
                 301,
                 new RoomStatus(1,"limpia"),
                 new RoomType(1,"doble"),
+                1000,
                 4,
                 2);
         listRoomMock.add(roomMock1);

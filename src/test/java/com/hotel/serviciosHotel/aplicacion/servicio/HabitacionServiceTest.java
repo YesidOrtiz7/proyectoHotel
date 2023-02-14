@@ -30,11 +30,13 @@ class HabitacionServiceTest {
         roomMock1=new Room(301,
                 new RoomStatus(1,"limpia"),
                 new RoomType(1,"doble"),
+                10000,
                 2,1);
 
         roomMock2=new Room(302,
                 new RoomStatus(1,"limpia"),
                 new RoomType(1,"doble"),
+                10000,
                 2,2);
 
         listRoomMock=new ArrayList<>();

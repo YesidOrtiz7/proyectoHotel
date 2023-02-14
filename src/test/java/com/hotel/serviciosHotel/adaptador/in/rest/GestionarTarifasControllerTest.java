@@ -17,8 +17,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class GestionarTarifasControllerTest {
     private TarifaPortIn portInMock;
-    private RateType rateTypeMock1=new RateType(1,"tipo1");
-    private RateType rateTypeMock2=new RateType(2,"tipo2");
+    private RateType rateTypeMock1=new RateType(1,"tipo1",0);
+    private RateType rateTypeMock2=new RateType(2,"tipo2",20);
     private List<RateType> listRateTypeMock=new ArrayList<>();
 
     private GestionarTarifasController controller;

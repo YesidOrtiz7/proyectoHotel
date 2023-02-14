@@ -55,16 +55,16 @@ public class Servicio {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idTipoPago", nullable = false)
     private TipoPago idTipoPago;
-    private int pago;
+    private double pago;
     private LocalDateTime fechaEntrada;
     private LocalDateTime fechaSalida;
 
-    private byte estado;
+    private int estado;
 
     public Servicio() {
     }
 
-    public Servicio(int idServicio, Recepcionista idRecep, Cliente idCliente, Habitacion idHabitacion, TipoTarifa idTipoTarifa, Municipios cliProcedencia, Municipios cliDestino, TipoPago idTipoPago, int pago, LocalDateTime fechaEntrada, LocalDateTime fechaSalida, byte estado) {
+    public Servicio(int idServicio, Recepcionista idRecep, Cliente idCliente, Habitacion idHabitacion, TipoTarifa idTipoTarifa, Municipios cliProcedencia, Municipios cliDestino, TipoPago idTipoPago, double pago, LocalDateTime fechaEntrada, LocalDateTime fechaSalida, byte estado) {
         this.idServicio = idServicio;
         this.idRecep = idRecep;
         this.idCliente = idCliente;
@@ -79,11 +79,11 @@ public class Servicio {
         this.estado = estado;
     }
 
-    public byte getEstado() {
+    public int getEstado() {
         return estado;
     }
 
-    public void setEstado(byte estado) {
+    public void setEstado(int estado) {
         this.estado = estado;
     }
 
@@ -151,11 +151,11 @@ public class Servicio {
         this.idTipoPago = idTipoPago;
     }
 
-    public int getPago() {
+    public double getPago() {
         return pago;
     }
 
-    public void setPago(int pago) {
+    public void setPago(double pago) {
         this.pago = pago;
     }
 

@@ -9,4 +9,6 @@ public interface ServicePortOut {
     List<Service> consultarServicios();
     Service registrarServicio(Service service);
     Service actualizarServicio(Service service);
+
+    boolean servicioExiste(Service service);
 }

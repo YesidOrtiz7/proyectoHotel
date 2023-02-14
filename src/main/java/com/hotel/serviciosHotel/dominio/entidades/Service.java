@@ -13,13 +13,13 @@ public class Service {
     private Municipios cliProcedencia;
     private Municipios cliDestino;
     private PaymentType idTipoPago;
-    private int payment;
+    private double payment;
     private LocalDateTime fechaEntrada;
     private LocalDateTime fechaSalida;
 
     private int state;
 
-    public Service(int idService, ReceptionistEntity idRecep, Client idClient, Room idRoom, RateType idRateType, Municipios cliProcedencia, Municipios cliDestino, PaymentType idTipoPago, int payment, LocalDateTime fechaEntrada, LocalDateTime fechaSalida, int state) {
+    public Service(int idService, ReceptionistEntity idRecep, Client idClient, Room idRoom, RateType idRateType, Municipios cliProcedencia, Municipios cliDestino, PaymentType idTipoPago, double payment, LocalDateTime fechaEntrada, LocalDateTime fechaSalida, int state) {
         this.idService = idService;
         this.idRecep = idRecep;
         this.idClient = idClient;
@@ -117,11 +117,11 @@ public class Service {
         this.idTipoPago = idTipoPago;
     }
 
-    public int getPayment() {
+    public double getPayment() {
         return payment;
     }
 
-    public void setPayment(int payment) {
+    public void setPayment(double payment) {
         this.payment = payment;
     }
 

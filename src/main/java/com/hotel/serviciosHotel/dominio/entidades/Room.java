@@ -5,13 +5,15 @@ public class Room {
     private int roomNumber;
     private RoomStatus idRoomStatus;
     private RoomType roomType;
+    private int roomPriceNight;
     private int bedsNumber;
     private int idRoom;
 
-    public Room(int roomNumber, RoomStatus idRoomStatus, RoomType roomType, int bedsNumber, int idRoom) {
+    public Room(int roomNumber, RoomStatus idRoomStatus, RoomType roomType, int roomPriceNight, int bedsNumber, int idRoom) {
         this.roomNumber = roomNumber;
         this.idRoomStatus = idRoomStatus;
         this.roomType = roomType;
+        this.roomPriceNight = roomPriceNight;
         this.bedsNumber = bedsNumber;
         this.idRoom = idRoom;
     }
@@ -19,6 +21,13 @@ public class Room {
     public Room() {
     }
 
+    public int getRoomPriceNight() {
+        return roomPriceNight;
+    }
+
+    public void setRoomPriceNight(int roomPriceNight) {
+        this.roomPriceNight = roomPriceNight;
+    }
 
     public int getRoomNumber() {
         return roomNumber;

@@ -89,7 +89,8 @@ CREATE TABLE `tblhabitacion` (
   `num_habitacion` int(11) NOT NULL,
   `numero_camas` int(11) NOT NULL,
   `id_est_hab` int(11) NOT NULL,
-  `tipo_habitacion` int(11) NOT NULL
+  `tipo_habitacion` int(11) NOT NULL,
+  `precio_habitacion_noche` int(9) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 ALTER TABLE `tblhabitacion`
   ADD PRIMARY KEY (`id_habitacion`),
@@ -165,7 +166,8 @@ INSERT INTO `tbltipopago` (`id_pago`, `descripcion_pago`) VALUES (NULL, 'debito'
 
 CREATE TABLE `tbltipotarifa` (
   `id_tipo_tarifa` int(11) NOT NULL ,
-  `descripcion_tarifa` varchar(255) NOT NULL
+  `descripcion_tarifa` varchar(255) NOT NULL,
+  `porcentaje_tarifa` int(2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 ALTER TABLE `tbltipotarifa`
   ADD PRIMARY KEY (`id_tipo_tarifa`),

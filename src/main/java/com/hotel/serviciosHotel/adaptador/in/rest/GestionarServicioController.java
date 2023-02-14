@@ -1,5 +1,8 @@
 package com.hotel.serviciosHotel.adaptador.in.rest;
 
+import com.hotel.serviciosHotel.adaptador.modelResponse.ExtendServicesRequestModel;
+import com.hotel.serviciosHotel.adaptador.modelResponse.UpdateRateServiceRequest;
+import com.hotel.serviciosHotel.adaptador.modelResponse.UpdateRoomServiceRequest;
 import com.hotel.serviciosHotel.aplicacion.puerto.in.ServicioPortIn;
 import com.hotel.serviciosHotel.dominio.entidades.Service;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,18 +50,18 @@ public class GestionarServicioController {
             return new ResponseEntity<>(response,HttpStatus.CREATED);
         }
     }
-    @PostMapping("/nuevaHabitacion/{numHab}")
-    public ResponseEntity<Service> actualizarHabitacionServicio(@RequestBody Service service,@PathVariable("numHab")int numeroHabitacion){
-        Service response=servicePortIn.actualizarHabitacionServicio(service,numeroHabitacion);
+    @PostMapping("/nuevaHabitacion")
+    public ResponseEntity<Service> actualizarHabitacionServicio(@RequestBody UpdateRoomServiceRequest request){
+        Service response=servicePortIn.actualizarHabitacionServicio(request.getIdService(),request.getRoomNumber());
         if (response==null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }else {
             return new ResponseEntity<>(response,HttpStatus.OK);
         }
     }
-    @PostMapping("/nuevaTarifa/{idTarifa}")
-    public ResponseEntity<Service> actualizarTarifaServicio(@RequestBody Service service,@PathVariable("idTarifa")int idTarifa){
-        Service response=servicePortIn.actualizarTarifaServicio(service,idTarifa);
+    @PostMapping("/cambiarTarifa")
+    public ResponseEntity<Service> actualizarTarifaServicio(@RequestBody UpdateRateServiceRequest request){
+        Service response=servicePortIn.actualizarTarifaServicio(request.getIdService(),request.getRateId());
         if (response==null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }else {
@@ -66,4 +69,34 @@ public class GestionarServicioController {
         }
     }
 
+    @PostMapping("/extenderServicios")
+    public ResponseEntity<Service> ampliarServicio(@RequestBody ExtendServicesRequestModel request){
+        /*Service response=servicePortIn.registrarServicio(service);
+        if (response==null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }else {
+            return new ResponseEntity<>(response,HttpStatus.CREATED);
+        }*/
+        Service response =servicePortIn.ampliarServicio(
+                request.getService(),
+                request.getDia(),
+                request.getHora(),
+                request.getMinuto()
+        );
+        if (response==null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }else {
+            return new ResponseEntity<>(response,HttpStatus.OK);
+        }
+    }
+    @PostMapping("/cerrarServicio/{idService}")
+    public ResponseEntity<Service> cerrarServicioPorId(@PathVariable("idService") int id){
+
+        Service response=servicePortIn.cerrarServicioPorIdServicio(id);
+        if (response==null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }else {
+            return new ResponseEntity<>(response,HttpStatus.OK);
+        }
+    }
 }

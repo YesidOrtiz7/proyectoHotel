@@ -9,7 +9,7 @@ import com.hotel.serviciosHotel.dominio.entidades.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.time.Period;
 import java.util.List;
 
 @org.springframework.stereotype.Service
@@ -23,6 +23,7 @@ public class ServicioService implements ServicioPortIn {
 
     private RecepcionistaPortIn recepcionistaService;
 
+    /*------------------------------inyeccion de dependencias------------------------------*/
     @Autowired
     public void setPortOut(ServicePortOut portOut) {
         this.portOut = portOut;
@@ -42,6 +43,7 @@ public class ServicioService implements ServicioPortIn {
     public void setRecepcionistaService(RecepcionistaPortIn recepcionistaService) {
         this.recepcionistaService = recepcionistaService;
     }
+    /*-------------------------------------------------------------------------------*/
 
     @Override
     public Service consultarServicioPorId(int id) {
@@ -72,47 +74,110 @@ public class ServicioService implements ServicioPortIn {
     }
 
     @Override
-    public Service actualizarServicio(Service service) {
-        ReceptionistEntity recepcionista= this.obtenerRecepcionista(service);
-        if (recepcionista!=null && this.determinarOcupacionHabitacion(service)){
-            service.setIdRecep(recepcionista);
-            return portOut.actualizarServicio(service);
+    public Service actualizarServicioHabitacionOcupada(Service service) {
+        if (portOut.servicioExiste(service)){
+            ReceptionistEntity recepcionista= this.obtenerRecepcionista(service);
+            if (recepcionista!=null && this.determinarOcupacionHabitacion(service)){
+                service.setIdRecep(recepcionista);
+                return portOut.actualizarServicio(service);
+            }else {
+                return null;
+            }
         }else {
             return null;
         }
+
+    }
+    @Override
+    public Service actualizarServicioHabitacionDesocupada(Service service) {
+        if (portOut.servicioExiste(service)){
+            ReceptionistEntity recepcionista= this.obtenerRecepcionista(service);
+            if (recepcionista!=null && !this.determinarOcupacionHabitacion(service)){
+                service.setIdRecep(recepcionista);
+
+                return portOut.actualizarServicio(service);
+            }else {
+                return null;
+            }
+        }else {
+            return null;
+        }
+
     }
 
     @Override
-    public Service actualizarHabitacionServicio(Service service,int numeroHabitacion) {
+    public Service actualizarHabitacionServicio(int service,int numeroHabitacion) {
+        Service serv=portOut.consultarServicioPorId(service);
+
         Room hab=habitacionService.getRoomByNumber(numeroHabitacion);
         if (hab==null||(hab.getIdRoom()==0)){
             return null;
         }else {
-            service.setIdRoom(hab);
-            return this.actualizarServicio(service);
+            //cambiar la habitacion actual a sucia
+            habitacionService.changeRoomStatus(serv.getIdRoom().getIdRoom(),2);
+
+            serv.setIdRoom(hab);
+
+            //cambiar la otra habitacion a ocupada
+            habitacionService.changeRoomStatus(numeroHabitacion,3);
+            return this.actualizarServicioHabitacionOcupada(serv);
         }
     }
 
     @Override
-    public Service actualizarTarifaServicio(Service service,int idTarifa) {
+    public Service actualizarTarifaServicio(int service,int idTarifa) {
+        Service serv=portOut.consultarServicioPorId(service);
         RateType tarifa=tarifaService.obtenerTarifaPorId(idTarifa);
+
         if (tarifa==null||(tarifa.getIdTipoTarifa()==0)){
             return null;
         }else {
-            service.setIdTipoTarifa(tarifa);
-            return this.actualizarServicio(service);
+            serv.setIdTipoTarifa(tarifa);
+            return this.actualizarServicioHabitacionOcupada(serv);
         }
     }
 
     @Override
     public Service cerrarServicio(Service service) {
-        service.setState(1);
-        return this.actualizarServicio(service);
+        service.setState(0);
+        Room room=habitacionService.getRoomById(service.getIdRoom().getIdRoom());
+        int descuento=service.getIdRateType().getPorcentajeTarifa()/100;
+        descuento=room.getRoomPriceNight()*descuento;
+
+        int precioSinDescuento=room.getRoomPriceNight()-descuento;
+
+        precioSinDescuento*=this.determinarDiasEstadia(
+                service.getFechaEntrada(),
+                service.getFechaSalida()
+        );
+
+        service.setPayment(precioSinDescuento);
+        return this.actualizarServicioHabitacionDesocupada(service);
     }
 
     @Override
-    public Service ampliarServicio(Service service) {
-        return null;
+    public Service cerrarServicioPorIdServicio(int idService) {
+        Service service =this.consultarServicioPorId(idService);
+        return this.cerrarServicio(service);
+    }
+
+    @Override
+    public Service ampliarServicio(Service service, int dia,int hora,int minuto) {
+        LocalDateTime entrada=service.getFechaEntrada();
+        LocalDateTime salida=service.getFechaSalida();
+        if (entrada!=null&&salida!=null&& salida.isAfter(entrada)){
+            service.setFechaSalida(
+                    LocalDateTime.of(LocalDateTime.now().getYear(),
+                            LocalDateTime.now().getMonth(),
+                            LocalDateTime.now().getDayOfMonth()+dia,
+                            LocalDateTime.now().getHour()+hora,
+                            LocalDateTime.now().getMinute()+minuto,
+                            LocalDateTime.now().getSecond())
+            );
+            return this.actualizarServicioHabitacionOcupada(service);
+        }else {
+            return null;
+        }
     }
 
     public ReceptionistEntity obtenerRecepcionista(Service service){
@@ -136,6 +201,8 @@ public class ServicioService implements ServicioPortIn {
         LocalDateTime entrada=service.getFechaEntrada();
         LocalDateTime salida=service.getFechaSalida();
 
+        service.setState(1);
+
         if (entrada!=null&&salida!=null&& salida.isAfter(entrada)){
             return service;
         }else {
@@ -150,5 +217,9 @@ public class ServicioService implements ServicioPortIn {
             );
             return service;
         }
+    }
+
+    public int determinarDiasEstadia(LocalDateTime entrada,LocalDateTime salida){
+        return Period.between(entrada.toLocalDate(),salida.toLocalDate()).getDays();
     }
 }
