@@ -132,7 +132,7 @@ public class ServicioService implements ServicioPortIn {
         if (tarifa==null||(tarifa.getIdTipoTarifa()==0)){
             return null;
         }else {
-            serv.setIdTipoTarifa(tarifa);
+            serv.setIdRateType(tarifa);
             return this.actualizarServicioHabitacionOcupada(serv);
         }
     }

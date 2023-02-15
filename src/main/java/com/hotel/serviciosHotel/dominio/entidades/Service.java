@@ -85,14 +85,6 @@ public class Service {
         this.idRoom = idRoom;
     }
 
-    public RateType getIdTipoTarifa() {
-        return idRateType;
-    }
-
-    public void setIdTipoTarifa(RateType idRateType) {
-        this.idRateType = idRateType;
-    }
-
     public Municipios getCliProcedencia() {
         return cliProcedencia;
     }
