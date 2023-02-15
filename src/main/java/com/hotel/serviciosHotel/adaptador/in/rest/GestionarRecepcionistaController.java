@@ -50,7 +50,7 @@ public class GestionarRecepcionistaController {
         }
     }
 
-    @PostMapping("/actualizar")
+    @PutMapping("/actualizar")
     public ResponseEntity<ReceptionistEntity> actualizarRecepcionistas(@RequestBody ReceptionistEntity receptionist){
         ReceptionistEntity response=service.actualizarRecepcionista(receptionist);
         if (response==null){

@@ -50,7 +50,7 @@ public class GestionarMunicipiosController {
         }
     }
 
-    @PostMapping("/actualizar")
+    @PutMapping("/actualizar")
     public ResponseEntity<Municipios> actualizarMunicipio(@RequestBody Municipios municipios){
         Municipios response=service.actualizarMunicipio(municipios);
         if (response==null){

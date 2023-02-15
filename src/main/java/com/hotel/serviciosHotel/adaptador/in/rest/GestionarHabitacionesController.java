@@ -49,7 +49,7 @@ public class GestionarHabitacionesController {
             return new ResponseEntity<>(response,HttpStatus.CREATED);
         }
     }
-    @PostMapping("/actualizar")
+    @PutMapping("/actualizar")
     public ResponseEntity<Room> actualizarHabitacion(@RequestBody Room room){
         Room response=service.updateRoom(room);
         if (response==null){
@@ -59,7 +59,7 @@ public class GestionarHabitacionesController {
         }
 
     }
-    @PostMapping("/cambiarTipoHabitacion/{type}/{room}")
+    @PutMapping("/cambiarTipoHabitacion/{type}/{room}")
     public ResponseEntity<Room> cambiarTipoHabitacion(@PathVariable("type") int state,@PathVariable("room") int room){
         Room response=service.changeRoomType(room, state);
         if (response==null){
@@ -69,7 +69,7 @@ public class GestionarHabitacionesController {
         }
 
     }
-    @PostMapping("/cambiarEstado/{state}/{room}")
+    @PutMapping("/cambiarEstado/{state}/{room}")
     public ResponseEntity<Room> cambiarEstadoHabitacion(@PathVariable("state") int state,@PathVariable("room") int room){
         Room response=service.changeRoomStatus(room, state);
         if (response==null){

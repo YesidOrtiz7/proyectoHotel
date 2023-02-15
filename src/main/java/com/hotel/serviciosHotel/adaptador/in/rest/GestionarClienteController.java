@@ -49,7 +49,7 @@ public class GestionarClienteController {
         }
     }
 
-    @PostMapping("/actualizar")
+    @PutMapping("/actualizar")
     public ResponseEntity<Client> actualizarCliente(@RequestBody Client client){
         Client clientResponse=service.actualizarCliente(client);
         if (clientResponse==null){

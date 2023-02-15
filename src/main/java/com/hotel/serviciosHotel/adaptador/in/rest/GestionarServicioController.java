@@ -50,7 +50,7 @@ public class GestionarServicioController {
             return new ResponseEntity<>(response,HttpStatus.CREATED);
         }
     }
-    @PostMapping("/nuevaHabitacion")
+    @PutMapping("/nuevaHabitacion")
     public ResponseEntity<Service> actualizarHabitacionServicio(@RequestBody UpdateRoomServiceRequest request){
         Service response=servicePortIn.actualizarHabitacionServicio(request.getIdService(),request.getRoomNumber());
         if (response==null){
@@ -59,7 +59,7 @@ public class GestionarServicioController {
             return new ResponseEntity<>(response,HttpStatus.OK);
         }
     }
-    @PostMapping("/cambiarTarifa")
+    @PutMapping("/cambiarTarifa")
     public ResponseEntity<Service> actualizarTarifaServicio(@RequestBody UpdateRateServiceRequest request){
         Service response=servicePortIn.actualizarTarifaServicio(request.getIdService(),request.getRateId());
         if (response==null){
@@ -69,14 +69,8 @@ public class GestionarServicioController {
         }
     }
 
-    @PostMapping("/extenderServicios")
+    @PutMapping("/extenderServicios")
     public ResponseEntity<Service> ampliarServicio(@RequestBody ExtendServicesRequestModel request){
-        /*Service response=servicePortIn.registrarServicio(service);
-        if (response==null){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }else {
-            return new ResponseEntity<>(response,HttpStatus.CREATED);
-        }*/
         Service response =servicePortIn.ampliarServicio(
                 request.getService(),
                 request.getDia(),

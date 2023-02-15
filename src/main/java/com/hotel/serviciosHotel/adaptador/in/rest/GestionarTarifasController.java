@@ -50,7 +50,7 @@ public class GestionarTarifasController {
         }
     }
 
-    @PostMapping("/actualizar")
+    @PutMapping("/actualizar")
     public ResponseEntity<RateType> actualizarTarifa(@RequestBody RateType rate){
         RateType response=service.actualizarTarifa(rate);
         if (response==null){
