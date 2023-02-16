@@ -58,12 +58,19 @@ public class ServicioService implements ServicioPortIn {
     @Override
     public Service registrarServicio(Service service) {
         ReceptionistEntity recepcionista=this.obtenerRecepcionista(service);
-        if (recepcionista!=null && !this.determinarOcupacionHabitacion(service)){
+        Room room= habitacionService.getRoomById(
+                service.getIdRoom().getIdRoom()
+        );
+        if (recepcionista!=null && !this.determinarOcupacionHabitacion(service) && room.getIdRoomStatus().getIdStatus() !=3){
             service.setIdRecep(recepcionista);
-            habitacionService.changeRoomStatus(
+
+            /*cambiar el estado a la habitacion*/
+            service.setIdRoom(
+                habitacionService.changeRoomStatus(
                     service.getIdRoom().getRoomNumber(),3
+                )
             );
-            //return portOut.registrarServicio(service);
+            
             return portOut.registrarServicio(
                     this.establecerEstadia(service)
             );
