@@ -138,7 +138,7 @@ public class RoomRepository implements RoomPortOut {
     @Override
     public Room changeStateRoom(int idroom, int state) {
         Optional<Room> roomByNumber=this.getRoomByNumber(idroom);
-        Room room=(roomByNumber.isEmpty()||roomByNumber==null)?null:roomByNumber.get();
+        Room room=(roomByNumber==null||roomByNumber.isEmpty())?null:roomByNumber.get();
         if (repositoryEstadoHab.existsById(state)&&room!=null){
             RoomStatus roomStatus=mapperRoomStatus.toRoomStatus(
                     repositoryEstadoHab.findByIdEstado(state)

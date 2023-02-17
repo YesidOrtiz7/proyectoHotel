@@ -70,7 +70,7 @@ public class ServicioService implements ServicioPortIn {
                     service.getIdRoom().getRoomNumber(),3
                 )
             );
-            
+
             return portOut.registrarServicio(
                     this.establecerEstadia(service)
             );
@@ -96,11 +96,16 @@ public class ServicioService implements ServicioPortIn {
 
     }
     @Override
-    public Service actualizarServicioHabitacionDesocupada(Service service) {
+    public Service actualizarServicioParaCerrarServicio(Service service) {
         if (portOut.servicioExiste(service)){
             ReceptionistEntity recepcionista= this.obtenerRecepcionista(service);
-            if (recepcionista!=null && !this.determinarOcupacionHabitacion(service)){
+            if (recepcionista!=null && this.determinarOcupacionHabitacion(service)){
                 service.setIdRecep(recepcionista);
+
+                /*cambiar habitacion a sucia*/
+                service.setIdRoom(
+                    habitacionService.changeRoomStatus(service.getIdRoom().getRoomNumber(),2)
+                );
 
                 return portOut.actualizarServicio(service);
             }else {
@@ -148,10 +153,10 @@ public class ServicioService implements ServicioPortIn {
     public Service cerrarServicio(Service service) {
         service.setState(0);
         Room room=habitacionService.getRoomById(service.getIdRoom().getIdRoom());
-        int descuento=service.getIdRateType().getPorcentajeTarifa()/100;
+        double descuento=service.getIdRateType().getPorcentajeTarifa()/100;
         descuento=room.getRoomPriceNight()*descuento;
 
-        int precioSinDescuento=room.getRoomPriceNight()-descuento;
+        double precioSinDescuento=room.getRoomPriceNight()-descuento;
 
         precioSinDescuento*=this.determinarDiasEstadia(
                 service.getFechaEntrada(),
@@ -159,7 +164,7 @@ public class ServicioService implements ServicioPortIn {
         );
 
         service.setPayment(precioSinDescuento);
-        return this.actualizarServicioHabitacionDesocupada(service);
+        return this.actualizarServicioParaCerrarServicio(service);
     }
 
     @Override

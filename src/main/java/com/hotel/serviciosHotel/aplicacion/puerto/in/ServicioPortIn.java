@@ -13,7 +13,7 @@ public interface ServicioPortIn {
 
 
     Service actualizarServicioHabitacionOcupada(Service service);
-    Service actualizarServicioHabitacionDesocupada(Service service);
+    Service actualizarServicioParaCerrarServicio(Service service);
     Service actualizarHabitacionServicio(int service, int numeroHabitacion);
     Service actualizarTarifaServicio(int service,int idTarifa);
 

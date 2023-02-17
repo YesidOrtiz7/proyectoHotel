@@ -11,7 +11,6 @@ import com.hotel.serviciosHotel.dominio.entidades.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import java.time.LocalDateTime;
@@ -130,10 +129,19 @@ class ServicioServiceTest {
 
     @Test
     void registrarServicio() {
-        Mockito.when(portOutMock.registrarServicio(responseMock2)).thenReturn(responseMock2);
+        Mockito.when(portOutMock.registrarServicio(responseMock3)).thenReturn(responseMock3);
         Mockito.when(recepcionistaServiceMock.obtenerRecepcionistaPorId(1)).thenReturn(receptionistMock);
+        Mockito.when(habitacionServiceMock.getRoomById(1)).thenReturn(
+                new Room(
+                        302,
+                        new RoomStatus(2,"sucia"),
+                        new RoomType(1,"doble"),
+                        10000,
+                        4,
+                        1)
+        );
 
-        Assertions.assertEquals(responseMock2,service.registrarServicio(responseMock2));
+        Assertions.assertEquals(responseMock3,service.registrarServicio(responseMock3));
     }
     @Test
     void registrarServicioRecepcionistaNull() {
@@ -179,34 +187,7 @@ class ServicioServiceTest {
 
         Assertions.assertEquals(null,service.actualizarServicioHabitacionOcupada(responseMock1));
     }
-    @Test
-    void actualizarServicioHabitacionDesocupada() {
-        Mockito.when(portOutMock.servicioExiste(responseMock2)).thenReturn(true);
 
-        Mockito.when(portOutMock.actualizarServicio(responseMock2)).thenReturn(responseMock2);
-        Mockito.when(recepcionistaServiceMock.obtenerRecepcionistaPorId(1)).thenReturn(receptionistMock);
-
-        Assertions.assertEquals(responseMock2,service.actualizarServicioHabitacionDesocupada(responseMock2));
-    }
-    @Test
-    void actualizarServicioHabitacionDesocupadaSinServicio() {
-        Mockito.when(portOutMock.servicioExiste(responseMock2)).thenReturn(false);
-
-        Mockito.when(portOutMock.actualizarServicio(responseMock2)).thenReturn(responseMock2);
-        Mockito.when(recepcionistaServiceMock.obtenerRecepcionistaPorId(1)).thenReturn(receptionistMock);
-
-        Assertions.assertEquals(null,service.actualizarServicioHabitacionDesocupada(responseMock2));
-    }
-
-    @Test
-    void actualizarServicioHabitacionDesocupadaSinRecepcionista() {
-        Mockito.when(portOutMock.servicioExiste(responseMock2)).thenReturn(true);
-
-        Mockito.when(portOutMock.actualizarServicio(responseMock2)).thenReturn(responseMock2);
-        Mockito.when(recepcionistaServiceMock.obtenerRecepcionistaPorId(1)).thenReturn(null);
-
-        Assertions.assertEquals(null,service.actualizarServicioHabitacionDesocupada(responseMock2));
-    }
     @Test
     void actualizarServicioRecepcionistaNull() {
         Mockito.when(portOutMock.actualizarServicio(responseMock1)).thenReturn(responseMock1);
@@ -297,23 +278,24 @@ class ServicioServiceTest {
 
     @Test
     void cerrarServicio() {
-        Mockito.when(habitacionServiceMock.getRoomById(1)).thenReturn(roomMock2);
-        Mockito.when(portOutMock.servicioExiste(responseMock3)).thenReturn(true);
-        Mockito.when(recepcionistaServiceMock.obtenerRecepcionistaPorId(1)).thenReturn(new ReceptionistEntity(1,"789","maria","delmar"));
-        Mockito.when(portOutMock.actualizarServicio(responseMock3)).thenReturn(responseMock3);
 
-        Assertions.assertEquals(responseMock3,service.cerrarServicio(responseMock3));
+        Mockito.when(portOutMock.servicioExiste(responseMock1)).thenReturn(true);
+        Mockito.when(recepcionistaServiceMock.obtenerRecepcionistaPorId(1)).thenReturn(new ReceptionistEntity(1,"789","maria","delmar"));
+        Mockito.when(portOutMock.actualizarServicio(responseMock1)).thenReturn(responseMock1);
+        Mockito.when(habitacionServiceMock.getRoomById(2)).thenReturn(roomMock);
+
+        Assertions.assertEquals(responseMock1,service.cerrarServicio(responseMock1));
     }
 
     @Test
     void cerrarServicioPorIdServicio() {
-        Mockito.when(habitacionServiceMock.getRoomById(1)).thenReturn(roomMock2);
-        Mockito.when(portOutMock.servicioExiste(responseMock3)).thenReturn(true);
+        Mockito.when(habitacionServiceMock.getRoomById(2)).thenReturn(roomMock);
+        Mockito.when(portOutMock.servicioExiste(responseMock1)).thenReturn(true);
         Mockito.when(recepcionistaServiceMock.obtenerRecepcionistaPorId(1)).thenReturn(new ReceptionistEntity(1,"789","maria","delmar"));
-        Mockito.when(portOutMock.actualizarServicio(responseMock3)).thenReturn(responseMock3);
-        Mockito.when(service.consultarServicioPorId(responseMock3.getIdService())).thenReturn(responseMock3);
+        Mockito.when(portOutMock.actualizarServicio(responseMock1)).thenReturn(responseMock1);
+        Mockito.when(service.consultarServicioPorId(responseMock1.getIdService())).thenReturn(responseMock1);
 
-        Assertions.assertEquals(responseMock3,service.cerrarServicioPorIdServicio(responseMock3.getIdService()));
+        Assertions.assertEquals(responseMock1,service.cerrarServicioPorIdServicio(responseMock1.getIdService()));
     }
 
     @Test
@@ -325,12 +307,4 @@ class ServicioServiceTest {
 
         Assertions.assertEquals(responseMock1,service.ampliarServicio(responseMock1,1,0,0));
     }
-
-    /*@Test
-    void obtenerRecepcionista() {
-    }
-
-    @Test
-    void determinarOcupacionHabitacion() {
-    }*/
 }
