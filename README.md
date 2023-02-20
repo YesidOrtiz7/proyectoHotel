@@ -9,8 +9,11 @@ Para el funcionamiento y descarga de este proyecto se debe tener una base de dat
 
 Endpoints documentados con springdoc.
 
-Documentacion de los test disponible en: http://localhost:63342/demo/build/reports/tests/test/index.html?_ijt=dg8od33ldj9niej7q7het0q2ud&_ij_reload=RELOAD_ON_SAVE
-documentación disponible en la ruta: http://localhost:8080/swagger-ui.html
+Documentacion de los test disponible en: 
+http://localhost:63342/demo/build/reports/tests/test/index.html?_ijt=dg8od33ldj9niej7q7het0q2ud&_ij_reload=RELOAD_ON_SAVE
+
+documentación disponible en la ruta: 
+http://localhost:8080/swagger-ui.html
 
 ## Autor 
 Yesid Ortiz
