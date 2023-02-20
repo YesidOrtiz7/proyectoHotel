@@ -20,7 +20,7 @@ public class Habitacion {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tipoHabitacion",nullable = false)
     private TipoHabitacion tipoHabitacion;
-    private int precioHabitacionNoche;
+    private double precioHabitacionNoche;
     private int numeroCamas;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -69,11 +69,11 @@ public class Habitacion {
         this.numeroCamas = numeroCamas;
     }
 
-    public int getPrecioHabitacionNoche() {
+    public double getPrecioHabitacionNoche() {
         return precioHabitacionNoche;
     }
 
-    public void setPrecioHabitacionNoche(int precioHabitacionNoche) {
+    public void setPrecioHabitacionNoche(double precioHabitacionNoche) {
         this.precioHabitacionNoche = precioHabitacionNoche;
     }
 

@@ -83,7 +83,7 @@ class GestionarRecepcionistaControllerTest {
     @Test
     void registrarRecepcionista() {
         Mockito.when(portInMock.registrarRecepcionista(receptionistMock1)).thenReturn(receptionistMock1);
-        Assertions.assertEquals(new ResponseEntity<>(receptionistMock1,HttpStatus.OK),controller.registrarRecepcionista(receptionistMock1));
+        Assertions.assertEquals(new ResponseEntity<>(receptionistMock1,HttpStatus.CREATED),controller.registrarRecepcionista(receptionistMock1));
     }
     @Test
     void registrarRecepcionistaNull() {

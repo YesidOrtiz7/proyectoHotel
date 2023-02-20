@@ -1,8 +1,10 @@
 package com.hotel.serviciosHotel.adaptador.in.rest;
 
 import com.hotel.serviciosHotel.aplicacion.puerto.in.TipoPagoPortIn;
-import com.hotel.serviciosHotel.dominio.entidades.Client;
 import com.hotel.serviciosHotel.dominio.entidades.PaymentType;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,21 +26,31 @@ public class GestionarTipoPagoController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "obtener tipo pago por id",description = "retorna la entidad tipo pago que posee el id especificado")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200",description = "OK"),
+            @ApiResponse(responseCode = "400",description = "BAD_REQUEST")
+    })
     public ResponseEntity<PaymentType> obtenerTipoPagoPorId(@PathVariable("id") int id) {
         PaymentType response=portIn.obtenerTipoPagoPorId(id);
-        if (response != null){
-            return new ResponseEntity<>(response, HttpStatus.OK);
+        if (response == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }else{
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
     @GetMapping("/todos")
+    @Operation(summary = "obtener todas los tipos de pago",description = "retorna la lista de todos los tipos de pago existentes en la base de datos")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200",description = "OK"),
+            @ApiResponse(responseCode = "400",description = "BAD REQUEST")
+    })
     public ResponseEntity<List<PaymentType>> obtenerTipoPagos() {
         List<PaymentType> response=portIn.obtenerTipoPagos();
-        if (response != null){
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        }else{
+        if (response == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }else{
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
 }
