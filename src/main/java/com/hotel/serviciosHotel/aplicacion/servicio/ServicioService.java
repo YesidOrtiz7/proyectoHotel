@@ -61,7 +61,7 @@ public class ServicioService implements ServicioPortIn {
         Room room= habitacionService.getRoomById(
                 service.getIdRoom().getIdRoom()
         );
-        if (recepcionista!=null && !this.determinarOcupacionHabitacion(service) && room.getIdRoomStatus().getIdStatus() !=3){
+        if (recepcionista!=null && !this.determinarOcupacionHabitacion(service)){
             service.setIdRecep(recepcionista);
 
             /*cambiar el estado a la habitacion*/
@@ -217,7 +217,7 @@ public class ServicioService implements ServicioPortIn {
 
         if (entrada!=null&&salida!=null&& salida.isAfter(entrada)){
             return service;
-        }else {
+        }else if (entrada!=null && salida==null){
             service.setFechaEntrada(LocalDateTime.now());
             service.setFechaSalida(
                     LocalDateTime.of(entrada.getYear(),
@@ -226,6 +226,17 @@ public class ServicioService implements ServicioPortIn {
                             entrada.getHour(),
                             entrada.getMinute(),
                             entrada.getSecond())
+            );
+            return service;
+        }else {
+            service.setFechaEntrada(LocalDateTime.now());
+            service.setFechaSalida(
+                    LocalDateTime.of(LocalDateTime.now().getYear(),
+                            LocalDateTime.now().getMonth(),
+                            LocalDateTime.now().getDayOfMonth()+1,
+                            LocalDateTime.now().getHour(),
+                            LocalDateTime.now().getMinute(),
+                            LocalDateTime.now().getSecond())
             );
             return service;
         }
