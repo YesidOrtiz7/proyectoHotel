@@ -21,7 +21,7 @@ public class MunicipiosRepository implements MunicipioPortOut {
 
     @Override
     public com.hotel.serviciosHotel.dominio.entidades.Municipios registrarMunicipio(com.hotel.serviciosHotel.dominio.entidades.Municipios municipio) {
-        if (municipio.getIdMunicipios()==0&&municipio.getNombreMun()!=null){
+        if (municipio.getIdMunicipios()==0&&municipio.getNombreMun()!=null && !municipio.getNombreMun().isBlank()){
             return mapper.toMunicipiosEntidades(
                     repository.save(
                             mapper.toMunicipiosPersistence(municipio)
@@ -74,7 +74,7 @@ public class MunicipiosRepository implements MunicipioPortOut {
     @Override
     public Optional<com.hotel.serviciosHotel.dominio.entidades.Municipios> obtenerMunicipioPorId(int id) {
         Optional<Municipios> municipio=repository.findById(id);
-        if (municipio.isEmpty()||municipio==null){
+        if (municipio==null||municipio.isEmpty()){
             return Optional.empty();
         }else {
             return Optional.of(
