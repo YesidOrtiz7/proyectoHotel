@@ -122,7 +122,7 @@ public class ServicioService implements ServicioPortIn {
         Service serv=portOut.consultarServicioPorId(service);
 
         Room hab=habitacionService.getRoomByNumber(numeroHabitacion);
-        if (hab==null||(hab.getIdRoom()==0)){
+        if ((hab==null || hab.getIdRoom()==0) || serv==null){
             return null;
         }else {
             //cambiar la habitacion actual a sucia
@@ -141,7 +141,7 @@ public class ServicioService implements ServicioPortIn {
         Service serv=portOut.consultarServicioPorId(service);
         RateType tarifa=tarifaService.obtenerTarifaPorId(idTarifa);
 
-        if (tarifa==null||(tarifa.getIdTipoTarifa()==0)){
+        if ((tarifa==null || tarifa.getIdTipoTarifa()==0) || serv==null){
             return null;
         }else {
             serv.setIdRateType(tarifa);
@@ -150,27 +150,20 @@ public class ServicioService implements ServicioPortIn {
     }
 
     @Override
-    public Service cerrarServicio(Service service) {
-        service.setState(0);
-        Room room=habitacionService.getRoomById(service.getIdRoom().getIdRoom());
-        double descuento=service.getIdRateType().getPorcentajeTarifa()/100;
-        descuento=room.getRoomPriceNight()*descuento;
-
-        double precioSinDescuento=room.getRoomPriceNight()-descuento;
-
-        precioSinDescuento*=this.determinarDiasEstadia(
-                service.getFechaEntrada(),
-                service.getFechaSalida()
-        );
-
-        service.setPayment(precioSinDescuento);
-        return this.actualizarServicioParaCerrarServicio(service);
-    }
-
-    @Override
     public Service cerrarServicioPorIdServicio(int idService) {
         Service service =this.consultarServicioPorId(idService);
-        return this.cerrarServicio(service);
+        service.setState(0);
+        Room room=habitacionService.getRoomById(service.getIdRoom().getIdRoom());
+        double valor=0;
+
+        valor=this.cobrar(service.getFechaEntrada()
+                ,service.getFechaSalida(),
+                room.getRoomPrice24Hours(),
+                service.getIdRateType().getIdTipoTarifa()
+        );
+
+        service.setPayment(valor);
+        return this.actualizarServicioParaCerrarServicio(service);
     }
 
     @Override
@@ -179,12 +172,7 @@ public class ServicioService implements ServicioPortIn {
         LocalDateTime salida=service.getFechaSalida();
         if (entrada!=null&&salida!=null&& salida.isAfter(entrada)){
             service.setFechaSalida(
-                    LocalDateTime.of(LocalDateTime.now().getYear(),
-                            LocalDateTime.now().getMonth(),
-                            LocalDateTime.now().getDayOfMonth()+dia,
-                            LocalDateTime.now().getHour()+hora,
-                            LocalDateTime.now().getMinute()+minuto,
-                            LocalDateTime.now().getSecond())
+                    this.configurarDias(service.getFechaSalida(),dia,hora,minuto)
             );
             return this.actualizarServicioHabitacionOcupada(service);
         }else {
@@ -199,7 +187,10 @@ public class ServicioService implements ServicioPortIn {
     }
 
     public boolean determinarOcupacionHabitacion(Service service){
-        int estado=service.getIdRoom().getIdRoomStatus().getIdStatus();
+        Room room= habitacionService.getRoomById(
+                service.getIdRoom().getIdRoom()
+        );
+        int estado=room.getIdRoomStatus().getIdStatus();
         if (estado==3){
             return true;
         }else {
@@ -218,31 +209,60 @@ public class ServicioService implements ServicioPortIn {
         if (entrada!=null&&salida!=null&& salida.isAfter(entrada)){
             return service;
         }else if (entrada!=null && salida==null){
-            service.setFechaEntrada(LocalDateTime.now());
+            service.setFechaEntrada(entrada);
             service.setFechaSalida(
-                    LocalDateTime.of(entrada.getYear(),
-                            entrada.getMonth(),
-                            entrada.getDayOfMonth()+1,
-                            entrada.getHour(),
-                            entrada.getMinute(),
-                            entrada.getSecond())
+                    LocalDateTime.now().plusDays(1)
             );
             return service;
         }else {
             service.setFechaEntrada(LocalDateTime.now());
             service.setFechaSalida(
-                    LocalDateTime.of(LocalDateTime.now().getYear(),
-                            LocalDateTime.now().getMonth(),
-                            LocalDateTime.now().getDayOfMonth()+1,
-                            LocalDateTime.now().getHour(),
-                            LocalDateTime.now().getMinute(),
-                            LocalDateTime.now().getSecond())
+                    LocalDateTime.now().plusDays(1)
             );
             return service;
         }
     }
 
-    public int determinarDiasEstadia(LocalDateTime entrada,LocalDateTime salida){
-        return Period.between(entrada.toLocalDate(),salida.toLocalDate()).getDays();
+    public int determinarMinutosEstadia(LocalDateTime entrada, LocalDateTime salida){
+        int horasEntrada,horasSalida;
+        int minutosEntrada,minutosSalida;
+        int minutos=Period.between(entrada.toLocalDate(),salida.toLocalDate()).getDays()*1440;
+        //return Period.between(entrada.toLocalDate(),salida.toLocalDate()).getDays();
+
+        horasEntrada=entrada.getHour();
+        horasSalida=salida.getHour();
+
+        minutosEntrada=entrada.getMinute();
+        minutosSalida=salida.getMinute();
+
+        minutos+=(horasSalida-horasEntrada)*60;
+        minutos+=minutosSalida-minutosEntrada;
+
+
+        return minutos;
+    }
+
+    public LocalDateTime configurarDias(LocalDateTime fecha, int dia,int hora,int minuto){
+        LocalDateTime salida=fecha
+                .plusDays(dia)
+                .plusHours(hora)
+                .plusMinutes(minuto);
+
+        return salida;
+    }
+
+    public double cobrar(LocalDateTime entrada, LocalDateTime salida, double tarifa, double descuento){
+        double valor=0;
+        double desc=0;
+
+        int minutosEstadia=this.determinarMinutosEstadia(entrada,salida);
+
+        valor=(tarifa/1440)*minutosEstadia;
+
+        desc=(valor*descuento)/100;
+
+        valor-=desc;
+
+        return Math.round(valor);
     }
 }

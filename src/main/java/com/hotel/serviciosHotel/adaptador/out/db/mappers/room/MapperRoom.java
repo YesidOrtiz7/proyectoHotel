@@ -15,7 +15,7 @@ public interface MapperRoom {
             @Mapping(source = "roomType",target = "tipoHabitacion"),
             @Mapping(source = "bedsNumber",target = "numeroCamas"),
             @Mapping(source = "idRoom",target = "idHabitacion"),
-            @Mapping(source = "roomPriceNight",target = "precioHabitacionNoche"),
+            @Mapping(source = "roomPrice24Hours",target = "precioHabitacion24Horas"),
     })
     Habitacion toHabitacion(Room room);
 

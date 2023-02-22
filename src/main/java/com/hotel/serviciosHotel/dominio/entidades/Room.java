@@ -5,15 +5,15 @@ public class Room {
     private int roomNumber;
     private RoomStatus idRoomStatus;
     private RoomType roomType;
-    private double roomPriceNight;
+    private double roomPrice24Hours;
     private int bedsNumber;
     private int idRoom;
 
-    public Room(int roomNumber, RoomStatus idRoomStatus, RoomType roomType, double roomPriceNight, int bedsNumber, int idRoom) {
+    public Room(int roomNumber, RoomStatus idRoomStatus, RoomType roomType, double roomPrice24Hours, int bedsNumber, int idRoom) {
         this.roomNumber = roomNumber;
         this.idRoomStatus = idRoomStatus;
         this.roomType = roomType;
-        this.roomPriceNight = roomPriceNight;
+        this.roomPrice24Hours = roomPrice24Hours;
         this.bedsNumber = bedsNumber;
         this.idRoom = idRoom;
     }
@@ -21,12 +21,12 @@ public class Room {
     public Room() {
     }
 
-    public double getRoomPriceNight() {
-        return roomPriceNight;
+    public double getRoomPrice24Hours() {
+        return roomPrice24Hours;
     }
 
-    public void setRoomPriceNight(double roomPriceNight) {
-        this.roomPriceNight = roomPriceNight;
+    public void setRoomPrice24Hours(double roomPrice24Hours) {
+        this.roomPrice24Hours = roomPrice24Hours;
     }
 
     public int getRoomNumber() {
