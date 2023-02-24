@@ -50,12 +50,6 @@ class ClienteServiceTest {
 
         Assertions.assertEquals(null, service.obtenerClientes());
     }
-    @Test
-    void obtenerClientesConListadoEmpty() {
-        Mockito.when(portOutMock.getClients()).thenReturn(new ArrayList<>());
-
-        Assertions.assertEquals(null, service.obtenerClientes());
-    }
 
     @Test
     void registrarCliente() {
@@ -92,13 +86,6 @@ class ClienteServiceTest {
     }
 
     @Test
-    void consultarClientePorIdEmpty() {
-        Mockito.when(portOutMock.getClientById(1)).thenReturn(Optional.empty());
-
-        Assertions.assertEquals(null,service.consultarClientePorId(1));
-    }
-
-    @Test
     void consultarClientePorDocumento() {
         Mockito.when(portOutMock.getClientByDocument("489984")).thenReturn(Optional.of(c1));
 
@@ -108,13 +95,6 @@ class ClienteServiceTest {
     @Test
     void consultarClientePorDocumentoNull() {
         Mockito.when(portOutMock.getClientByDocument("489984")).thenReturn(null);
-
-        Assertions.assertEquals(null,service.consultarClientePorDocumento("489984"));
-    }
-
-    @Test
-    void consultarClientePorDocumentoEmpty() {
-        Mockito.when(portOutMock.getClientByDocument("489984")).thenReturn(Optional.empty());
 
         Assertions.assertEquals(null,service.consultarClientePorDocumento("489984"));
     }

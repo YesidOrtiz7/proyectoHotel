@@ -25,13 +25,13 @@ public class HabitacionService implements HabitacionPortIn {
     @Override
     public Room getRoomByNumber(Integer number) {
         Optional<Room> room=portOut.getRoomByNumber(number);
-        return room==null||room.isEmpty()?null:room.get();
+        return room==null?null:room.get();
     }
 
     @Override
     public Room getRoomById(Integer id) {
         Optional<Room> room=portOut.getRoomById(id);
-        return room==null||room.isEmpty()?null:room.get();
+        return room==null?null:room.get();
     }
 
     @Override

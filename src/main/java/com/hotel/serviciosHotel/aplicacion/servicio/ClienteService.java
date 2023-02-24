@@ -16,7 +16,7 @@ public class ClienteService implements ClientePortIn {
     @Override
     public List<Client> obtenerClientes() {
         List<Client> clients=portOut.getClients();
-        if (clients==null||clients.isEmpty()){
+        if (clients==null){
             return null;
         }else {
             return clients;
@@ -41,13 +41,13 @@ public class ClienteService implements ClientePortIn {
     @Override
     public Client consultarClientePorId(Integer id) {
         Optional<Client> client=portOut.getClientById(id);
-        return client==null||client.isEmpty()?null:client.get();
+        return client==null?null:client.get();
     }
 
     @Override
     public Client consultarClientePorDocumento(String documento) {
         Optional<Client> client=portOut.getClientByDocument(documento);
-        return client==null||client.isEmpty()?null:client.get();
+        return client==null?null:client.get();
     }
 
     @Autowired

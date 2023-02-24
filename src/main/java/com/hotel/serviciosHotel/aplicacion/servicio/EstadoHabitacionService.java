@@ -31,7 +31,7 @@ public class EstadoHabitacionService implements EstadoHabitacionPortIn {
     @Override
     public RoomStatus obtenerEstadoHabitacionPorId(int id) {
         Optional<RoomStatus> response=portOut.obtenerEstadoPorId(id);
-        if (response==null||response.isEmpty()){
+        if (response==null){
             return null;
         }else {
             return response.get();

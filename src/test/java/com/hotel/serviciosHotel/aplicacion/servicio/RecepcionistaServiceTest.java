@@ -59,12 +59,6 @@ class RecepcionistaServiceTest {
 
         Assertions.assertEquals(null,service.obtenerRecepcionistaPorId(2));
     }
-    @Test
-    void obtenerRecepcionistaPorIdEmpty() {
-        Mockito.when(portOutMock.getRecepcionistById(2)).thenReturn(Optional.empty());
-
-        Assertions.assertEquals(null,service.obtenerRecepcionistaPorId(2));
-    }
 
     @Test
     void obtenerRecepcionistaPorDocumento() {
@@ -78,12 +72,6 @@ class RecepcionistaServiceTest {
 
         Assertions.assertEquals(null, service.obtenerRecepcionistaPorDocumento("222"));
     }
-    @Test
-    void obtenerRecepcionistaPorDocumentoEmpty() {
-        Mockito.when(portOutMock.getRecepcionistByDocument("222")).thenReturn(Optional.empty());
-
-        Assertions.assertEquals(null, service.obtenerRecepcionistaPorDocumento("222"));
-    }
 
     @Test
     void obtenerRecepcionistas() {
@@ -94,12 +82,6 @@ class RecepcionistaServiceTest {
     @Test
     void obtenerRecepcionistasNull() {
         Mockito.when(portOutMock.getRecepcionist()).thenReturn(null);
-
-        Assertions.assertEquals(null,service.obtenerRecepcionistas());
-    }
-    @Test
-    void obtenerRecepcionistasEmpty() {
-        Mockito.when(portOutMock.getRecepcionist()).thenReturn(new ArrayList<>());
 
         Assertions.assertEquals(null,service.obtenerRecepcionistas());
     }

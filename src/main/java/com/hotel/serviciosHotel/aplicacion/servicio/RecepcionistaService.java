@@ -32,19 +32,19 @@ public class RecepcionistaService implements RecepcionistaPortIn {
     @Override
     public ReceptionistEntity obtenerRecepcionistaPorId(Integer id) {
         Optional<ReceptionistEntity> receptionist=portOut.getRecepcionistById(id);
-        return receptionist==null||receptionist.isEmpty()?null:receptionist.get();
+        return receptionist==null?null:receptionist.get();
     }
 
     @Override
     public ReceptionistEntity obtenerRecepcionistaPorDocumento(String document) {
         Optional<ReceptionistEntity> receptionist=portOut.getRecepcionistByDocument(document);
-        return receptionist==null||receptionist.isEmpty()?null:receptionist.get();
+        return receptionist==null?null:receptionist.get();
     }
 
     @Override
     public List<ReceptionistEntity> obtenerRecepcionistas() {
         List<ReceptionistEntity> receptionistEntities =portOut.getRecepcionist();
-        if (receptionistEntities ==null||receptionistEntities.isEmpty()){
+        if (receptionistEntities ==null){
             return null;
         }else {
             return receptionistEntities;

@@ -32,7 +32,7 @@ public class MunicipioService implements MunicipioPortIn {
     @Override
     public Municipios obtenerMunicipioPorId(int id) {
         Optional<Municipios> response=portOut.obtenerMunicipioPorId(id);
-        return (response==null||response.isEmpty())?null:response.get();
+        return (response==null)?null:response.get();
     }
 
     @Override

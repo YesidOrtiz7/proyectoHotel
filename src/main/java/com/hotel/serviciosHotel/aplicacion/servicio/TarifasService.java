@@ -27,7 +27,7 @@ public class TarifasService implements TarifaPortIn {
     @Override
     public List<RateType> obtenerTarifas() {
         List<RateType> rates=portOut.getRates();
-        if (rates==null||rates.isEmpty()){
+        if (rates==null){
             return null;
         }else {
             return rates;
@@ -37,7 +37,7 @@ public class TarifasService implements TarifaPortIn {
     @Override
     public RateType obtenerTarifaPorId(int id) {
         Optional<RateType> rate=portOut.getRateById(id);
-        return (rate==null||rate.isEmpty())?null:rate.get();
+        return (rate==null)?null:rate.get();
     }
 
     @Override

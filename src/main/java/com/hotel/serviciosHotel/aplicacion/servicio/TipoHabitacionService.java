@@ -31,7 +31,7 @@ public class TipoHabitacionService implements TipoHabitacionPortIn {
     @Override
     public RoomType obtenerTipoHabitacionPorId(int id) {
         Optional<RoomType> response=portOut.obtenerTipoPorId(id);
-        if (response==null||response.isEmpty()){
+        if (response==null){
             return null;
         }else {
             return response.get();

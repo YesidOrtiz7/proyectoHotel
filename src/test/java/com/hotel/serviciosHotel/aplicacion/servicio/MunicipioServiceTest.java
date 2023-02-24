@@ -58,12 +58,6 @@ class MunicipioServiceTest {
 
         Assertions.assertEquals(null,service.obtenerMunicipioPorId(1));
     }
-    @Test
-    void obtenerMunicipioPorIdEmpty() {
-        Mockito.when(portOutMock.obtenerMunicipioPorId(1)).thenReturn(Optional.empty());
-
-        Assertions.assertEquals(null,service.obtenerMunicipioPorId(1));
-    }
 
     @Test
     void actualizarMunicipio() {

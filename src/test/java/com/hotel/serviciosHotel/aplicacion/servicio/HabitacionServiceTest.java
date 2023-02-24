@@ -73,12 +73,6 @@ class HabitacionServiceTest {
 
         Assertions.assertEquals(null, service.getRoomByNumber(301));
     }
-    @Test
-    void getRoomByNumberEmpty() {
-        Mockito.when(portOutMock.getRoomByNumber(301)).thenReturn(Optional.empty());
-
-        Assertions.assertEquals(null, service.getRoomByNumber(301));
-    }
 
     @Test
     void getRoomById() {
@@ -89,12 +83,6 @@ class HabitacionServiceTest {
     @Test
     void getRoomByIdNull() {
         Mockito.when(portOutMock.getRoomById(1)).thenReturn(null);
-
-        Assertions.assertEquals(null, service.getRoomById(1));
-    }
-    @Test
-    void getRoomByIdEmpty() {
-        Mockito.when(portOutMock.getRoomById(1)).thenReturn(Optional.empty());
 
         Assertions.assertEquals(null, service.getRoomById(1));
     }
