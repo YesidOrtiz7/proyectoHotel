@@ -2,7 +2,7 @@ version: "3.9"
 services:
   #hotel_app va a ser el alias en la red generada por docker compose
   hotel_app:
-    image: hotel-imagen:1.1
+    image: hotel-imagen:1
     environment:
       PROFILE_ACTIVE: pdn
       MYSQL_PORT: 3306
