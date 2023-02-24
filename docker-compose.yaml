@@ -1,0 +1,27 @@
+version: "3.9"
+services:
+  #hotel_app va a ser el alias en la red generada por docker compose
+  hotel_app:
+    image: hotel-imagen:1.1
+    environment:
+      PROFILE_ACTIVE: pdn
+      MYSQL_PORT: 3306
+      #MYSQL_HOST: hotel_network
+      MYSQL_USERNAME: root
+      MYSQL_PASSWORD: root
+    ports:
+      - 8080:8080
+
+  #mysql va a ser el alias en la red generada por docker compose
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: hotel
+      #MYSQL_USER: root
+      #MYSQL_PASSWORD:
+    ports:
+      - 3306:3306
+networks:
+  default:
+    name: hotel_network
