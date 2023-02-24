@@ -4,15 +4,15 @@ Proyecto para el manejo de las reservas de un hotel
 Este proyecto fue realizado usando Spring Boot y MySQL, siguiendo los patrones de arquitectura hexagonal, con pruebas
 unitarias con JUnit, Mockito y Jacoco.
 
-## Instalacion
+# Instalacion
 
-# Con una base de datos local
+## Con una base de datos local
 Para el funcionamiento y descarga de este proyecto se debe tener:
 * Un servidor MySQL con una base de datos llamada hotel comunicandose con el puerto 3306.
 * Jdk 17.
 * Descargar este proyecto y ejecutar el archivo ServiciosHotelApplication
 
-# Usando docker o docker desktop
+## Usando docker o docker desktop
 Solo se necesita tener instalado:
 * Descargar el archivo hotel.jar ubicado en la raiz de este proyecto.
 * Descargar los archivos Dockerfile y docker-compose.yaml ubicados en la raiz de este proyecto
