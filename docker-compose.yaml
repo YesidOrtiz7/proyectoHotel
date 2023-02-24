@@ -6,14 +6,16 @@ services:
     environment:
       PROFILE_ACTIVE: pdn
       MYSQL_PORT: 3306
-      #MYSQL_HOST: hotel_network
+      MYSQL_HOST: mysql_container
       MYSQL_USERNAME: root
       MYSQL_PASSWORD: root
     ports:
       - 8080:8080
+    depends_on:
+      - mysql_container
 
   #mysql va a ser el alias en la red generada por docker compose
-  mysql:
+  mysql_container:
     image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: root
