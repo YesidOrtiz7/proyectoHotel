@@ -2,6 +2,7 @@ package com.hotel.serviciosHotel.adaptador.in.rest;
 
 import com.hotel.serviciosHotel.aplicacion.puerto.in.ClientePortIn;
 import com.hotel.serviciosHotel.dominio.entidades.Client;
+import com.hotel.serviciosHotel.exceptionHandler.exceptions.SearchItemNotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -44,7 +45,7 @@ public class GestionarClienteController {
             @ApiResponse(responseCode = "200",description = "OK"),
             @ApiResponse(responseCode = "400",description = "BAD REQUEST")
     })
-    public ResponseEntity<Client> obtenerClientePorId(@PathVariable("id") int id){
+    public ResponseEntity<Client> obtenerClientePorId(@PathVariable("id") int id) throws SearchItemNotFoundException {
         Client cli = service.consultarClientePorId(id);
         if (cli == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

@@ -3,6 +3,7 @@ package com.hotel.serviciosHotel.aplicacion.servicio;
 import com.hotel.serviciosHotel.aplicacion.puerto.in.TipoHabitacionPortIn;
 import com.hotel.serviciosHotel.aplicacion.puerto.out.persistance.RoomTypePortOut;
 import com.hotel.serviciosHotel.dominio.entidades.RoomType;
+import com.hotel.serviciosHotel.exceptionHandler.exceptions.SearchItemNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,12 +30,12 @@ public class TipoHabitacionService implements TipoHabitacionPortIn {
     }
 
     @Override
-    public RoomType obtenerTipoHabitacionPorId(int id) {
+    public RoomType obtenerTipoHabitacionPorId(int id) throws SearchItemNotFoundException {
         Optional<RoomType> response=portOut.obtenerTipoPorId(id);
-        if (response==null){
-            return null;
-        }else {
+        if (response!=null){
             return response.get();
+        }else {
+            throw new SearchItemNotFoundException("el tipo habitacion con el id "+id+" no existe");
         }
     }
 

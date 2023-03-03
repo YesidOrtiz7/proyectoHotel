@@ -5,6 +5,7 @@ import com.hotel.serviciosHotel.adaptador.modelResponse.UpdateRateServiceRequest
 import com.hotel.serviciosHotel.adaptador.modelResponse.UpdateRoomServiceRequest;
 import com.hotel.serviciosHotel.aplicacion.puerto.in.ServicioPortIn;
 import com.hotel.serviciosHotel.dominio.entidades.Service;
+import com.hotel.serviciosHotel.exceptionHandler.exceptions.SearchItemNotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -32,7 +33,7 @@ public class GestionarServicioController {
             @ApiResponse(responseCode = "200",description = "OK"),
             @ApiResponse(responseCode = "400",description = "BAD_REQUEST")
     })
-    public ResponseEntity<Service> obtenerServicioPorId(@PathVariable("id")int id){
+    public ResponseEntity<Service> obtenerServicioPorId(@PathVariable("id")int id) throws SearchItemNotFoundException {
         Service response=servicePortIn.consultarServicioPorId(id);
         if (response==null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -68,7 +69,7 @@ public class GestionarServicioController {
             @ApiResponse(responseCode = "201",description = "CREATED"),
             @ApiResponse(responseCode = "400",description = "BAD REQUEST")
     })
-    public ResponseEntity<Service> crearServicio(@RequestBody Service service){
+    public ResponseEntity<Service> crearServicio(@RequestBody Service service) throws SearchItemNotFoundException {
         Service response=servicePortIn.registrarServicio(service);
         if (response==null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -84,7 +85,7 @@ public class GestionarServicioController {
             @ApiResponse(responseCode = "200",description = "OK"),
             @ApiResponse(responseCode = "400",description = "BAD REQUEST")
     })
-    public ResponseEntity<Service> actualizarHabitacionServicio(@RequestBody UpdateRoomServiceRequest request){
+    public ResponseEntity<Service> actualizarHabitacionServicio(@RequestBody UpdateRoomServiceRequest request) throws SearchItemNotFoundException {
         Service response=servicePortIn.actualizarHabitacionServicio(request.getIdService(),request.getRoomNumber());
         if (response==null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -99,7 +100,7 @@ public class GestionarServicioController {
             @ApiResponse(responseCode = "200",description = "OK"),
             @ApiResponse(responseCode = "400",description = "BAD REQUEST")
     })
-    public ResponseEntity<Service> actualizarTarifaServicio(@RequestBody UpdateRateServiceRequest request){
+    public ResponseEntity<Service> actualizarTarifaServicio(@RequestBody UpdateRateServiceRequest request) throws SearchItemNotFoundException {
         Service response=servicePortIn.actualizarTarifaServicio(request.getIdService(),request.getRateId());
         if (response==null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -118,7 +119,7 @@ public class GestionarServicioController {
             @ApiResponse(responseCode = "200",description = "OK"),
             @ApiResponse(responseCode = "400",description = "BAD REQUEST")
     })
-    public ResponseEntity<Service> ampliarServicio(@RequestBody ExtendServicesRequestModel request){
+    public ResponseEntity<Service> ampliarServicio(@RequestBody ExtendServicesRequestModel request) throws SearchItemNotFoundException {
         Service response =servicePortIn.ampliarServicio(
                 request.getService(),
                 request.getDia(),
@@ -139,7 +140,7 @@ public class GestionarServicioController {
             @ApiResponse(responseCode = "200",description = "OK"),
             @ApiResponse(responseCode = "400",description = "BAD REQUEST")
     })
-    public ResponseEntity<Service> cerrarServicioPorId(@PathVariable("idService") int id){
+    public ResponseEntity<Service> cerrarServicioPorId(@PathVariable("idService") int id) throws SearchItemNotFoundException {
 
         Service response=servicePortIn.cerrarServicioPorIdServicio(id);
         if (response==null){

@@ -3,6 +3,7 @@ package com.hotel.serviciosHotel.aplicacion.servicio;
 import com.hotel.serviciosHotel.adaptador.out.db.MunicipiosRepository;
 import com.hotel.serviciosHotel.aplicacion.puerto.out.persistance.MunicipioPortOut;
 import com.hotel.serviciosHotel.dominio.entidades.Municipios;
+import com.hotel.serviciosHotel.exceptionHandler.exceptions.SearchItemNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -47,7 +48,7 @@ class MunicipioServiceTest {
     }
 
     @Test
-    void obtenerMunicipioPorId() {
+    void obtenerMunicipioPorId() throws SearchItemNotFoundException {
         Mockito.when(portOutMock.obtenerMunicipioPorId(1)).thenReturn(Optional.of(municipioMock1));
 
         Assertions.assertEquals(municipioMock1,service.obtenerMunicipioPorId(1));
@@ -56,7 +57,9 @@ class MunicipioServiceTest {
     void obtenerMunicipioPorIdNull() {
         Mockito.when(portOutMock.obtenerMunicipioPorId(1)).thenReturn(null);
 
-        Assertions.assertEquals(null,service.obtenerMunicipioPorId(1));
+        Assertions.assertThrows(SearchItemNotFoundException.class,()->{
+            service.obtenerMunicipioPorId(1);
+        });
     }
 
     @Test

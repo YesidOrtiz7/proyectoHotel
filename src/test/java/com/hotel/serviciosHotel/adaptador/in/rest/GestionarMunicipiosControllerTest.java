@@ -3,6 +3,7 @@ package com.hotel.serviciosHotel.adaptador.in.rest;
 import com.hotel.serviciosHotel.aplicacion.puerto.in.MunicipioPortIn;
 import com.hotel.serviciosHotel.aplicacion.servicio.MunicipioService;
 import com.hotel.serviciosHotel.dominio.entidades.Municipios;
+import com.hotel.serviciosHotel.exceptionHandler.exceptions.SearchItemNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -58,12 +59,12 @@ class GestionarMunicipiosControllerTest {
     }
 
     @Test
-    void obtenerMunicipiosPorId() {
+    void obtenerMunicipiosPorId() throws SearchItemNotFoundException {
         Mockito.when(portInMock.obtenerMunicipioPorId(1)).thenReturn(municipioMock1);
         Assertions.assertEquals(new ResponseEntity<>(municipioMock1,HttpStatus.OK),controller.obtenerMunicipiosPorId(1));
     }
     @Test
-    void obtenerMunicipiosPorIdNull() {
+    void obtenerMunicipiosPorIdNull() throws SearchItemNotFoundException {
         Mockito.when(portInMock.obtenerMunicipioPorId(1)).thenReturn(null);
         Assertions.assertEquals(new ResponseEntity<>(HttpStatus.BAD_REQUEST),controller.obtenerMunicipiosPorId(1));
     }

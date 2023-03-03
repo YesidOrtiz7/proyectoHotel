@@ -3,6 +3,7 @@ package com.hotel.serviciosHotel.aplicacion.servicio;
 import com.hotel.serviciosHotel.aplicacion.puerto.in.ClientePortIn;
 import com.hotel.serviciosHotel.aplicacion.puerto.out.persistance.ClientPortOut;
 import com.hotel.serviciosHotel.dominio.entidades.Client;
+import com.hotel.serviciosHotel.exceptionHandler.exceptions.SearchItemNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,9 +40,13 @@ public class ClienteService implements ClientePortIn {
     }
 
     @Override
-    public Client consultarClientePorId(Integer id) {
+    public Client consultarClientePorId(Integer id) throws SearchItemNotFoundException {
         Optional<Client> client=portOut.getClientById(id);
-        return client==null?null:client.get();
+        if (client!=null){
+            return client.get();
+        }else {
+            throw new SearchItemNotFoundException("el cliente con el id "+id+" no existe");
+        }
     }
 
     @Override

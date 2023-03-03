@@ -5,6 +5,7 @@ import com.hotel.serviciosHotel.aplicacion.servicio.HabitacionService;
 import com.hotel.serviciosHotel.dominio.entidades.Room;
 import com.hotel.serviciosHotel.dominio.entidades.RoomStatus;
 import com.hotel.serviciosHotel.dominio.entidades.RoomType;
+import com.hotel.serviciosHotel.exceptionHandler.exceptions.SearchItemNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -50,14 +51,14 @@ class GestionarHabitacionesControllerTest {
     }
 
     @Test
-    void obtenerHabitacionPorNumero() {
+    void obtenerHabitacionPorNumero() throws SearchItemNotFoundException {
         Mockito.when(portInMock.getRoomByNumber(301)).thenReturn(roomMock1);
 
         Assertions.assertEquals(new ResponseEntity<>(roomMock1,HttpStatus.OK), controller.obtenerHabitacionPorNumero(301));
     }
 
     @Test
-    void obtenerHabitacionPorId() {
+    void obtenerHabitacionPorId() throws SearchItemNotFoundException {
         Mockito.when(portInMock.getRoomById(1)).thenReturn(roomMock1);
 
         Assertions.assertEquals(new ResponseEntity<>(roomMock1,HttpStatus.OK), controller.obtenerHabitacionPorId(1));

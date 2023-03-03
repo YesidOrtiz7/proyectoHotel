@@ -3,6 +3,7 @@ package com.hotel.serviciosHotel.aplicacion.servicio;
 import com.hotel.serviciosHotel.aplicacion.puerto.in.TarifaPortIn;
 import com.hotel.serviciosHotel.aplicacion.puerto.out.persistance.TarifasPortOut;
 import com.hotel.serviciosHotel.dominio.entidades.RateType;
+import com.hotel.serviciosHotel.exceptionHandler.exceptions.SearchItemNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,9 +36,13 @@ public class TarifasService implements TarifaPortIn {
     }
 
     @Override
-    public RateType obtenerTarifaPorId(int id) {
+    public RateType obtenerTarifaPorId(int id) throws SearchItemNotFoundException {
         Optional<RateType> rate=portOut.getRateById(id);
-        return (rate==null)?null:rate.get();
+        if (rate!=null){
+            return rate.get();
+        }else {
+            throw new SearchItemNotFoundException("tarifa con el id "+id+" no existe");
+        }
     }
 
     @Override

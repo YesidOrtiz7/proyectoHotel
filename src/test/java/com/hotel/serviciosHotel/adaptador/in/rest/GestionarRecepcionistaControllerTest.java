@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.hotel.serviciosHotel.aplicacion.puerto.in.RecepcionistaPortIn;
 import com.hotel.serviciosHotel.aplicacion.servicio.RecepcionistaService;
 import com.hotel.serviciosHotel.dominio.entidades.ReceptionistEntity;
+import com.hotel.serviciosHotel.exceptionHandler.exceptions.SearchItemNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,12 +49,12 @@ class GestionarRecepcionistaControllerTest {
     }
 
     @Test
-    void obtenerRecepcionistaPorId() {
+    void obtenerRecepcionistaPorId() throws SearchItemNotFoundException {
         Mockito.when(portInMock.obtenerRecepcionistaPorId(2)).thenReturn(receptionistMock2);
         Assertions.assertEquals(new ResponseEntity<>(receptionistMock2,HttpStatus.OK),controller.obtenerRecepcionistaPorId(2));
     }
     @Test
-    void obtenerRecepcionistaPorIdNull() {
+    void obtenerRecepcionistaPorIdNull() throws SearchItemNotFoundException {
         Mockito.when(portInMock.obtenerRecepcionistaPorId(2)).thenReturn(null);
         Assertions.assertEquals(new ResponseEntity<>(HttpStatus.BAD_REQUEST),controller.obtenerRecepcionistaPorId(2));
     }

@@ -6,6 +6,7 @@ import com.hotel.serviciosHotel.adaptador.modelResponse.UpdateRoomServiceRequest
 import com.hotel.serviciosHotel.aplicacion.puerto.in.ServicioPortIn;
 import com.hotel.serviciosHotel.aplicacion.servicio.ServicioService;
 import com.hotel.serviciosHotel.dominio.entidades.*;
+import com.hotel.serviciosHotel.exceptionHandler.exceptions.SearchItemNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -71,12 +72,12 @@ class GestionarServicioControllerTest {
         controller.setServicePortIn(portInMock);
     }
     @Test
-    void obtenerServicioPorId() {
+    void obtenerServicioPorId() throws SearchItemNotFoundException {
         Mockito.when(portInMock.consultarServicioPorId(1)).thenReturn(serviceMock1);
         Assertions.assertEquals(new ResponseEntity<>(serviceMock1, HttpStatus.OK),controller.obtenerServicioPorId(1));
     }
     @Test
-    void obtenerServicioPorIdNull() {
+    void obtenerServicioPorIdNull() throws SearchItemNotFoundException {
         Mockito.when(portInMock.consultarServicioPorId(1)).thenReturn(null);
         Assertions.assertEquals(new ResponseEntity<>(HttpStatus.BAD_REQUEST),controller.obtenerServicioPorId(1));
     }
@@ -93,25 +94,25 @@ class GestionarServicioControllerTest {
     }
 
     @Test
-    void crearServicio() {
+    void crearServicio() throws SearchItemNotFoundException {
         Mockito.when(portInMock.registrarServicio(serviceMock2)).thenReturn(serviceMock2);
         Assertions.assertEquals(new ResponseEntity<>(serviceMock2,HttpStatus.CREATED),controller.crearServicio(serviceMock2));
     }
     @Test
-    void crearServicioNull() {
+    void crearServicioNull() throws SearchItemNotFoundException {
         Mockito.when(portInMock.registrarServicio(serviceMock2)).thenReturn(null);
         Assertions.assertEquals(new ResponseEntity<>(HttpStatus.BAD_REQUEST),controller.crearServicio(serviceMock2));
     }
 
     @Test
-    void actualizarHabitacionServicio() {
+    void actualizarHabitacionServicio() throws SearchItemNotFoundException {
         UpdateRoomServiceRequest request=new UpdateRoomServiceRequest(1,301);
 
         Mockito.when(portInMock.actualizarHabitacionServicio(1,301)).thenReturn(serviceMock1);
         Assertions.assertEquals(new ResponseEntity<>(serviceMock1,HttpStatus.OK),controller.actualizarHabitacionServicio(request));
     }
     @Test
-    void actualizarHabitacionServicioNull() {
+    void actualizarHabitacionServicioNull() throws SearchItemNotFoundException {
         UpdateRoomServiceRequest request=new UpdateRoomServiceRequest(1,301);
 
         Mockito.when(portInMock.actualizarHabitacionServicio(1,301)).thenReturn(null);
@@ -119,7 +120,7 @@ class GestionarServicioControllerTest {
     }
 
     @Test
-    void actualizarTarifaServicio() {
+    void actualizarTarifaServicio() throws SearchItemNotFoundException {
         UpdateRateServiceRequest request=new UpdateRateServiceRequest(1,2);
 
         Mockito.when(portInMock.actualizarTarifaServicio(1,2)).thenReturn(serviceMock2);
@@ -127,7 +128,7 @@ class GestionarServicioControllerTest {
     }
 
     @Test
-    void ampliarServicio() {
+    void ampliarServicio() throws SearchItemNotFoundException {
         ExtendServicesRequestModel request=new ExtendServicesRequestModel(serviceMock2,1,0,0);
 
         Mockito.when(portInMock.ampliarServicio(request.getService(),request.getDia(),request.getHora(),request.getMinuto())).thenReturn(serviceMock2);
@@ -135,13 +136,13 @@ class GestionarServicioControllerTest {
     }
 
     @Test
-    void cerrarServicioPorId() {
+    void cerrarServicioPorId() throws SearchItemNotFoundException {
         Mockito.when(portInMock.cerrarServicioPorIdServicio(1)).thenReturn(serviceMock1);
         Assertions.assertEquals(new ResponseEntity<>(serviceMock1,HttpStatus.OK),controller.cerrarServicioPorId(1));
     }
 
     @Test
-    void cerrarServicioPorIdNull() {
+    void cerrarServicioPorIdNull() throws SearchItemNotFoundException {
         Mockito.when(portInMock.cerrarServicioPorIdServicio(1)).thenReturn(null);
         Assertions.assertEquals(new ResponseEntity<>(HttpStatus.BAD_REQUEST),controller.cerrarServicioPorId(1));
     }

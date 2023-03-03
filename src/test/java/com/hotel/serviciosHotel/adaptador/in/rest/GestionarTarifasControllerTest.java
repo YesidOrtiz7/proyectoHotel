@@ -3,6 +3,7 @@ package com.hotel.serviciosHotel.adaptador.in.rest;
 import com.hotel.serviciosHotel.aplicacion.puerto.in.TarifaPortIn;
 import com.hotel.serviciosHotel.aplicacion.servicio.TarifasService;
 import com.hotel.serviciosHotel.dominio.entidades.RateType;
+import com.hotel.serviciosHotel.exceptionHandler.exceptions.SearchItemNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -57,12 +58,12 @@ class GestionarTarifasControllerTest {
     }
 
     @Test
-    void obtenerTarifaPorId() {
+    void obtenerTarifaPorId() throws SearchItemNotFoundException {
         Mockito.when(portInMock.obtenerTarifaPorId(1)).thenReturn(rateTypeMock1);
         Assertions.assertEquals(new ResponseEntity<>(rateTypeMock1,HttpStatus.OK),controller.obtenerTarifaPorId(1));
     }
     @Test
-    void obtenerTarifaPorIdNull() {
+    void obtenerTarifaPorIdNull() throws SearchItemNotFoundException {
         Mockito.when(portInMock.obtenerTarifaPorId(1)).thenReturn(null);
         Assertions.assertEquals(new ResponseEntity<>(HttpStatus.BAD_REQUEST),controller.obtenerTarifaPorId(1));
     }

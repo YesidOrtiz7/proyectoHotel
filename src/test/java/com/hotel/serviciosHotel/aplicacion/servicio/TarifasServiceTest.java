@@ -3,6 +3,7 @@ package com.hotel.serviciosHotel.aplicacion.servicio;
 import com.hotel.serviciosHotel.adaptador.out.db.RateRepository;
 import com.hotel.serviciosHotel.aplicacion.puerto.out.persistance.TarifasPortOut;
 import com.hotel.serviciosHotel.dominio.entidades.RateType;
+import com.hotel.serviciosHotel.exceptionHandler.exceptions.SearchItemNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,10 +49,19 @@ class TarifasServiceTest {
     }
 
     @Test
-    void obtenerTarifaPorId() {
+    void obtenerTarifaPorId() throws SearchItemNotFoundException {
         Mockito.when(portOutMock.getRateById(1)).thenReturn(Optional.of(rateTypeMock1));
 
         Assertions.assertEquals(rateTypeMock1,service.obtenerTarifaPorId(1));
+    }
+
+    @Test
+    void obtenerTarifaPorId_null() throws SearchItemNotFoundException {
+        Mockito.when(portOutMock.getRateById(1)).thenReturn(null);
+
+        Assertions.assertThrows(SearchItemNotFoundException.class,()->{
+            service.obtenerTarifaPorId(1);
+        });
     }
 
     @Test

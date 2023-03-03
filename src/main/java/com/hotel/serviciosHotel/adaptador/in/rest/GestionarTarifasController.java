@@ -2,6 +2,7 @@ package com.hotel.serviciosHotel.adaptador.in.rest;
 
 import com.hotel.serviciosHotel.aplicacion.puerto.in.TarifaPortIn;
 import com.hotel.serviciosHotel.dominio.entidades.RateType;
+import com.hotel.serviciosHotel.exceptionHandler.exceptions.SearchItemNotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -60,7 +61,7 @@ public class GestionarTarifasController {
             @ApiResponse(responseCode = "200",description = "OK"),
             @ApiResponse(responseCode = "400",description = "BAD_REQUEST")
     })
-    public ResponseEntity<RateType> obtenerTarifaPorId(@PathVariable("id") int id){
+    public ResponseEntity<RateType> obtenerTarifaPorId(@PathVariable("id") int id) throws SearchItemNotFoundException {
         RateType response=service.obtenerTarifaPorId(id);
         if (response==null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

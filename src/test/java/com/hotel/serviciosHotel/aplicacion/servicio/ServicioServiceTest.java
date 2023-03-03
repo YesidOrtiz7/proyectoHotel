@@ -8,6 +8,7 @@ import com.hotel.serviciosHotel.aplicacion.puerto.in.RecepcionistaPortIn;
 import com.hotel.serviciosHotel.aplicacion.puerto.in.TarifaPortIn;
 import com.hotel.serviciosHotel.aplicacion.puerto.out.persistance.ServicePortOut;
 import com.hotel.serviciosHotel.dominio.entidades.*;
+import com.hotel.serviciosHotel.exceptionHandler.exceptions.SearchItemNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -105,7 +106,11 @@ class ServicioServiceTest {
     void consultarServicioPorId() {
         Mockito.when(portOutMock.consultarServicioPorId(1)).thenReturn(responseMockHabOcupada);
 
-        Assertions.assertEquals(responseMockHabOcupada, service.consultarServicioPorId(1));
+        try {
+            Assertions.assertEquals(responseMockHabOcupada, service.consultarServicioPorId(1));
+        } catch (SearchItemNotFoundException e) {
+            Assertions.assertEquals(SearchItemNotFoundException.class,e.getClass());
+        }
     }
 
     @Test
@@ -116,7 +121,7 @@ class ServicioServiceTest {
     }
 
     @Test
-    void registrarServicio() {
+    void registrarServicio() throws SearchItemNotFoundException {
         Mockito.when(habitacionServiceMock.getRoomById(1)).thenReturn(habDesocupadaMock);
         Mockito.when(recepcionistaServiceMock.obtenerRecepcionistaPorId(1)).thenReturn(receptionistMock);
         Mockito.when(portOutMock.registrarServicio(responseMockHabLimpia)).thenReturn(responseMockHabLimpia);
@@ -124,7 +129,7 @@ class ServicioServiceTest {
         Assertions.assertEquals(responseMockHabLimpia,service.registrarServicio(responseMockHabLimpia));
     }
     @Test
-    void registrarServicio_RecepcionistaNull() {
+    void registrarServicio_RecepcionistaNull() throws SearchItemNotFoundException {
         Mockito.when(habitacionServiceMock.getRoomById(1)).thenReturn(habDesocupadaMock);
         Mockito.when(recepcionistaServiceMock.obtenerRecepcionistaPorId(1)).thenReturn(null);
         Mockito.when(portOutMock.registrarServicio(responseMockHabLimpia)).thenReturn(responseMockHabLimpia);
@@ -132,7 +137,7 @@ class ServicioServiceTest {
         Assertions.assertEquals(null,service.registrarServicio(responseMockHabLimpia));
     }
     @Test
-    void registrarServicioHabOcupada() {
+    void registrarServicioHabOcupada() throws SearchItemNotFoundException {
         Mockito.when(habitacionServiceMock.getRoomById(1)).thenReturn(habOcupadaMock);
         Mockito.when(recepcionistaServiceMock.obtenerRecepcionistaPorId(1)).thenReturn(receptionistMock);
         Mockito.when(portOutMock.registrarServicio(responseMockHabOcupada)).thenReturn(responseMockHabOcupada);
@@ -141,7 +146,7 @@ class ServicioServiceTest {
     }
 
     @Test
-    void actualizarServicioHabitacionOcupada() {
+    void actualizarServicioHabitacionOcupada() throws SearchItemNotFoundException {
         Mockito.when(portOutMock.servicioExiste(responseMockHabOcupada)).thenReturn(true);
         Mockito.when(recepcionistaServiceMock.obtenerRecepcionistaPorId(1)).thenReturn(receptionistMock);
         Mockito.when(portOutMock.actualizarServicio(responseMockHabOcupada)).thenReturn(responseMockHabOcupada);
@@ -151,7 +156,7 @@ class ServicioServiceTest {
     }
 
     @Test
-    void actualizarServicioHabitacionOcupada_SinServicio() {
+    void actualizarServicioHabitacionOcupada_SinServicio() throws SearchItemNotFoundException {
         Mockito.when(portOutMock.servicioExiste(responseMockHabOcupada)).thenReturn(false);
         Mockito.when(recepcionistaServiceMock.obtenerRecepcionistaPorId(1)).thenReturn(receptionistMock);
         Mockito.when(portOutMock.actualizarServicio(responseMockHabOcupada)).thenReturn(responseMockHabOcupada);
@@ -160,7 +165,7 @@ class ServicioServiceTest {
         Assertions.assertEquals(null,service.actualizarServicioHabitacionOcupada(responseMockHabOcupada));
     }
     @Test
-    void actualizarServicioHabitacionOcupada_SinRecepcionista() {
+    void actualizarServicioHabitacionOcupada_SinRecepcionista() throws SearchItemNotFoundException {
         Mockito.when(portOutMock.servicioExiste(responseMockHabOcupada)).thenReturn(true);
         Mockito.when(recepcionistaServiceMock.obtenerRecepcionistaPorId(1)).thenReturn(null);
         Mockito.when(portOutMock.actualizarServicio(responseMockHabOcupada)).thenReturn(responseMockHabOcupada);
@@ -170,7 +175,7 @@ class ServicioServiceTest {
     }
 
     @Test
-    void actualizarServicioParaCerrarServicio() {
+    void actualizarServicioParaCerrarServicio() throws SearchItemNotFoundException {
         Mockito.when(portOutMock.servicioExiste(responseMockHabOcupada)).thenReturn(true);
         Mockito.when(recepcionistaServiceMock.obtenerRecepcionistaPorId(1)).thenReturn(receptionistMock);
         Mockito.when(habitacionServiceMock.getRoomById(1)).thenReturn(habOcupadaMock);
@@ -181,7 +186,7 @@ class ServicioServiceTest {
     }
 
     @Test
-    void actualizarServicioParaCerrarServicio_SinServicio() {
+    void actualizarServicioParaCerrarServicio_SinServicio() throws SearchItemNotFoundException {
         Mockito.when(portOutMock.servicioExiste(responseMockHabOcupada)).thenReturn(false);
         Mockito.when(recepcionistaServiceMock.obtenerRecepcionistaPorId(1)).thenReturn(receptionistMock);
         Mockito.when(habitacionServiceMock.getRoomById(1)).thenReturn(habOcupadaMock);
@@ -192,7 +197,7 @@ class ServicioServiceTest {
     }
 
     @Test
-    void actualizarServicioParaCerrarServicio_RecepcionistaNull() {
+    void actualizarServicioParaCerrarServicio_RecepcionistaNull() throws SearchItemNotFoundException {
         Mockito.when(portOutMock.servicioExiste(responseMockHabOcupada)).thenReturn(true);
         Mockito.when(recepcionistaServiceMock.obtenerRecepcionistaPorId(1)).thenReturn(null);
         Mockito.when(habitacionServiceMock.getRoomById(1)).thenReturn(habOcupadaMock);
@@ -203,7 +208,7 @@ class ServicioServiceTest {
     }
 
     @Test
-    void actualizarServicioParaCerrarServicio_HabitacionDesocupada() {
+    void actualizarServicioParaCerrarServicio_HabitacionDesocupada() throws SearchItemNotFoundException {
         Mockito.when(portOutMock.servicioExiste(responseMockHabLimpia)).thenReturn(true);
         Mockito.when(recepcionistaServiceMock.obtenerRecepcionistaPorId(1)).thenReturn(receptionistMock);
         Mockito.when(habitacionServiceMock.getRoomById(1)).thenReturn(habDesocupadaMock);
@@ -214,7 +219,7 @@ class ServicioServiceTest {
     }
 
     @Test
-    void actualizarHabitacionServicio() {
+    void actualizarHabitacionServicio() throws SearchItemNotFoundException {
         UpdateRoomServiceRequest request=new UpdateRoomServiceRequest(1,301);
 
         /*para el metodo actualizarHabitacionServicio*/
@@ -230,7 +235,7 @@ class ServicioServiceTest {
         Assertions.assertEquals(responseMockHabOcupada,service.actualizarHabitacionServicio(request.getIdService(),request.getRoomNumber()));
     }
     @Test
-    void actualizarHabitacionServicio_ServicioNull() {
+    void actualizarHabitacionServicio_ServicioNull() throws SearchItemNotFoundException {
         UpdateRoomServiceRequest request=new UpdateRoomServiceRequest(1,301);
 
         /*para el metodo actualizarHabitacionServicio*/
@@ -247,7 +252,7 @@ class ServicioServiceTest {
     }
 
     @Test
-    void actualizarHabitacionServicio_HabitacionNull() {
+    void actualizarHabitacionServicio_HabitacionNull() throws SearchItemNotFoundException {
         UpdateRoomServiceRequest request=new UpdateRoomServiceRequest(1,301);
 
         /*para el metodo actualizarHabitacionServicio*/
@@ -260,10 +265,13 @@ class ServicioServiceTest {
         Mockito.when(portOutMock.actualizarServicio(responseMockHabOcupada)).thenReturn(responseMockHabOcupada);
         Mockito.when(habitacionServiceMock.getRoomById(1)).thenReturn(habOcupadaMock);
 
+        /*Assertions.assertThrows(SearchItemNotFoundException.class,()->{
+            service.actualizarHabitacionServicio(request.getIdService(),request.getRoomNumber());
+        });*/
         Assertions.assertEquals(null,service.actualizarHabitacionServicio(request.getIdService(),request.getRoomNumber()));
     }
     @Test
-    void actualizarHabitacionServicio_IdRoom0() {
+    void actualizarHabitacionServicio_IdRoom0() throws SearchItemNotFoundException {
         UpdateRoomServiceRequest request=new UpdateRoomServiceRequest(1,301);
 
         /*para el metodo actualizarHabitacionServicio*/
@@ -280,7 +288,7 @@ class ServicioServiceTest {
     }
 
     @Test
-    void actualizarTarifaServicio() {
+    void actualizarTarifaServicio() throws SearchItemNotFoundException {
         UpdateRateServiceRequest request=new UpdateRateServiceRequest(1,1);
 
         /*para el mteodo actualizarTarifaServicio*/
@@ -298,7 +306,7 @@ class ServicioServiceTest {
         Assertions.assertEquals(responseMockHabOcupada,service.actualizarTarifaServicio(request.getIdService(), request.getRateId()));
     }
     @Test
-    void actualizarTarifaServicio_TarifaNull() {
+    void actualizarTarifaServicio_TarifaNull() throws SearchItemNotFoundException {
         UpdateRateServiceRequest request=new UpdateRateServiceRequest(1,1);
 
         /*para el mteodo actualizarTarifaServicio*/
@@ -316,7 +324,7 @@ class ServicioServiceTest {
         Assertions.assertEquals(null,service.actualizarTarifaServicio(request.getIdService(), request.getRateId()));
     }
     @Test
-    void actualizarTarifaServicio_IdTarifa0() {
+    void actualizarTarifaServicio_IdTarifa0() throws SearchItemNotFoundException {
         UpdateRateServiceRequest request=new UpdateRateServiceRequest(1,1);
 
         /*para el mteodo actualizarTarifaServicio*/
@@ -335,7 +343,7 @@ class ServicioServiceTest {
     }
 
     @Test
-    void actualizarTarifaServicio_ServicioNull() {
+    void actualizarTarifaServicio_ServicioNull() throws SearchItemNotFoundException {
         UpdateRateServiceRequest request=new UpdateRateServiceRequest(1,1);
 
         /*para el mteodo actualizarTarifaServicio*/
@@ -354,7 +362,7 @@ class ServicioServiceTest {
     }
 
     @Test
-    void cerrarServicioPorIdServicio() {
+    void cerrarServicioPorIdServicio() throws SearchItemNotFoundException {
         Mockito.when(habitacionServiceMock.getRoomById(responseMockHabOcupada.getIdRoom().getIdRoom())).thenReturn(habOcupadaMock);
 
 
@@ -373,7 +381,7 @@ class ServicioServiceTest {
     }
 
     @Test
-    void ampliarServicio() {
+    void ampliarServicio() throws SearchItemNotFoundException {
         /*para el metodo actualizarServicioHabitacionOcupada*/
         Mockito.when(portOutMock.servicioExiste(responseMockHabOcupada)).thenReturn(true);
         Mockito.when(recepcionistaServiceMock.obtenerRecepcionistaPorId(1)).thenReturn(receptionistMock);

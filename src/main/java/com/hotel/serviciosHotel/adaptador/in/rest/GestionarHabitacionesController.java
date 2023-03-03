@@ -2,6 +2,7 @@ package com.hotel.serviciosHotel.adaptador.in.rest;
 
 import com.hotel.serviciosHotel.aplicacion.puerto.in.HabitacionPortIn;
 import com.hotel.serviciosHotel.dominio.entidades.Room;
+import com.hotel.serviciosHotel.exceptionHandler.exceptions.SearchItemNotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -29,7 +30,7 @@ public class GestionarHabitacionesController {
             @ApiResponse(responseCode = "200",description = "OK"),
             @ApiResponse(responseCode = "404",description = "NOT FOUND")
     })
-    public ResponseEntity<Room> obtenerHabitacionPorNumero(@PathVariable("num") int num){
+    public ResponseEntity<Room> obtenerHabitacionPorNumero(@PathVariable("num") int num) throws SearchItemNotFoundException {
         Room response=service.getRoomByNumber(num);
         if (response==null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -45,7 +46,7 @@ public class GestionarHabitacionesController {
             @ApiResponse(responseCode = "200",description = "OK"),
             @ApiResponse(responseCode = "404",description = "NOT FOUND")
     })
-    public ResponseEntity<Room> obtenerHabitacionPorId(@PathVariable("id") int id){
+    public ResponseEntity<Room> obtenerHabitacionPorId(@PathVariable("id") int id) throws SearchItemNotFoundException {
         Room response=service.getRoomById(id);
         if (response==null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

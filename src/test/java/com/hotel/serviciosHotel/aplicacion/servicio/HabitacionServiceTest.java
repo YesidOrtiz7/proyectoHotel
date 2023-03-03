@@ -5,6 +5,7 @@ import com.hotel.serviciosHotel.aplicacion.puerto.out.persistance.RoomPortOut;
 import com.hotel.serviciosHotel.dominio.entidades.Room;
 import com.hotel.serviciosHotel.dominio.entidades.RoomStatus;
 import com.hotel.serviciosHotel.dominio.entidades.RoomType;
+import com.hotel.serviciosHotel.exceptionHandler.exceptions.SearchItemNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -65,17 +66,21 @@ class HabitacionServiceTest {
     void getRoomByNumber() {
         Mockito.when(portOutMock.getRoomByNumber(301)).thenReturn(Optional.of(roomMock1));
 
-        Assertions.assertEquals(roomMock1, service.getRoomByNumber(301));
+        try {
+            Assertions.assertEquals(roomMock1, service.getRoomByNumber(301));
+        } catch (SearchItemNotFoundException e) {
+            Assertions.assertEquals(SearchItemNotFoundException.class,e.getClass());
+        }
     }
     @Test
     void getRoomByNumberNull() {
         Mockito.when(portOutMock.getRoomByNumber(301)).thenReturn(null);
 
-        Assertions.assertEquals(null, service.getRoomByNumber(301));
+        Assertions.assertThrows(SearchItemNotFoundException.class, ()->{service.getRoomByNumber(301);});
     }
 
     @Test
-    void getRoomById() {
+    void getRoomById() throws SearchItemNotFoundException {
         Mockito.when(portOutMock.getRoomById(1)).thenReturn(Optional.of(roomMock1));
 
         Assertions.assertEquals(roomMock1, service.getRoomById(1));
@@ -84,7 +89,9 @@ class HabitacionServiceTest {
     void getRoomByIdNull() {
         Mockito.when(portOutMock.getRoomById(1)).thenReturn(null);
 
-        Assertions.assertEquals(null, service.getRoomById(1));
+        Assertions.assertThrows(SearchItemNotFoundException.class, ()->{
+            service.getRoomById(1);
+        });
     }
 
     @Test

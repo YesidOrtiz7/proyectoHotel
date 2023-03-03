@@ -2,6 +2,7 @@ package com.hotel.serviciosHotel.adaptador.in.rest;
 
 import com.hotel.serviciosHotel.aplicacion.puerto.in.MunicipioPortIn;
 import com.hotel.serviciosHotel.dominio.entidades.Municipios;
+import com.hotel.serviciosHotel.exceptionHandler.exceptions.SearchItemNotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -62,7 +63,7 @@ public class GestionarMunicipiosController {
             @ApiResponse(responseCode = "200",description = "OK"),
             @ApiResponse(responseCode = "400",description = "BAD_REQUEST")
     })
-    public ResponseEntity<Municipios> obtenerMunicipiosPorId(@PathVariable("id")int id){
+    public ResponseEntity<Municipios> obtenerMunicipiosPorId(@PathVariable("id")int id) throws SearchItemNotFoundException {
         Municipios response=service.obtenerMunicipioPorId(id);
         if (response==null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

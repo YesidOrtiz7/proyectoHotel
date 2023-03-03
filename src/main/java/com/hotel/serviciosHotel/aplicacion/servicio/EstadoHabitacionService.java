@@ -3,6 +3,7 @@ package com.hotel.serviciosHotel.aplicacion.servicio;
 import com.hotel.serviciosHotel.aplicacion.puerto.in.EstadoHabitacionPortIn;
 import com.hotel.serviciosHotel.aplicacion.puerto.out.persistance.RoomStatePortOut;
 import com.hotel.serviciosHotel.dominio.entidades.RoomStatus;
+import com.hotel.serviciosHotel.exceptionHandler.exceptions.SearchItemNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,12 +30,12 @@ public class EstadoHabitacionService implements EstadoHabitacionPortIn {
     }
 
     @Override
-    public RoomStatus obtenerEstadoHabitacionPorId(int id) {
+    public RoomStatus obtenerEstadoHabitacionPorId(int id) throws SearchItemNotFoundException {
         Optional<RoomStatus> response=portOut.obtenerEstadoPorId(id);
-        if (response==null){
-            return null;
-        }else {
+        if (response!=null){
             return response.get();
+        }else {
+            throw new SearchItemNotFoundException("el estado habitacion con el id "+id+" no existe");
         }
     }
 

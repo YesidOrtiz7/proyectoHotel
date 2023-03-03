@@ -2,6 +2,7 @@ package com.hotel.serviciosHotel.adaptador.in.rest;
 
 import com.hotel.serviciosHotel.aplicacion.puerto.in.EstadoHabitacionPortIn;
 import com.hotel.serviciosHotel.dominio.entidades.RoomStatus;
+import com.hotel.serviciosHotel.exceptionHandler.exceptions.SearchItemNotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -60,7 +61,7 @@ public class GestionarEstadoHabController {
             @ApiResponse(responseCode = "200",description = "OK"),
             @ApiResponse(responseCode = "400",description = "BAD REQUEST")
     })
-    public ResponseEntity<RoomStatus> obtenerEstadoHabitacionPorId(@PathVariable("id")int id){
+    public ResponseEntity<RoomStatus> obtenerEstadoHabitacionPorId(@PathVariable("id")int id) throws SearchItemNotFoundException {
         RoomStatus response=portIn.obtenerEstadoHabitacionPorId(id);
         if (response==null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

@@ -3,6 +3,7 @@ package com.hotel.serviciosHotel.aplicacion.servicio;
 import com.hotel.serviciosHotel.aplicacion.puerto.in.RecepcionistaPortIn;
 import com.hotel.serviciosHotel.aplicacion.puerto.out.persistance.ReceptionistPortOut;
 import com.hotel.serviciosHotel.dominio.entidades.ReceptionistEntity;
+import com.hotel.serviciosHotel.exceptionHandler.exceptions.SearchItemNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,9 +31,13 @@ public class RecepcionistaService implements RecepcionistaPortIn {
     }
 
     @Override
-    public ReceptionistEntity obtenerRecepcionistaPorId(Integer id) {
+    public ReceptionistEntity obtenerRecepcionistaPorId(Integer id) throws SearchItemNotFoundException {
         Optional<ReceptionistEntity> receptionist=portOut.getRecepcionistById(id);
-        return receptionist==null?null:receptionist.get();
+        if (receptionist!=null){
+            return receptionist.get();
+        }else {
+            throw new SearchItemNotFoundException("la recepcionista identificada con el id "+id+" no existe");
+        }
     }
 
     @Override

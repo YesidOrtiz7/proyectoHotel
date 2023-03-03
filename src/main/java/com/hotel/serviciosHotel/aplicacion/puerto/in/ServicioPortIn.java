@@ -1,24 +1,25 @@
 package com.hotel.serviciosHotel.aplicacion.puerto.in;
 
 import com.hotel.serviciosHotel.dominio.entidades.Service;
+import com.hotel.serviciosHotel.exceptionHandler.exceptions.SearchItemNotFoundException;
 
 import java.util.List;
 
 public interface ServicioPortIn {
-    Service consultarServicioPorId(int id);
+    Service consultarServicioPorId(int id) throws SearchItemNotFoundException;
     List<Service> consultarServicios();
 
 
-    Service registrarServicio(Service service);
+    Service registrarServicio(Service service) throws SearchItemNotFoundException;
 
 
-    Service actualizarServicioHabitacionOcupada(Service service);
-    Service actualizarServicioParaCerrarServicio(Service service);
-    Service actualizarHabitacionServicio(int service, int numeroHabitacion);
-    Service actualizarTarifaServicio(int service,int idTarifa);
+    Service actualizarServicioHabitacionOcupada(Service service) throws SearchItemNotFoundException;
+    Service actualizarServicioParaCerrarServicio(Service service) throws SearchItemNotFoundException;
+    Service actualizarHabitacionServicio(int service, int numeroHabitacion) throws SearchItemNotFoundException;
+    Service actualizarTarifaServicio(int service,int idTarifa) throws SearchItemNotFoundException;
 
-    Service cerrarServicioPorIdServicio(int idService);
+    Service cerrarServicioPorIdServicio(int idService) throws SearchItemNotFoundException;
 
 
-    Service ampliarServicio(Service service, int dia, int hora, int minutos);
+    Service ampliarServicio(Service service, int dia, int hora, int minutos) throws SearchItemNotFoundException;
 }

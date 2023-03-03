@@ -6,6 +6,7 @@ import com.hotel.serviciosHotel.aplicacion.puerto.in.ServicioPortIn;
 import com.hotel.serviciosHotel.aplicacion.puerto.in.TarifaPortIn;
 import com.hotel.serviciosHotel.aplicacion.puerto.out.persistance.ServicePortOut;
 import com.hotel.serviciosHotel.dominio.entidades.*;
+import com.hotel.serviciosHotel.exceptionHandler.exceptions.SearchItemNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
@@ -46,8 +47,13 @@ public class ServicioService implements ServicioPortIn {
     /*-------------------------------------------------------------------------------*/
 
     @Override
-    public Service consultarServicioPorId(int id) {
-        return portOut.consultarServicioPorId(id);
+    public Service consultarServicioPorId(int id) throws SearchItemNotFoundException {
+        Service response=portOut.consultarServicioPorId(id);
+        if (response!=null){
+            return response;
+        }else {
+            throw new SearchItemNotFoundException("el servicio con el id "+id+" no existe");
+        }
     }
 
     @Override
@@ -56,7 +62,7 @@ public class ServicioService implements ServicioPortIn {
     }
 
     @Override
-    public Service registrarServicio(Service service) {
+    public Service registrarServicio(Service service) throws SearchItemNotFoundException {
         ReceptionistEntity recepcionista=this.obtenerRecepcionista(service);
         Room room= habitacionService.getRoomById(
                 service.getIdRoom().getIdRoom()
@@ -81,7 +87,7 @@ public class ServicioService implements ServicioPortIn {
     }
 
     @Override
-    public Service actualizarServicioHabitacionOcupada(Service service) {
+    public Service actualizarServicioHabitacionOcupada(Service service) throws SearchItemNotFoundException {
         if (portOut.servicioExiste(service)){
             ReceptionistEntity recepcionista= this.obtenerRecepcionista(service);
             if (recepcionista!=null && this.determinarOcupacionHabitacion(service)){
@@ -96,7 +102,7 @@ public class ServicioService implements ServicioPortIn {
 
     }
     @Override
-    public Service actualizarServicioParaCerrarServicio(Service service) {
+    public Service actualizarServicioParaCerrarServicio(Service service) throws SearchItemNotFoundException {
         if (portOut.servicioExiste(service)){
             ReceptionistEntity recepcionista= this.obtenerRecepcionista(service);
             if (recepcionista!=null && this.determinarOcupacionHabitacion(service)){
@@ -118,7 +124,7 @@ public class ServicioService implements ServicioPortIn {
     }
 
     @Override
-    public Service actualizarHabitacionServicio(int service,int numeroHabitacion) {
+    public Service actualizarHabitacionServicio(int service,int numeroHabitacion) throws SearchItemNotFoundException {
         Service serv=portOut.consultarServicioPorId(service);
 
         Room hab=habitacionService.getRoomByNumber(numeroHabitacion);
@@ -137,7 +143,7 @@ public class ServicioService implements ServicioPortIn {
     }
 
     @Override
-    public Service actualizarTarifaServicio(int service,int idTarifa) {
+    public Service actualizarTarifaServicio(int service,int idTarifa) throws SearchItemNotFoundException {
         Service serv=portOut.consultarServicioPorId(service);
         RateType tarifa=tarifaService.obtenerTarifaPorId(idTarifa);
 
@@ -150,7 +156,7 @@ public class ServicioService implements ServicioPortIn {
     }
 
     @Override
-    public Service cerrarServicioPorIdServicio(int idService) {
+    public Service cerrarServicioPorIdServicio(int idService) throws SearchItemNotFoundException {
         Service service =this.consultarServicioPorId(idService);
         service.setState(0);
         Room room=habitacionService.getRoomById(service.getIdRoom().getIdRoom());
@@ -167,7 +173,7 @@ public class ServicioService implements ServicioPortIn {
     }
 
     @Override
-    public Service ampliarServicio(Service service, int dia,int hora,int minuto) {
+    public Service ampliarServicio(Service service, int dia,int hora,int minuto) throws SearchItemNotFoundException {
         LocalDateTime entrada=service.getFechaEntrada();
         LocalDateTime salida=service.getFechaSalida();
         if (entrada!=null&&salida!=null&& salida.isAfter(entrada)){
@@ -180,13 +186,13 @@ public class ServicioService implements ServicioPortIn {
         }
     }
 
-    public ReceptionistEntity obtenerRecepcionista(Service service){
+    public ReceptionistEntity obtenerRecepcionista(Service service) throws SearchItemNotFoundException {/*!!!!!*/
         return recepcionistaService.obtenerRecepcionistaPorId(
                 service.getIdRecep().getIdRecep()
         );
     }
 
-    public boolean determinarOcupacionHabitacion(Service service){
+    public boolean determinarOcupacionHabitacion(Service service) throws SearchItemNotFoundException {
         Room room= habitacionService.getRoomById(
                 service.getIdRoom().getIdRoom()
         );

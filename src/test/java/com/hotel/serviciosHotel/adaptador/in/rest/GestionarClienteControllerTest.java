@@ -3,6 +3,7 @@ package com.hotel.serviciosHotel.adaptador.in.rest;
 import com.hotel.serviciosHotel.aplicacion.puerto.in.ClientePortIn;
 import com.hotel.serviciosHotel.aplicacion.servicio.ClienteService;
 import com.hotel.serviciosHotel.dominio.entidades.Client;
+import com.hotel.serviciosHotel.exceptionHandler.exceptions.SearchItemNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -49,13 +50,13 @@ class GestionarClienteControllerTest {
     }
 
     @Test
-    void obtenerClientePorId() {
+    void obtenerClientePorId() throws SearchItemNotFoundException {
         Mockito.when(portInMock.consultarClientePorId(1)).thenReturn(clientMock1);
 
         Assertions.assertEquals(new ResponseEntity<>(clientMock1, HttpStatus.OK),controller.obtenerClientePorId(1));
     }
     @Test
-    void obtenerClientePorIdNull() {
+    void obtenerClientePorIdNull() throws SearchItemNotFoundException {
         Mockito.when(portInMock.consultarClientePorId(1)).thenReturn(null);
 
         Assertions.assertEquals(new ResponseEntity<>(HttpStatus.BAD_REQUEST),controller.obtenerClientePorId(1));

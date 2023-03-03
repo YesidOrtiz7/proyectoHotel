@@ -3,7 +3,9 @@ package com.hotel.serviciosHotel.aplicacion.servicio;
 import com.hotel.serviciosHotel.adaptador.out.db.ClientRepository;
 import com.hotel.serviciosHotel.aplicacion.puerto.out.persistance.ClientPortOut;
 import com.hotel.serviciosHotel.dominio.entidades.Client;
+import com.hotel.serviciosHotel.exceptionHandler.exceptions.SearchItemNotFoundException;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.function.Executable;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
@@ -72,7 +74,7 @@ class ClienteServiceTest {
     }
 
     @Test
-    void consultarClientePorId() {
+    void consultarClientePorId() throws SearchItemNotFoundException {
         Mockito.when(portOutMock.getClientById(1)).thenReturn(Optional.of(c1));
 
         Assertions.assertEquals(c1,service.consultarClientePorId(1));
@@ -82,7 +84,8 @@ class ClienteServiceTest {
     void consultarClientePorIdNull() {
         Mockito.when(portOutMock.getClientById(1)).thenReturn(null);
 
-        Assertions.assertEquals(null,service.consultarClientePorId(1));
+        Assertions.assertThrows(SearchItemNotFoundException.class, () ->{service.consultarClientePorId(1);});
+
     }
 
     @Test

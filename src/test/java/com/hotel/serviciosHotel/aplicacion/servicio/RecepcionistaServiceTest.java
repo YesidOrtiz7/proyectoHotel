@@ -3,6 +3,7 @@ package com.hotel.serviciosHotel.aplicacion.servicio;
 import com.hotel.serviciosHotel.adaptador.out.db.ReceptionistRepository;
 import com.hotel.serviciosHotel.aplicacion.puerto.out.persistance.ReceptionistPortOut;
 import com.hotel.serviciosHotel.dominio.entidades.ReceptionistEntity;
+import com.hotel.serviciosHotel.exceptionHandler.exceptions.SearchItemNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,7 +49,7 @@ class RecepcionistaServiceTest {
     }
 
     @Test
-    void obtenerRecepcionistaPorId() {
+    void obtenerRecepcionistaPorId() throws SearchItemNotFoundException {
         Mockito.when(portOutMock.getRecepcionistById(2)).thenReturn(Optional.of(receptionistMock2));
 
         Assertions.assertEquals(receptionistMock2,service.obtenerRecepcionistaPorId(2));
@@ -57,7 +58,9 @@ class RecepcionistaServiceTest {
     void obtenerRecepcionistaPorIdNull() {
         Mockito.when(portOutMock.getRecepcionistById(2)).thenReturn(null);
 
-        Assertions.assertEquals(null,service.obtenerRecepcionistaPorId(2));
+        Assertions.assertThrows(SearchItemNotFoundException.class,()->{
+            service.obtenerRecepcionistaPorId(2);
+        });
     }
 
     @Test

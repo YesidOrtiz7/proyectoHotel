@@ -3,6 +3,7 @@ package com.hotel.serviciosHotel.aplicacion.servicio;
 import com.hotel.serviciosHotel.aplicacion.puerto.in.HabitacionPortIn;
 import com.hotel.serviciosHotel.aplicacion.puerto.out.persistance.RoomPortOut;
 import com.hotel.serviciosHotel.dominio.entidades.Room;
+import com.hotel.serviciosHotel.exceptionHandler.exceptions.SearchItemNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,15 +24,23 @@ public class HabitacionService implements HabitacionPortIn {
     }
 
     @Override
-    public Room getRoomByNumber(Integer number) {
+    public Room getRoomByNumber(Integer number) throws SearchItemNotFoundException {
         Optional<Room> room=portOut.getRoomByNumber(number);
-        return room==null?null:room.get();
+        if (room!=null){
+            return room.get();
+        }else {
+            throw new SearchItemNotFoundException("la habitacion con el numero "+number+" no existe");
+        }
     }
 
     @Override
-    public Room getRoomById(Integer id) {
+    public Room getRoomById(Integer id) throws SearchItemNotFoundException {
         Optional<Room> room=portOut.getRoomById(id);
-        return room==null?null:room.get();
+        if (room!=null){
+            return room.get();
+        }else {
+            throw new SearchItemNotFoundException("la habitacion con el id "+id+" no existe");
+        }
     }
 
     @Override
