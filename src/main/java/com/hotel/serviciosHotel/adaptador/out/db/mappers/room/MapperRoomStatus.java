@@ -11,7 +11,9 @@ import org.mapstruct.Mappings;
 public interface MapperRoomStatus {
     @Mappings({
             @Mapping(source = "idEstado",target = "idStatus"),
-            @Mapping(source = "nombreEstado",target = "statusName")
+            @Mapping(source = "nombreEstado",target = "statusName"),
+            @Mapping(source = "visibleEnSeleccion",target = "visibleOnSelection"),
+            @Mapping(source = "predeterminadoParaCierre",target = "defaultForServiceShutdown")
     })
     RoomStatus toRoomStatus(EstadosHabitacion estado);
 

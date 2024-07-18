@@ -1,5 +1,6 @@
 package com.hotel.serviciosHotel.adaptador.in.rest;
 
+import com.hotel.serviciosHotel.adaptador.modelResponse.IdAndStateRequest;
 import com.hotel.serviciosHotel.aplicacion.puerto.in.EstadoHabitacionPortIn;
 import com.hotel.serviciosHotel.dominio.entidades.RoomStatus;
 import com.hotel.serviciosHotel.exceptionHandler.exceptions.SearchItemNotFoundException;
@@ -31,7 +32,8 @@ public class GestionarEstadoHabController {
             @ApiResponse(responseCode = "201",description = "CREATED"),
             @ApiResponse(responseCode = "400",description = "BAD REQUEST")
     })
-    public ResponseEntity<RoomStatus> registrarEstadoHab(RoomStatus status){
+    public ResponseEntity<RoomStatus> registrarEstadoHab(@RequestBody RoomStatus status){
+        System.out.println(status.getStatusName());
         RoomStatus response=portIn.registrarEstadoHabitacion(status);
         if (response==null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -77,12 +79,31 @@ public class GestionarEstadoHabController {
             @ApiResponse(responseCode = "200",description = "OK"),
             @ApiResponse(responseCode = "400",description = "BAD REQUEST")
     })
-    public ResponseEntity<RoomStatus> actualizarEstadoHab(RoomStatus status){
+    public ResponseEntity<RoomStatus> actualizarEstadoHab(@RequestBody RoomStatus status){
         RoomStatus response=portIn.actualizarEstadoHabitacion(status);
         if (response==null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }else {
             return new ResponseEntity<>(response,HttpStatus.CREATED);
+        }
+    }
+    @PutMapping("/actualizarvisibilidad")
+    public ResponseEntity actualizarVisibilidadEnSeleccion(@RequestBody IdAndStateRequest request){
+        try {
+            RoomStatus response=portIn.obtenerEstadoHabitacionPorId(request.getId());
+            response.setVisibleOnSelection(request.isState());
+            portIn.actualizarEstadoHabitacion(response);
+            return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
+        }catch (SearchItemNotFoundException e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
+        }
+    }
+    @DeleteMapping("/eliminar/{id}")
+    public ResponseEntity eliminarEstadoHab(@PathVariable int id){
+        if (portIn.eliminarEstadoHabitacion(id)){
+            return new ResponseEntity<>(HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 }

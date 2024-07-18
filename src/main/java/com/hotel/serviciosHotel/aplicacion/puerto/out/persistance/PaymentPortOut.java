@@ -7,4 +7,6 @@ import java.util.List;
 public interface PaymentPortOut {
     PaymentType consultarTipoPagoPorId(int id);
     List<PaymentType> obtenerTipoPagos();
+    PaymentType guardarTipoPago(PaymentType type);
+    boolean eliminarTipoPago(PaymentType type);
 }

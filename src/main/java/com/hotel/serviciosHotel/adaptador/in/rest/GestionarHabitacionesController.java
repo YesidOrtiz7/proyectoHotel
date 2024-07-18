@@ -79,6 +79,7 @@ public class GestionarHabitacionesController {
             @ApiResponse(responseCode = "400",description = "BAD REQUEST")
     })
     public ResponseEntity<Room> registrarNuevaHabitacion(@RequestBody Room room){
+        System.out.println(room.getRoomNumber());
         Room response=service.createRoom(room);
         if (response==null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

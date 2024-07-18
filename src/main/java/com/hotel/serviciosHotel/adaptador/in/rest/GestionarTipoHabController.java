@@ -2,6 +2,7 @@ package com.hotel.serviciosHotel.adaptador.in.rest;
 
 import com.hotel.serviciosHotel.aplicacion.puerto.in.TipoHabitacionPortIn;
 import com.hotel.serviciosHotel.dominio.entidades.RoomType;
+import com.hotel.serviciosHotel.exceptionHandler.exceptions.SearchItemNotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -30,7 +31,7 @@ public class GestionarTipoHabController {
             @ApiResponse(responseCode = "201",description = "CREATED"),
             @ApiResponse(responseCode = "400",description = "BAD REQUEST")
     })
-    public ResponseEntity<RoomType> registrarTipoHab(RoomType type){
+    public ResponseEntity<RoomType> registrarTipoHab(@RequestBody RoomType type){
         RoomType response=portIn.registrarTipoHabitacion(type);
         if (response==null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -60,7 +61,7 @@ public class GestionarTipoHabController {
             @ApiResponse(responseCode = "200",description = "OK"),
             @ApiResponse(responseCode = "400",description = "BAD REQUEST")
     })
-    public ResponseEntity<RoomType> obtenerTipoPorId(@PathVariable("id")int id){
+    public ResponseEntity<RoomType> obtenerTipoPorId(@PathVariable("id")int id) throws SearchItemNotFoundException {
         RoomType response=portIn.obtenerTipoHabitacionPorId(id);
         if (response==null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -76,12 +77,21 @@ public class GestionarTipoHabController {
             @ApiResponse(responseCode = "200",description = "OK"),
             @ApiResponse(responseCode = "400",description = "BAD REQUEST")
     })
-    public ResponseEntity<RoomType> actualizarTipoHab(RoomType type){
+    public ResponseEntity<RoomType> actualizarTipoHab(@RequestBody RoomType type){
         RoomType response=portIn.actualizarTipoHabitacion(type);
         if (response==null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }else {
             return new ResponseEntity<>(response,HttpStatus.OK);
         }
+    }
+
+    @DeleteMapping("/eliminar/{id}")
+    public ResponseEntity eliminarTipoHab(@PathVariable("id")int type){
+            if(portIn.eliminarTipoHabitacionPorId(type)) {
+                return new ResponseEntity<>(HttpStatus.OK);
+            }else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
     }
 }

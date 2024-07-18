@@ -1,6 +1,8 @@
 package com.hotel.serviciosHotel.adaptador.out.db.persistenceModels;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
 
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -55,16 +57,19 @@ public class Servicio {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idTipoPago", nullable = false)
     private TipoPago idTipoPago;
+    @Null
     private double pago;
+    @NotNull
     private LocalDateTime fechaEntrada;
+    @NotNull
     private LocalDateTime fechaSalida;
 
-    private int estado;
+    private boolean estado;
 
     public Servicio() {
     }
 
-    public Servicio(int idServicio, Recepcionista idRecep, Cliente idCliente, Habitacion idHabitacion, TipoTarifa idTipoTarifa, Municipios cliProcedencia, Municipios cliDestino, TipoPago idTipoPago, double pago, LocalDateTime fechaEntrada, LocalDateTime fechaSalida, byte estado) {
+    public Servicio(int idServicio, Recepcionista idRecep, Cliente idCliente, Habitacion idHabitacion, TipoTarifa idTipoTarifa, Municipios cliProcedencia, Municipios cliDestino, TipoPago idTipoPago, double pago, LocalDateTime fechaEntrada, LocalDateTime fechaSalida, boolean estado) {
         this.idServicio = idServicio;
         this.idRecep = idRecep;
         this.idCliente = idCliente;
@@ -79,11 +84,11 @@ public class Servicio {
         this.estado = estado;
     }
 
-    public int getEstado() {
+    public boolean getEstado() {
         return estado;
     }
 
-    public void setEstado(int estado) {
+    public void setEstado(boolean estado) {
         this.estado = estado;
     }
 

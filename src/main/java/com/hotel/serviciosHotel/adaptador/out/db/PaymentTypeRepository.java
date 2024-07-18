@@ -2,6 +2,7 @@ package com.hotel.serviciosHotel.adaptador.out.db;
 
 import com.hotel.serviciosHotel.adaptador.out.db.mappers.MapperPaymentType;
 import com.hotel.serviciosHotel.adaptador.out.db.persistence.PaymentRepository;
+import com.hotel.serviciosHotel.adaptador.out.db.persistenceModels.Habitacion;
 import com.hotel.serviciosHotel.adaptador.out.db.persistenceModels.TipoPago;
 import com.hotel.serviciosHotel.aplicacion.puerto.out.persistance.PaymentPortOut;
 import com.hotel.serviciosHotel.dominio.entidades.PaymentType;
@@ -50,5 +51,29 @@ public class PaymentTypeRepository implements PaymentPortOut {
             );
         }
         return response;
+    }
+
+    @Override
+    public PaymentType guardarTipoPago(PaymentType type) {
+        if (type.getIdPago()==0||!repository.existsById(type.getIdPago())){
+            TipoPago tipo = mapper.toTipoPago(type);
+            return mapper.toPaymentType(
+                    repository.save(tipo)
+            );
+        }else {
+            return null;
+        }
+    }
+
+    @Override
+    public boolean eliminarTipoPago(PaymentType type) {
+        if (repository.existsById(type.getIdPago())){
+            repository.delete(
+                    mapper.toTipoPago(type)
+            );
+            return true;
+        }else {
+            return false;
+        }
     }
 }

@@ -27,4 +27,9 @@ public class RoomType {
     public void setRoomTypeDescription(String roomTypeDescription) {
         this.roomTypeDescription = roomTypeDescription;
     }
+
+    @Override
+    public String toString() {
+        return this.idRoomType+" "+this.roomTypeDescription;
+    }
 }

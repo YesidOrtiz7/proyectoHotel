@@ -21,6 +21,11 @@ public class RecepcionistaService implements RecepcionistaPortIn {
     }
 
     @Override
+    public boolean existenciaRecepcionista(int id) {
+        return portOut.receptionistExist(id);
+    }
+
+    @Override
     public ReceptionistEntity registrarRecepcionista(ReceptionistEntity receptionist) {
         return portOut.saveRecepcionist(receptionist);
     }

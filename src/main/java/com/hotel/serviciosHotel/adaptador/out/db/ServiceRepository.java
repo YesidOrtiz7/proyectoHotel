@@ -5,6 +5,7 @@ import com.hotel.serviciosHotel.adaptador.out.db.persistence.ServiceCrudReposito
 import com.hotel.serviciosHotel.adaptador.out.db.persistenceModels.Servicio;
 import com.hotel.serviciosHotel.aplicacion.puerto.out.persistance.ServicePortOut;
 import com.hotel.serviciosHotel.dominio.entidades.Service;
+import com.hotel.serviciosHotel.exceptionHandler.exceptions.ItemAlreadyExistException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -50,9 +51,10 @@ public class ServiceRepository implements ServicePortOut {
     }
 
     @Override
-    public Service registrarServicio(Service service) {
+    public Service registrarServicio(Service service) throws ItemAlreadyExistException {
         if (repository.existsById(service.getIdService())){
-            return null;
+            throw new ItemAlreadyExistException("El servicio que esta tratando de registrar tiene un ID que ya existe en"+
+                    " la base de datos");
         }else {
             Servicio query=repository.save(
                     mapper.toServicio(service)

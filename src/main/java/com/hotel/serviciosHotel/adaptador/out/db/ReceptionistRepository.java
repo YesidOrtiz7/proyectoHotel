@@ -18,6 +18,12 @@ public class ReceptionistRepository implements ReceptionistPortOut {
     private RecepcionistasCrudRepository repository;
     @Autowired
     private MapperRecepcionist mapper;
+
+    @Override
+    public boolean receptionistExist(int id) {
+        return repository.existsById(id);
+    }
+
     @Override
     public ReceptionistEntity saveRecepcionist(ReceptionistEntity receptionist) {
         Optional<Recepcionista> query=repository.findByDocRecep(receptionist.getDocRecep());

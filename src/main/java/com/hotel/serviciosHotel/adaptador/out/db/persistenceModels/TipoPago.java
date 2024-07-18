@@ -1,6 +1,7 @@
 package com.hotel.serviciosHotel.adaptador.out.db.persistenceModels;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "tbltipopago")
@@ -9,6 +10,7 @@ public class TipoPago {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idPago;
 
+    @NotNull
     private String descripcionPago;
 
     public TipoPago() {

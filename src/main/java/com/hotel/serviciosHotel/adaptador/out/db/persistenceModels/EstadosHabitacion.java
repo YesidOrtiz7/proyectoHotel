@@ -13,6 +13,8 @@ public class EstadosHabitacion {
     @Column(name = "id_estado")
     private int idEstado;
     private String NombreEstado;
+    private boolean visibleEnSeleccion;
+    private boolean predeterminadoParaCierre;
 
     @OneToMany(mappedBy = "idEstHab",cascade = CascadeType.ALL)
     private List<Habitacion> habitaciones;
@@ -20,8 +22,10 @@ public class EstadosHabitacion {
     public EstadosHabitacion() {
     }
 
-    public EstadosHabitacion(String nombreEstado) {
+    public EstadosHabitacion(String nombreEstado, boolean visibleEnSeleccion, boolean predeterminadoParaCierre) {
         NombreEstado = nombreEstado;
+        this.visibleEnSeleccion = visibleEnSeleccion;
+        this.predeterminadoParaCierre = predeterminadoParaCierre;
     }
 
     public List<Habitacion> getHabitaciones() {
@@ -46,5 +50,21 @@ public class EstadosHabitacion {
 
     public void setNombreEstado(String nombreEstado) {
         NombreEstado = nombreEstado;
+    }
+
+    public boolean isVisibleEnSeleccion() {
+        return visibleEnSeleccion;
+    }
+
+    public void setVisibleEnSeleccion(boolean visibleEnSeleccion) {
+        this.visibleEnSeleccion = visibleEnSeleccion;
+    }
+
+    public boolean isPredeterminadoParaCierre() {
+        return predeterminadoParaCierre;
+    }
+
+    public void setPredeterminadoParaCierre(boolean predeterminadoParaCierre) {
+        this.predeterminadoParaCierre = predeterminadoParaCierre;
     }
 }

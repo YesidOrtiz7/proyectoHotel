@@ -6,6 +6,7 @@ import com.hotel.serviciosHotel.exceptionHandler.exceptions.SearchItemNotFoundEx
 import java.util.ArrayList;
 
 public interface HabitacionPortIn {
+    public boolean roomExist(int id);
     public Room createRoom(Room room);
     public ArrayList<Room> getRooms();
     public Room getRoomByNumber(Integer number) throws SearchItemNotFoundException;

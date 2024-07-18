@@ -6,6 +6,7 @@ import com.hotel.serviciosHotel.exceptionHandler.exceptions.SearchItemNotFoundEx
 import java.util.List;
 
 public interface RecepcionistaPortIn {
+    public boolean existenciaRecepcionista(int id);
     public ReceptionistEntity registrarRecepcionista(ReceptionistEntity receptionist);
     public ReceptionistEntity actualizarRecepcionista(ReceptionistEntity receptionist);
     public ReceptionistEntity obtenerRecepcionistaPorId(Integer id) throws SearchItemNotFoundException;

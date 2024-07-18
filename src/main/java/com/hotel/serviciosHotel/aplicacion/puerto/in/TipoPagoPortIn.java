@@ -8,4 +8,6 @@ import java.util.List;
 public interface TipoPagoPortIn {
     PaymentType obtenerTipoPagoPorId(int id) throws SearchItemNotFoundException;
     List<PaymentType> obtenerTipoPagos();
+    PaymentType guardarTipoPago(PaymentType tipo);
+    boolean eliminarTipoPago(PaymentType tipo);
 }

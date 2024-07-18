@@ -32,7 +32,7 @@ public class EstadoHabitacionService implements EstadoHabitacionPortIn {
     @Override
     public RoomStatus obtenerEstadoHabitacionPorId(int id) throws SearchItemNotFoundException {
         Optional<RoomStatus> response=portOut.obtenerEstadoPorId(id);
-        if (response!=null){
+        if (!response.isEmpty()){
             return response.get();
         }else {
             throw new SearchItemNotFoundException("el estado habitacion con el id "+id+" no existe");

@@ -20,9 +20,7 @@ public class TipoHabitacionService implements TipoHabitacionPortIn {
     }
 
     @Override
-    public RoomType registrarTipoHabitacion(RoomType tipo) {
-        return portOut.registrarTipo(tipo);
-    }
+    public RoomType registrarTipoHabitacion(RoomType tipo) {return portOut.registrarTipo(tipo);}
 
     @Override
     public List<RoomType> obtenerTipoHabitaciones() {

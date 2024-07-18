@@ -32,4 +32,14 @@ public class TipoPagoService implements TipoPagoPortIn {
     public List<PaymentType> obtenerTipoPagos() {
         return portOut.obtenerTipoPagos();
     }
+
+    @Override
+    public PaymentType guardarTipoPago(PaymentType tipo) {
+        return portOut.guardarTipoPago(tipo);
+    }
+
+    @Override
+    public boolean eliminarTipoPago(PaymentType tipo) {
+        return portOut.eliminarTipoPago(tipo);
+    }
 }

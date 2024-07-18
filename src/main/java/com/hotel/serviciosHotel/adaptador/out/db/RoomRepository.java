@@ -35,6 +35,11 @@ public class RoomRepository implements RoomPortOut {
     private MapperRoomStatus mapperRoomStatus;
 
     @Override
+    public boolean roomExist(int id) {
+        return repository.existsById(id);
+    }
+
+    @Override
     public Room saveRoom(Room room) {
         if (repository.existsById(room.getIdRoom())||room.getIdRoom()==0){
             Habitacion hab = mapper.toHabitacion(room);
@@ -120,7 +125,8 @@ public class RoomRepository implements RoomPortOut {
 
     @Override
     public Room changeRoomType(int idroom, int idState) {
-        Optional<Room> roomByNumber=this.getRoomByNumber(idroom);
+        Optional<Room> roomByNumber=this.getRoomById(idroom);
+
         Room room=(roomByNumber.isEmpty()||roomByNumber==null)?null:roomByNumber.get();
 
         if (repositoryTipoHab.existsById(idState)&&room!=null){
@@ -137,7 +143,7 @@ public class RoomRepository implements RoomPortOut {
 
     @Override
     public Room changeStateRoom(int idroom, int state) {
-        Optional<Room> roomByNumber=this.getRoomByNumber(idroom);
+        Optional<Room> roomByNumber=this.getRoomById(idroom);
         Room room=(roomByNumber==null||roomByNumber.isEmpty())?null:roomByNumber.get();
         if (repositoryEstadoHab.existsById(state)&&room!=null){
             RoomStatus roomStatus=mapperRoomStatus.toRoomStatus(

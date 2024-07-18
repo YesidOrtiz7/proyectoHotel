@@ -5,7 +5,11 @@ import com.hotel.serviciosHotel.aplicacion.puerto.in.RecepcionistaPortIn;
 import com.hotel.serviciosHotel.aplicacion.puerto.in.ServicioPortIn;
 import com.hotel.serviciosHotel.aplicacion.puerto.in.TarifaPortIn;
 import com.hotel.serviciosHotel.aplicacion.puerto.out.persistance.ServicePortOut;
-import com.hotel.serviciosHotel.dominio.entidades.*;
+import com.hotel.serviciosHotel.dominio.entidades.RateType;
+import com.hotel.serviciosHotel.dominio.entidades.ReceptionistEntity;
+import com.hotel.serviciosHotel.dominio.entidades.Room;
+import com.hotel.serviciosHotel.dominio.entidades.Service;
+import com.hotel.serviciosHotel.exceptionHandler.exceptions.ItemAlreadyExistException;
 import com.hotel.serviciosHotel.exceptionHandler.exceptions.SearchItemNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -62,7 +66,7 @@ public class ServicioService implements ServicioPortIn {
     }
 
     @Override
-    public Service registrarServicio(Service service) throws SearchItemNotFoundException {
+    public Service registrarServicio(Service service) throws SearchItemNotFoundException, ItemAlreadyExistException {
         ReceptionistEntity recepcionista=this.obtenerRecepcionista(service);
         Room room= habitacionService.getRoomById(
                 service.getIdRoom().getIdRoom()
@@ -78,7 +82,8 @@ public class ServicioService implements ServicioPortIn {
             );
 
             return portOut.registrarServicio(
-                    this.establecerEstadia(service)
+                    //this.establecerEstadia(service)
+                    service
             );
         }else {
             return null;
@@ -158,7 +163,7 @@ public class ServicioService implements ServicioPortIn {
     @Override
     public Service cerrarServicioPorIdServicio(int idService) throws SearchItemNotFoundException {
         Service service =this.consultarServicioPorId(idService);
-        service.setState(0);
+        service.setState(false);
         Room room=habitacionService.getRoomById(service.getIdRoom().getIdRoom());
         double valor=0;
 
@@ -210,7 +215,7 @@ public class ServicioService implements ServicioPortIn {
         LocalDateTime entrada=service.getFechaEntrada();
         LocalDateTime salida=service.getFechaSalida();
 
-        service.setState(1);
+        service.setState(true);
 
         if (entrada!=null&&salida!=null&& salida.isAfter(entrada)){
             return service;

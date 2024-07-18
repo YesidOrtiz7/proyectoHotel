@@ -1,6 +1,10 @@
 package com.hotel.serviciosHotel.exceptionHandler.exceptions;
 
 public class SearchItemNotFoundException extends Exception{
+    public SearchItemNotFoundException() {
+        super();
+    }
+
     public SearchItemNotFoundException(String message) {
         super(message);
     }

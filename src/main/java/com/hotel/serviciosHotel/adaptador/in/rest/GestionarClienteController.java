@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/cliente")
@@ -31,12 +32,17 @@ public class GestionarClienteController {
             @ApiResponse(responseCode = "400",description = "BAD REQUEST")
     })
     public ResponseEntity<Client> obtenerClientePorDocumento(@PathVariable("documento") String documento) {
-        Client cli = service.consultarClientePorDocumento(documento);
-        if (cli == null){
+        try{
+            Client cli = service.consultarClientePorDocumento(documento);
+            if (cli == null){
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }else{
+                return new ResponseEntity<>(cli, HttpStatus.OK);
+            }
+        }catch (NoSuchElementException e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }else{
-            return new ResponseEntity<>(cli, HttpStatus.OK);
         }
+
     }
 
     @GetMapping("/id/{id}")

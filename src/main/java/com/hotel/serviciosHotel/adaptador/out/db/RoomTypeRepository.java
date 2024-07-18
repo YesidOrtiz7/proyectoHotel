@@ -22,7 +22,7 @@ public class RoomTypeRepository implements RoomTypePortOut {
 
     @Override
     public RoomType registrarTipo(RoomType type) {
-        if (type.getIdRoomType()==0 && type.getRoomTypeDescription()!=null && !type.getRoomTypeDescription().isBlank()){
+        if (type.getRoomTypeDescription()!=null && !type.getRoomTypeDescription().isBlank()){
             return mapper.toRoomType(
                     repository.save(
                             mapper.toTipoHabitacion(type)

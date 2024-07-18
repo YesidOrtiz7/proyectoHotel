@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ReceptionistPortOut {
+    public boolean receptionistExist(int id);
     public ReceptionistEntity saveRecepcionist(ReceptionistEntity receptionist);
     public ReceptionistEntity updateRecepcionist(ReceptionistEntity receptionist);
     public Optional<ReceptionistEntity> getRecepcionistById(Integer id);

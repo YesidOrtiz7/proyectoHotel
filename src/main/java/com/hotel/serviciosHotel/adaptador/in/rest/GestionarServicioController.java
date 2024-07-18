@@ -5,11 +5,13 @@ import com.hotel.serviciosHotel.adaptador.modelResponse.UpdateRateServiceRequest
 import com.hotel.serviciosHotel.adaptador.modelResponse.UpdateRoomServiceRequest;
 import com.hotel.serviciosHotel.aplicacion.puerto.in.ServicioPortIn;
 import com.hotel.serviciosHotel.dominio.entidades.Service;
+import com.hotel.serviciosHotel.exceptionHandler.exceptions.ItemAlreadyExistException;
 import com.hotel.serviciosHotel.exceptionHandler.exceptions.SearchItemNotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,9 +23,9 @@ import java.util.List;
 public class GestionarServicioController {
 
     private ServicioPortIn servicePortIn;
-
+    //@Qualifier("servicioImpl2")
     @Autowired
-    public void setServicePortIn(ServicioPortIn servicePortIn) {
+    public void setServicePortIn(@Qualifier("ServicioService2") ServicioPortIn servicePortIn) {
         this.servicePortIn = servicePortIn;
     }
 
@@ -69,12 +71,19 @@ public class GestionarServicioController {
             @ApiResponse(responseCode = "201",description = "CREATED"),
             @ApiResponse(responseCode = "400",description = "BAD REQUEST")
     })
-    public ResponseEntity<Service> crearServicio(@RequestBody Service service) throws SearchItemNotFoundException {
-        Service response=servicePortIn.registrarServicio(service);
-        if (response==null){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }else {
-            return new ResponseEntity<>(response,HttpStatus.CREATED);
+    public ResponseEntity crearServicio(@RequestBody Service service) throws SearchItemNotFoundException {
+        System.out.println(service.getIdRoom().getIdRoom());
+        try {
+            Service response=servicePortIn.registrarServicio(service);
+            if (response==null){
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }else {
+                return new ResponseEntity<>(response,HttpStatus.CREATED);
+            }
+        }catch (SearchItemNotFoundException e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
+        }catch (ItemAlreadyExistException e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
         }
     }
     @PutMapping("/nuevaHabitacion")

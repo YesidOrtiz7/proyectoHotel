@@ -71,9 +71,10 @@ public class ClientRepository implements ClientPortOut {
     public List<Client> getClients() {
         Iterable<Cliente> cli= repository.findAll();
         List<Client> clients = new ArrayList<>();
-        for (Cliente cliente:cli) {
+        cli.iterator().forEachRemaining((client) ->{clients.add(mapper.toClient(client));});
+        /*for (Cliente cliente:cli) {
             clients.add(mapper.toClient(cliente));
-        }
+        }*/
         return clients;
     }
 

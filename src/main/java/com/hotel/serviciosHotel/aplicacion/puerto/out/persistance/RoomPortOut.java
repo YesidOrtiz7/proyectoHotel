@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 public interface RoomPortOut {
+    public boolean roomExist(int id);
     public Room saveRoom(Room room);
     public Room updateRoom(Room room);
     public Optional<Room> getRoomByNumber(Integer number);

@@ -20,6 +20,16 @@ public class Client {
         this.celularCliente = celularCliente;
     }
 
+    public Client( String documentoCliente, String primerNombreCliente, String segundoNombreCliente, String primerApellidoCliente, String segundoApellidoCliente, String celularCliente) {
+        this.idCliente = idCliente;
+        this.documentoCliente = documentoCliente;
+        this.primerNombreCliente = primerNombreCliente;
+        this.segundoNombreCliente = segundoNombreCliente;
+        this.primerApellidoCliente = primerApellidoCliente;
+        this.segundoApellidoCliente = segundoApellidoCliente;
+        this.celularCliente = celularCliente;
+    }
+
     public Client() {
     }
 

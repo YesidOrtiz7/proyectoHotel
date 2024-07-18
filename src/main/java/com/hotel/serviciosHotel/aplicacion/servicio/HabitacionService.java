@@ -13,6 +13,12 @@ import java.util.Optional;
 @Service
 public class HabitacionService implements HabitacionPortIn {
     private RoomPortOut portOut;
+
+    @Override
+    public boolean roomExist(int id) {
+        return portOut.roomExist(id);
+    }
+
     @Override
     public Room createRoom(Room room) {
         return portOut.saveRoom(room);

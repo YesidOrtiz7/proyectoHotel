@@ -2,18 +2,17 @@ package com.hotel.serviciosHotel.adaptador.in.rest;
 
 import com.hotel.serviciosHotel.aplicacion.puerto.in.TipoPagoPortIn;
 import com.hotel.serviciosHotel.dominio.entidades.PaymentType;
+import com.hotel.serviciosHotel.exceptionHandler.exceptions.SearchItemNotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/tipoPago")
@@ -31,7 +30,7 @@ public class GestionarTipoPagoController {
             @ApiResponse(responseCode = "200",description = "OK"),
             @ApiResponse(responseCode = "400",description = "BAD_REQUEST")
     })
-    public ResponseEntity<PaymentType> obtenerTipoPagoPorId(@PathVariable("id") int id) {
+    public ResponseEntity<PaymentType> obtenerTipoPagoPorId(@PathVariable("id") int id) throws SearchItemNotFoundException {
         PaymentType response=portIn.obtenerTipoPagoPorId(id);
         if (response == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -51,6 +50,25 @@ public class GestionarTipoPagoController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }else{
             return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+    }
+
+    @PostMapping("/nuevo")
+    public ResponseEntity<PaymentType> nuevoTipoPago(@RequestBody PaymentType type){
+        PaymentType response=portIn.guardarTipoPago(type);
+        if (response!=null){
+            return new ResponseEntity<>(response,HttpStatus.CREATED);
+        }else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @DeleteMapping("/eliminar")
+    public ResponseEntity eliminarTipoPago(@RequestBody PaymentType type){
+        if (portIn.eliminarTipoPago(type)){
+            return new ResponseEntity(HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 }
