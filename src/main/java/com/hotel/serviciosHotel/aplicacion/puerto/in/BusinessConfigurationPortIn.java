@@ -9,6 +9,6 @@ import java.util.List;
 public interface BusinessConfigurationPortIn {
     public List<BusinessConfiguration> getConfigurations();
     public BusinessConfiguration saveConfiguration(BusinessConfiguration config) throws GenericException;
-    public BusinessConfiguration updateConfiguration(BusinessConfiguration config);
+    public BusinessConfiguration updateConfiguration(BusinessConfiguration config) throws SearchItemNotFoundException;
     public BusinessConfiguration getConfigurationById(int id) throws SearchItemNotFoundException;
 }

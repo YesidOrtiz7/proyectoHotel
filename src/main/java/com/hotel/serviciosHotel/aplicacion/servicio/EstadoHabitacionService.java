@@ -47,13 +47,21 @@ public class EstadoHabitacionService implements EstadoHabitacionPortIn {
     }
 
     @Override
-    public RoomStatus actualizarEstadoHabitacion(RoomStatus estado) {
-        /*if (estado.isDefaultForServiceShutdown()){
-            List<BusinessConfiguration> response=configurationPortIn.getConfigurations();
-            if (response.size()==1){
+    public RoomStatus actualizarEstadoHabitacion(RoomStatus estado) throws SearchItemNotFoundException {
+        if (estado.isDefaultForServiceShutdown()){
+            List<BusinessConfiguration> config=configurationPortIn.getConfigurations();
+            BusinessConfiguration c=config.get(0);
 
-            }
-        }*/
+            Optional<RoomStatus> estadoAnterior=portOut.obtenerEstadoPorId(
+                    c.getIdStateDefaultToCloseService()
+            );
+            RoomStatus est=estadoAnterior.get();
+            est.setDefaultForServiceShutdown(false);
+            portOut.actualizarEstado(est);
+
+            c.setIdStateDefaultToCloseService(estado.getIdStatus());
+            configurationPortIn.updateConfiguration(c);
+        }
         return portOut.actualizarEstado(estado);
     }
 

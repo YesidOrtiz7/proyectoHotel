@@ -36,8 +36,13 @@ public class BusinessConfigurationService implements BusinessConfigurationPortIn
     }
 
     @Override
-    public BusinessConfiguration updateConfiguration(BusinessConfiguration config) {
-        return portOut.updateConfiguration(config);
+    public BusinessConfiguration updateConfiguration(BusinessConfiguration config) throws SearchItemNotFoundException {
+        if (portOut.configurationByIdExist(config.getId())){
+
+            return portOut.updateConfiguration(config);
+        }else {
+            throw new SearchItemNotFoundException("la configuracion que esta tratando de actualizar no existe");
+        }
     }
 
     @Override

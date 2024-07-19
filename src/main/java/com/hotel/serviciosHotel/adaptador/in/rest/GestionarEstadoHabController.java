@@ -1,7 +1,9 @@
 package com.hotel.serviciosHotel.adaptador.in.rest;
 
 import com.hotel.serviciosHotel.adaptador.modelResponse.IdAndStateRequest;
+import com.hotel.serviciosHotel.aplicacion.puerto.in.BusinessConfigurationPortIn;
 import com.hotel.serviciosHotel.aplicacion.puerto.in.EstadoHabitacionPortIn;
+import com.hotel.serviciosHotel.dominio.entidades.BusinessConfiguration;
 import com.hotel.serviciosHotel.dominio.entidades.RoomStatus;
 import com.hotel.serviciosHotel.exceptionHandler.exceptions.SearchItemNotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,6 +20,11 @@ import java.util.List;
 @RequestMapping("/estados")
 public class GestionarEstadoHabController {
     private EstadoHabitacionPortIn portIn;
+    private BusinessConfigurationPortIn businessConfigurationPortIn;
+    @Autowired
+    public void setBusinessConfigurationPortIn(BusinessConfigurationPortIn businessConfigurationPortIn) {
+        this.businessConfigurationPortIn = businessConfigurationPortIn;
+    }
 
     @Autowired
     public void setPortIn(EstadoHabitacionPortIn portIn) {
@@ -79,13 +86,18 @@ public class GestionarEstadoHabController {
             @ApiResponse(responseCode = "200",description = "OK"),
             @ApiResponse(responseCode = "400",description = "BAD REQUEST")
     })
-    public ResponseEntity<RoomStatus> actualizarEstadoHab(@RequestBody RoomStatus status){
-        RoomStatus response=portIn.actualizarEstadoHabitacion(status);
-        if (response==null){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }else {
-            return new ResponseEntity<>(response,HttpStatus.CREATED);
+    public ResponseEntity actualizarEstadoHab(@RequestBody RoomStatus status){
+        try {
+            RoomStatus response=portIn.actualizarEstadoHabitacion(status);
+            if (response==null){
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }else {
+                return new ResponseEntity<>(response,HttpStatus.CREATED);
+            }
+        }catch (SearchItemNotFoundException e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
         }
+
     }
     @PutMapping("/actualizarconfiguracionestados")
     public ResponseEntity actualizarConfiguracionEstados(@RequestBody IdAndStateRequest request){

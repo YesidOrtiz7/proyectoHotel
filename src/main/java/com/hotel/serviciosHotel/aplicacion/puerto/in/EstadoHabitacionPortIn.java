@@ -10,7 +10,7 @@ public interface EstadoHabitacionPortIn {
     RoomStatus registrarEstadoHabitacion(RoomStatus status);
     List<RoomStatus> obtenerEstadoHabitaciones();
     RoomStatus obtenerEstadoHabitacionPorId(int id) throws SearchItemNotFoundException;
-    RoomStatus actualizarEstadoHabitacion(RoomStatus status);
+    RoomStatus actualizarEstadoHabitacion(RoomStatus status) throws SearchItemNotFoundException;
     boolean eliminarEstadoHabitacion(RoomStatus status);
     boolean eliminarEstadoHabitacion(int idStatus);
 }
