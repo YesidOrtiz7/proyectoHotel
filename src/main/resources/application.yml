@@ -3,6 +3,7 @@ spring:
     driverClassName: com.mysql.jdbc.Driver
     initialize: true
     data: classpath:data.sql
+    schema: classpath:schema.sql
   profiles:
     active: ${PROFILE_ACTIVE:dev}
     #active: pdn

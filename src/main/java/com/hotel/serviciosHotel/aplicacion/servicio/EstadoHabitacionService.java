@@ -1,7 +1,9 @@
 package com.hotel.serviciosHotel.aplicacion.servicio;
 
+import com.hotel.serviciosHotel.aplicacion.puerto.in.BusinessConfigurationPortIn;
 import com.hotel.serviciosHotel.aplicacion.puerto.in.EstadoHabitacionPortIn;
 import com.hotel.serviciosHotel.aplicacion.puerto.out.persistance.RoomStatePortOut;
+import com.hotel.serviciosHotel.dominio.entidades.BusinessConfiguration;
 import com.hotel.serviciosHotel.dominio.entidades.RoomStatus;
 import com.hotel.serviciosHotel.exceptionHandler.exceptions.SearchItemNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,11 @@ import java.util.Optional;
 @Service
 public class EstadoHabitacionService implements EstadoHabitacionPortIn {
     private RoomStatePortOut portOut;
+    private BusinessConfigurationPortIn configurationPortIn;
+    @Autowired
+    public void setConfigurationPortIn(BusinessConfigurationPortIn configurationPortIn) {
+        this.configurationPortIn = configurationPortIn;
+    }
 
     @Autowired
     public void setPortOut(RoomStatePortOut portOut) {
@@ -41,6 +48,12 @@ public class EstadoHabitacionService implements EstadoHabitacionPortIn {
 
     @Override
     public RoomStatus actualizarEstadoHabitacion(RoomStatus estado) {
+        /*if (estado.isDefaultForServiceShutdown()){
+            List<BusinessConfiguration> response=configurationPortIn.getConfigurations();
+            if (response.size()==1){
+
+            }
+        }*/
         return portOut.actualizarEstado(estado);
     }
 

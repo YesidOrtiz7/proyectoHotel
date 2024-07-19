@@ -87,13 +87,23 @@ public class GestionarEstadoHabController {
             return new ResponseEntity<>(response,HttpStatus.CREATED);
         }
     }
-    @PutMapping("/actualizarvisibilidad")
-    public ResponseEntity actualizarVisibilidadEnSeleccion(@RequestBody IdAndStateRequest request){
+    @PutMapping("/actualizarconfiguracionestados")
+    public ResponseEntity actualizarConfiguracionEstados(@RequestBody IdAndStateRequest request){
         try {
-            RoomStatus response=portIn.obtenerEstadoHabitacionPorId(request.getId());
-            response.setVisibleOnSelection(request.isState());
-            portIn.actualizarEstadoHabitacion(response);
-            return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
+            if(request.getQuery()==1){
+                RoomStatus response=portIn.obtenerEstadoHabitacionPorId(request.getId());
+                response.setVisibleOnSelection(request.isState());
+                portIn.actualizarEstadoHabitacion(response);
+                return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
+            } else if (request.getQuery()==2) {
+                RoomStatus response=portIn.obtenerEstadoHabitacionPorId(request.getId());
+                response.setDefaultForServiceShutdown(request.isState());
+                portIn.actualizarEstadoHabitacion(response);
+                return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
+            }else {
+                return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            }
+
         }catch (SearchItemNotFoundException e){
             return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
         }

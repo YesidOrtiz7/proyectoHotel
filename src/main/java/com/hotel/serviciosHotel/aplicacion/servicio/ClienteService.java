@@ -42,7 +42,7 @@ public class ClienteService implements ClientePortIn {
     @Override
     public Client consultarClientePorId(Integer id) throws SearchItemNotFoundException {
         Optional<Client> client=portOut.getClientById(id);
-        if (client!=null){
+        if (client.isPresent()){
             return client.get();
         }else {
             throw new SearchItemNotFoundException("el cliente con el id "+id+" no existe");
@@ -52,7 +52,7 @@ public class ClienteService implements ClientePortIn {
     @Override
     public Client consultarClientePorDocumento(String documento) {
         Optional<Client> client=portOut.getClientByDocument(documento);
-        return client==null?null:client.get();
+        return client.orElse(null);
     }
 
     @Autowired
