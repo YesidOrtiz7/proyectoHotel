@@ -14,6 +14,7 @@ public class EstadosHabitacion {
     private int idEstado;
     private String NombreEstado;
     private boolean visibleEnSeleccion;
+    private boolean predeterminadoParaInicioDeServicio;
     private boolean predeterminadoParaCierre;
 
     @OneToMany(mappedBy = "idEstHab",cascade = CascadeType.ALL)
@@ -22,9 +23,10 @@ public class EstadosHabitacion {
     public EstadosHabitacion() {
     }
 
-    public EstadosHabitacion(String nombreEstado, boolean visibleEnSeleccion, boolean predeterminadoParaCierre) {
+    public EstadosHabitacion(String nombreEstado, boolean visibleEnSeleccion, boolean predeterminadoParaInicioDeServicio, boolean predeterminadoParaCierre) {
         NombreEstado = nombreEstado;
         this.visibleEnSeleccion = visibleEnSeleccion;
+        this.predeterminadoParaInicioDeServicio = predeterminadoParaInicioDeServicio;
         this.predeterminadoParaCierre = predeterminadoParaCierre;
     }
 
@@ -58,6 +60,14 @@ public class EstadosHabitacion {
 
     public void setVisibleEnSeleccion(boolean visibleEnSeleccion) {
         this.visibleEnSeleccion = visibleEnSeleccion;
+    }
+
+    public boolean isPredeterminadoParaInicioDeServicio() {
+        return predeterminadoParaInicioDeServicio;
+    }
+
+    public void setPredeterminadoParaInicioDeServicio(boolean predeterminadoParaInicioDeServicio) {
+        this.predeterminadoParaInicioDeServicio = predeterminadoParaInicioDeServicio;
     }
 
     public boolean isPredeterminadoParaCierre() {

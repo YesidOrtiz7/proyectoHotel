@@ -4,12 +4,14 @@ public class RoomStatus {
     private int idStatus;
     private String statusName;
     private boolean visibleOnSelection;
+    private boolean defaultForServiceStart;
     private boolean defaultForServiceShutdown;
 
-    public RoomStatus(int idStatus, String statusName, boolean visibleOnSelection, boolean defaultForServiceShutdown) {
+    public RoomStatus(int idStatus, String statusName, boolean visibleOnSelection, boolean defaultForServiceStart, boolean defaultForServiceShutdown) {
         this.idStatus = idStatus;
         this.statusName = statusName;
         this.visibleOnSelection = visibleOnSelection;
+        this.defaultForServiceStart=defaultForServiceStart;
         this.defaultForServiceShutdown = defaultForServiceShutdown;
     }
 
@@ -38,6 +40,14 @@ public class RoomStatus {
 
     public void setVisibleOnSelection(boolean visibleOnSelection) {
         this.visibleOnSelection = visibleOnSelection;
+    }
+
+    public boolean isDefaultForServiceStart() {
+        return defaultForServiceStart;
+    }
+
+    public void setDefaultForServiceStart(boolean defaultForServiceStart) {
+        this.defaultForServiceStart = defaultForServiceStart;
     }
 
     public boolean isDefaultForServiceShutdown() {

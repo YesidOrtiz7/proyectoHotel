@@ -107,7 +107,12 @@ public class GestionarEstadoHabController {
                 response.setVisibleOnSelection(request.isState());
                 portIn.actualizarEstadoHabitacion(response);
                 return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
-            } else if (request.getQuery()==2) {
+            } else if(request.getQuery()==2){
+                RoomStatus response=portIn.obtenerEstadoHabitacionPorId(request.getId());
+                response.setDefaultForServiceStart(request.isState());
+                portIn.actualizarEstadoHabitacion(response);
+                return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
+            }else if (request.getQuery()==3) {
                 RoomStatus response=portIn.obtenerEstadoHabitacionPorId(request.getId());
                 response.setDefaultForServiceShutdown(request.isState());
                 portIn.actualizarEstadoHabitacion(response);

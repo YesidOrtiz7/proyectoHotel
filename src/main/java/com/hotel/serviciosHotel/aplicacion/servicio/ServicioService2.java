@@ -1,10 +1,9 @@
 package com.hotel.serviciosHotel.aplicacion.servicio;
 
-import com.hotel.serviciosHotel.aplicacion.puerto.in.HabitacionPortIn;
-import com.hotel.serviciosHotel.aplicacion.puerto.in.RecepcionistaPortIn;
-import com.hotel.serviciosHotel.aplicacion.puerto.in.ServicioPortIn;
-import com.hotel.serviciosHotel.aplicacion.puerto.in.TarifaPortIn;
+import com.hotel.serviciosHotel.aplicacion.puerto.in.*;
 import com.hotel.serviciosHotel.aplicacion.puerto.out.persistance.ServicePortOut;
+import com.hotel.serviciosHotel.dominio.entidades.BusinessConfiguration;
+import com.hotel.serviciosHotel.dominio.entidades.Room;
 import com.hotel.serviciosHotel.dominio.entidades.Service;
 import com.hotel.serviciosHotel.exceptionHandler.exceptions.ItemAlreadyExistException;
 import com.hotel.serviciosHotel.exceptionHandler.exceptions.SearchItemNotFoundException;
@@ -19,9 +18,20 @@ public class ServicioService2 implements ServicioPortIn {
     /*--------------------------Campos para inyeccion de dependencias-----------------------*/
     private ServicePortOut portOut;
     private HabitacionPortIn habitacionPortIn;
+    private EstadoHabitacionPortIn estadoHabitacionPortIn;
+    private BusinessConfigurationPortIn configurationPortIn;
     private TarifaPortIn tarifaService;
     private RecepcionistaPortIn recepcionistaService;
     /*--------------------------Inyeccion de dependencias-----------------------------------*/
+    @Autowired
+    public void setEstadoHabitacionPortIn(EstadoHabitacionPortIn estadoHabitacionPortIn) {
+        this.estadoHabitacionPortIn = estadoHabitacionPortIn;
+    }
+
+    @Autowired
+    public void setConfigurationPortIn(BusinessConfigurationPortIn configurationPortIn) {
+        this.configurationPortIn = configurationPortIn;
+    }
     @Autowired
     public void setPortOut(ServicePortOut portOut) {
         this.portOut = portOut;
@@ -72,6 +82,16 @@ public class ServicioService2 implements ServicioPortIn {
                         service.getIdRoom().getRoomPrice24Hours(),
                         service.getIdRateType().getPorcentajeTarifa()
                 )
+        );
+        BusinessConfiguration config=configurationPortIn.getConfigurations().get(0);
+        Room habitacion=habitacionPortIn.getRoomById(service.getIdRoom().getIdRoom());
+        habitacion.setIdRoomStatus(
+                estadoHabitacionPortIn.obtenerEstadoHabitacionPorId(
+                        config.getIdStateDefaultToStartService()
+                )
+        );
+        habitacionPortIn.updateRoom(
+                habitacion
         );
         return portOut.registrarServicio(service);
     }

@@ -62,6 +62,19 @@ public class EstadoHabitacionService implements EstadoHabitacionPortIn {
             c.setIdStateDefaultToCloseService(estado.getIdStatus());
             configurationPortIn.updateConfiguration(c);
         }
+        if (estado.isDefaultForServiceStart()){
+            BusinessConfiguration config=configurationPortIn.getConfigurations().get(0);
+
+            Optional<RoomStatus> estadoAnterior=portOut.obtenerEstadoPorId(
+                    config.getIdStateDefaultToStartService()
+            );
+            RoomStatus est=estadoAnterior.get();
+            est.setDefaultForServiceStart(false);
+            portOut.actualizarEstado(est);
+
+            config.setIdStateDefaultToStartService(estado.getIdStatus());
+            configurationPortIn.updateConfiguration(config);
+        }
         return portOut.actualizarEstado(estado);
     }
 

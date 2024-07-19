@@ -13,6 +13,7 @@ public interface MapperRoomStatus {
             @Mapping(source = "idEstado",target = "idStatus"),
             @Mapping(source = "nombreEstado",target = "statusName"),
             @Mapping(source = "visibleEnSeleccion",target = "visibleOnSelection"),
+            @Mapping(source = "predeterminadoParaInicioDeServicio",target = "defaultForServiceStart"),
             @Mapping(source = "predeterminadoParaCierre",target = "defaultForServiceShutdown")
     })
     RoomStatus toRoomStatus(EstadosHabitacion estado);

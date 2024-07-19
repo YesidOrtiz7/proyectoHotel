@@ -11,6 +11,7 @@ import org.mapstruct.Mappings;
 public interface MapperConfiguration {
     @Mappings({
             @Mapping(source = "id",target = "id"),
+            @Mapping(source = "idEstadoPredeterminadoInicioServicio",target = "idStateDefaultToStartService"),
             @Mapping(source = "idEstadoPredeterminadoCierreServicio",target = "idStateDefaultToCloseService")
     })
     BusinessConfiguration toBussinesConfiguration(Configuracion configuracion);
