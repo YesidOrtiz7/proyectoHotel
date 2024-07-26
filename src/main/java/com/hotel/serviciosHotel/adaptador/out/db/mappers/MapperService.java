@@ -24,8 +24,8 @@ public interface MapperService {
             @Mapping(source = "pago",target = "payment"),
             @Mapping(source = "fechaEntrada",target = "fechaEntrada"),
             @Mapping(source = "fechaSalida",target = "fechaSalida"),
-            @Mapping(source = "estado",target = "state")
-
+            @Mapping(source = "estado",target = "state"),
+            @Mapping(source = "pagado",target = "itsPaid")
     })
     Service toService(Servicio servicio);
 

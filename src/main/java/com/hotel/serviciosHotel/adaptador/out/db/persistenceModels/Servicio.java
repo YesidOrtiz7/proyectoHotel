@@ -59,6 +59,7 @@ public class Servicio {
     private TipoPago idTipoPago;
     @Null
     private double pago;
+    private boolean pagado;
     @NotNull
     private LocalDateTime fechaEntrada;
     @NotNull
@@ -69,7 +70,9 @@ public class Servicio {
     public Servicio() {
     }
 
-    public Servicio(int idServicio, Recepcionista idRecep, Cliente idCliente, Habitacion idHabitacion, TipoTarifa idTipoTarifa, Municipios cliProcedencia, Municipios cliDestino, TipoPago idTipoPago, double pago, LocalDateTime fechaEntrada, LocalDateTime fechaSalida, boolean estado) {
+    public Servicio(int idServicio, Recepcionista idRecep, Cliente idCliente, Habitacion idHabitacion,
+                    TipoTarifa idTipoTarifa, Municipios cliProcedencia, Municipios cliDestino, TipoPago idTipoPago,
+                    double pago, LocalDateTime fechaEntrada, LocalDateTime fechaSalida, boolean estado, boolean pagado) {
         this.idServicio = idServicio;
         this.idRecep = idRecep;
         this.idCliente = idCliente;
@@ -82,10 +85,7 @@ public class Servicio {
         this.fechaEntrada = fechaEntrada;
         this.fechaSalida = fechaSalida;
         this.estado = estado;
-    }
-
-    public boolean getEstado() {
-        return estado;
+        this.pagado=pagado;
     }
 
     public void setEstado(boolean estado) {
@@ -178,5 +178,17 @@ public class Servicio {
 
     public void setFechaSalida(LocalDateTime fechaSalida) {
         this.fechaSalida = fechaSalida;
+    }
+
+    public boolean isEstado() {
+        return estado;
+    }
+
+    public boolean isPagado() {
+        return pagado;
+    }
+
+    public void setPagado(boolean pagado) {
+        this.pagado = pagado;
     }
 }

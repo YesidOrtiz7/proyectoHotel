@@ -6,6 +6,7 @@ import com.hotel.serviciosHotel.adaptador.out.db.persistenceModels.Servicio;
 import com.hotel.serviciosHotel.aplicacion.puerto.out.persistance.ServicePortOut;
 import com.hotel.serviciosHotel.dominio.entidades.Service;
 import com.hotel.serviciosHotel.exceptionHandler.exceptions.ItemAlreadyExistException;
+import com.hotel.serviciosHotel.exceptionHandler.exceptions.SearchItemNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -21,10 +22,10 @@ public class ServiceRepository implements ServicePortOut {
     private MapperService mapper;
 
     @Override
-    public Service consultarServicioPorId(int id) {
+    public Service consultarServicioPorId(int id) throws SearchItemNotFoundException {
         Optional<Servicio> query=repository.findById(id);
         if (query.isEmpty()||query==null){
-            return null;
+            throw new SearchItemNotFoundException("el servicio con el id "+id+" no existe");
         }else {
             return mapper.toService(
                     query.get()

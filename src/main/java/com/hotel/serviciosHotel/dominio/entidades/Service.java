@@ -16,10 +16,12 @@ public class Service {
     private double payment;
     private LocalDateTime fechaEntrada;
     private LocalDateTime fechaSalida;
-
+    private boolean itsPaid;
     private boolean state;
 
-    public Service(int idService, ReceptionistEntity idRecep, Client idClient, Room idRoom, RateType idRateType, Municipios cliProcedencia, Municipios cliDestino, PaymentType idTipoPago, double payment, LocalDateTime fechaEntrada, LocalDateTime fechaSalida, boolean state) {
+    public Service(int idService, ReceptionistEntity idRecep, Client idClient, Room idRoom, RateType idRateType,
+                   Municipios cliProcedencia, Municipios cliDestino, PaymentType idTipoPago, double payment,
+                   LocalDateTime fechaEntrada, LocalDateTime fechaSalida, boolean state, boolean itsPaid) {
         this.idService = idService;
         this.idRecep = idRecep;
         this.idClient = idClient;
@@ -32,6 +34,7 @@ public class Service {
         this.fechaEntrada = fechaEntrada;
         this.fechaSalida = fechaSalida;
         this.state = state;
+        this.itsPaid=itsPaid;
     }
 
     public Service() {
@@ -131,5 +134,13 @@ public class Service {
 
     public void setFechaSalida(LocalDateTime fechaSalida) {
         this.fechaSalida = fechaSalida;
+    }
+
+    public boolean isItsPaid() {
+        return itsPaid;
+    }
+
+    public void setItsPaid(boolean itsPaid) {
+        this.itsPaid = itsPaid;
     }
 }

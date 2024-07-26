@@ -1,14 +1,12 @@
 package com.hotel.serviciosHotel.aplicacion.servicio;
 
-import com.hotel.serviciosHotel.aplicacion.puerto.in.HabitacionPortIn;
-import com.hotel.serviciosHotel.aplicacion.puerto.in.RecepcionistaPortIn;
-import com.hotel.serviciosHotel.aplicacion.puerto.in.ServicioPortIn;
-import com.hotel.serviciosHotel.aplicacion.puerto.in.TarifaPortIn;
+import com.hotel.serviciosHotel.aplicacion.puerto.in.*;
 import com.hotel.serviciosHotel.aplicacion.puerto.out.persistance.ServicePortOut;
+import com.hotel.serviciosHotel.dominio.entidades.BusinessConfiguration;
 import com.hotel.serviciosHotel.dominio.entidades.RateType;
-import com.hotel.serviciosHotel.dominio.entidades.ReceptionistEntity;
 import com.hotel.serviciosHotel.dominio.entidades.Room;
 import com.hotel.serviciosHotel.dominio.entidades.Service;
+import com.hotel.serviciosHotel.exceptionHandler.exceptions.GenericException;
 import com.hotel.serviciosHotel.exceptionHandler.exceptions.ItemAlreadyExistException;
 import com.hotel.serviciosHotel.exceptionHandler.exceptions.SearchItemNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,45 +16,48 @@ import java.time.Period;
 import java.util.List;
 
 @org.springframework.stereotype.Service
-public class ServicioService implements ServicioPortIn {
-
+public class ServicioService2 implements ServicioPortIn {
+    /*--------------------------Campos para inyeccion de dependencias-----------------------*/
     private ServicePortOut portOut;
-
-    private HabitacionPortIn habitacionService;
-
-    private TarifaPortIn tarifaService;
-
+    private HabitacionPortIn habitacionPortIn;
+    private EstadoHabitacionPortIn estadoHabitacionPortIn;
+    private BusinessConfigurationPortIn configurationPortIn;
+    private TarifaPortIn tarifaPortIn;
     private RecepcionistaPortIn recepcionistaService;
-
-    /*------------------------------inyeccion de dependencias------------------------------*/
+    /*--------------------------Inyeccion de dependencias-----------------------------------*/
+    @Autowired
+    public void setEstadoHabitacionPortIn(EstadoHabitacionPortIn estadoHabitacionPortIn) {
+        this.estadoHabitacionPortIn = estadoHabitacionPortIn;
+    }
+    @Autowired
+    public void setConfigurationPortIn(BusinessConfigurationPortIn configurationPortIn) {
+        this.configurationPortIn = configurationPortIn;
+    }
     @Autowired
     public void setPortOut(ServicePortOut portOut) {
         this.portOut = portOut;
     }
-
     @Autowired
-    public void setHabitacionService(HabitacionPortIn habitacionService) {
-        this.habitacionService = habitacionService;
+    public void setHabitacionPortIn(HabitacionPortIn habitacionPortIn) {
+        this.habitacionPortIn = habitacionPortIn;
     }
-
     @Autowired
-    public void setTarifaService(TarifaPortIn tarifaService) {
-        this.tarifaService = tarifaService;
+    public void setTarifaPortIn(TarifaPortIn tarifaPortIn) {
+        this.tarifaPortIn = tarifaPortIn;
     }
-
     @Autowired
     public void setRecepcionistaService(RecepcionistaPortIn recepcionistaService) {
         this.recepcionistaService = recepcionistaService;
     }
-    /*-------------------------------------------------------------------------------*/
 
+    /*---------------------------metodos de la clase----------------------------------------*/
     @Override
     public Service consultarServicioPorId(int id) throws SearchItemNotFoundException {
         Service response=portOut.consultarServicioPorId(id);
         if (response!=null){
             return response;
-        }else {
-            throw new SearchItemNotFoundException("el servicio con el id "+id+" no existe");
+        }else{
+            throw new SearchItemNotFoundException("el servicio con el id "+id+"no existe");
         }
     }
 
@@ -66,124 +67,169 @@ public class ServicioService implements ServicioPortIn {
     }
 
     @Override
-    public Service registrarServicio(Service service) throws SearchItemNotFoundException, ItemAlreadyExistException {
-        ReceptionistEntity recepcionista=this.obtenerRecepcionista(service);
-        Room room= habitacionService.getRoomById(
-                service.getIdRoom().getIdRoom()
+    public Service registrarServicio(Service service) throws SearchItemNotFoundException, ItemAlreadyExistException, GenericException {
+        if (!recepcionistaService.existenciaRecepcionista(service.getIdRecep().getIdRecep())){
+            throw new SearchItemNotFoundException("la recepcionista que se esta tratando"+
+                    " de asociar a este servicio no existe");
+        }
+        if (!habitacionPortIn.roomExist(service.getIdRoom().getIdRoom())){
+            throw new SearchItemNotFoundException("la habitacion que se esta tratando"+
+                    " de asociar a este servicio no existe");
+        }
+        BusinessConfiguration config=configurationPortIn.getConfigurations().get(0);
+        Room habitacion=habitacionPortIn.getRoomById(service.getIdRoom().getIdRoom());
+        if (this.determinarOcupacionHabitacion(habitacion.getIdRoom())){
+            throw new GenericException("la habitacion que esta tratando de registrar en este servicio tiene un estado"+
+                    "que le impide ser asignada");
+        }
+        service.setPayment(
+                this.cobrar(
+                        service.getFechaEntrada(),
+                        service.getFechaSalida(),
+                        service.getIdRoom().getRoomPrice24Hours(),
+                        service.getIdRateType().getPorcentajeTarifa()
+                )
         );
-        if (recepcionista!=null && !this.determinarOcupacionHabitacion(service)){
-            service.setIdRecep(recepcionista);
+
+        habitacion.setIdRoomStatus(
+                estadoHabitacionPortIn.obtenerEstadoHabitacionPorId(
+                        config.getIdStateDefaultToStartService()
+                )
+        );
+        habitacionPortIn.updateRoom(
+                habitacion
+        );
+
+        service.setState(true);
+
+        return portOut.registrarServicio(service);
+    }
+
+    @Override
+    public Service actualizarServicioHabitacionOcupada(Service service) throws SearchItemNotFoundException, GenericException {
+        if (!this.peticionLegal(service)){
+            throw new GenericException("Peticion invalida: los datos del pago registrados en la base de datos"+
+                    "no concuerdan");
+        }
+        if (!portOut.servicioExiste(service)){
+            return null;
+        }
+        if (!recepcionistaService.existenciaRecepcionista(service.getIdRecep().getIdRecep())){
+            return null;
+        }
+        if (!this.determinarOcupacionHabitacion(service.getIdRoom().getIdRoom())){
+            return null;
+        }
+        return portOut.actualizarServicio(service);
+    }
+
+    @Override
+    public Service actualizarServicioParaCerrarServicio(Service service) throws SearchItemNotFoundException, GenericException {
+        if (!this.peticionLegal(service)){
+            throw new GenericException("Peticion invalida: los datos del pago registrados en la base de datos"+
+                    "no concuerdan");
+        }
+        if (!portOut.servicioExiste(service)){
+            return null;
+        }
+        if (!this.servicioPagado(service.getIdService())){
+            throw new GenericException("el servicio que se esta tratando de cancelar no esta pagado");
+        }
+        if (recepcionistaService.existenciaRecepcionista(service.getIdRecep().getIdRecep())
+        && this.determinarOcupacionHabitacion(service.getIdRoom().getIdRoom())){
+
+            service.setState(false);
 
             /*cambiar el estado a la habitacion*/
+
+            BusinessConfiguration configuration=configurationPortIn.getConfigurations().get(0);
             service.setIdRoom(
-                habitacionService.changeRoomStatus(
-                    service.getIdRoom().getRoomNumber(),3
+                    habitacionPortIn.changeRoomStatus(
+                            service.getIdRoom().getIdRoom(),
+                            configuration.getIdStateDefaultToCloseService()
+                    )
+            );
+            return portOut.actualizarServicio(service);
+        }
+        return null;
+    }
+
+    @Override
+    public Service actualizarHabitacionServicio(int service, int numeroHabitacion) throws SearchItemNotFoundException {
+        Service servicio=portOut.consultarServicioPorId(service);
+        Room habitacionActual=servicio.getIdRoom();
+        Room habitacionTransferir=habitacionPortIn.getRoomByNumber(numeroHabitacion);
+
+        BusinessConfiguration config=configurationPortIn.getConfigurations().get(0);
+
+        habitacionActual.setIdRoomStatus(
+                estadoHabitacionPortIn.obtenerEstadoHabitacionPorId(
+                        config.getIdStateDefaultToCloseService()
                 )
-            );
+        );
+        habitacionPortIn.updateRoom(habitacionActual);
 
-            return portOut.registrarServicio(
-                    //this.establecerEstadia(service)
-                    service
-            );
-        }else {
-            return null;
-        }
+        habitacionTransferir.setIdRoomStatus(
+                estadoHabitacionPortIn.obtenerEstadoHabitacionPorId(
+                        config.getIdStateDefaultToStartService()
+                )
+        );
+        habitacionPortIn.updateRoom(habitacionTransferir);
 
+        servicio.setIdRoom(habitacionTransferir);
+        return portOut.actualizarServicio(servicio);
     }
 
     @Override
-    public Service actualizarServicioHabitacionOcupada(Service service) throws SearchItemNotFoundException {
-        if (portOut.servicioExiste(service)){
-            ReceptionistEntity recepcionista= this.obtenerRecepcionista(service);
-            if (recepcionista!=null && this.determinarOcupacionHabitacion(service)){
-                service.setIdRecep(recepcionista);
-                return portOut.actualizarServicio(service);
-            }else {
-                return null;
-            }
-        }else {
-            return null;
-        }
+    public Service actualizarTarifaServicio(int service, int idTarifa) throws SearchItemNotFoundException {
+        Service servicio=portOut.consultarServicioPorId(service);
+        RateType tarifaNueva=tarifaPortIn.obtenerTarifaPorId(idTarifa);
 
-    }
-    @Override
-    public Service actualizarServicioParaCerrarServicio(Service service) throws SearchItemNotFoundException {
-        if (portOut.servicioExiste(service)){
-            ReceptionistEntity recepcionista= this.obtenerRecepcionista(service);
-            if (recepcionista!=null && this.determinarOcupacionHabitacion(service)){
-                service.setIdRecep(recepcionista);
-
-                /*cambiar habitacion a sucia*/
-                service.setIdRoom(
-                    habitacionService.changeRoomStatus(service.getIdRoom().getRoomNumber(),2)
-                );
-
-                return portOut.actualizarServicio(service);
-            }else {
-                return null;
-            }
-        }else {
-            return null;
-        }
-
+        servicio.setIdRateType(tarifaNueva);
+        servicio.setPayment(
+                this.cobrar(
+                        servicio.getFechaEntrada(),
+                        servicio.getFechaSalida(),
+                        servicio.getIdRoom().getRoomPrice24Hours(),
+                        servicio.getIdRateType().getPorcentajeTarifa()
+                )
+        );
+        return portOut.actualizarServicio(servicio);
     }
 
     @Override
-    public Service actualizarHabitacionServicio(int service,int numeroHabitacion) throws SearchItemNotFoundException {
-        Service serv=portOut.consultarServicioPorId(service);
-
-        Room hab=habitacionService.getRoomByNumber(numeroHabitacion);
-        if ((hab==null || hab.getIdRoom()==0) || serv==null){
-            return null;
-        }else {
-            //cambiar la habitacion actual a sucia
-            habitacionService.changeRoomStatus(serv.getIdRoom().getIdRoom(),2);
-
-            serv.setIdRoom(hab);
-
-            //cambiar la otra habitacion a ocupada
-            habitacionService.changeRoomStatus(numeroHabitacion,3);
-            return this.actualizarServicioHabitacionOcupada(serv);
-        }
-    }
-
-    @Override
-    public Service actualizarTarifaServicio(int service,int idTarifa) throws SearchItemNotFoundException {
-        Service serv=portOut.consultarServicioPorId(service);
-        RateType tarifa=tarifaService.obtenerTarifaPorId(idTarifa);
-
-        if ((tarifa==null || tarifa.getIdTipoTarifa()==0) || serv==null){
-            return null;
-        }else {
-            serv.setIdRateType(tarifa);
-            return this.actualizarServicioHabitacionOcupada(serv);
-        }
-    }
-
-    @Override
-    public Service cerrarServicioPorIdServicio(int idService) throws SearchItemNotFoundException {
-        Service service =this.consultarServicioPorId(idService);
-        service.setState(false);
-        Room room=habitacionService.getRoomById(service.getIdRoom().getIdRoom());
-        double valor=0;
-
-        valor=this.cobrar(service.getFechaEntrada()
+    public Service cerrarServicioPorIdServicio(int idService) throws SearchItemNotFoundException, GenericException {
+        Service service=this.consultarServicioPorId(idService);
+        Room room=habitacionPortIn.getRoomById(service.getIdRoom().getIdRoom());
+        /*double valorRegistrado=service.getPayment();
+        double valorACobrar=this.cobrar(service.getFechaEntrada()
                 ,service.getFechaSalida(),
                 room.getRoomPrice24Hours(),
                 service.getIdRateType().getIdTipoTarifa()
         );
-
-        service.setPayment(valor);
+        if (valorRegistrado!=valorACobrar){
+            service.setPayment(valorACobrar);
+        }*/
         return this.actualizarServicioParaCerrarServicio(service);
     }
 
     @Override
-    public Service ampliarServicio(Service service, int dia,int hora,int minuto) throws SearchItemNotFoundException {
+    public Service ampliarServicio(Service service, int dia, int hora, int minutos) throws SearchItemNotFoundException, GenericException {
         LocalDateTime entrada=service.getFechaEntrada();
         LocalDateTime salida=service.getFechaSalida();
         if (entrada!=null&&salida!=null&& salida.isAfter(entrada)){
             service.setFechaSalida(
-                    this.configurarDias(service.getFechaSalida(),dia,hora,minuto)
+                    this.configurarDias(service.getFechaSalida(),dia,hora,minutos)
+            );
+            /*se podria refactorizar para retornar la diferencia entre
+            * el valor a cobrar antiguo y el valor a cobrar actual*/
+            service.setPayment(
+                    this.cobrar(
+                            service.getFechaEntrada(),
+                            service.getFechaSalida(),
+                            service.getIdRoom().getRoomPrice24Hours(),
+                            service.getIdRateType().getPorcentajeTarifa()
+                    )
             );
             return this.actualizarServicioHabitacionOcupada(service);
         }else {
@@ -191,53 +237,18 @@ public class ServicioService implements ServicioPortIn {
         }
     }
 
-    public ReceptionistEntity obtenerRecepcionista(Service service) throws SearchItemNotFoundException {/*!!!!!*/
-        return recepcionistaService.obtenerRecepcionistaPorId(
-                service.getIdRecep().getIdRecep()
-        );
-    }
+    @Override
+    public Service pagarServicio(int idService) throws SearchItemNotFoundException {
+        Service service = portOut.consultarServicioPorId(idService);
+        service.setItsPaid(true);
 
-    public boolean determinarOcupacionHabitacion(Service service) throws SearchItemNotFoundException {
-        Room room= habitacionService.getRoomById(
-                service.getIdRoom().getIdRoom()
-        );
-        int estado=room.getIdRoomStatus().getIdStatus();
-        if (estado==3){
-            return true;
-        }else {
-            return false;
-        }
-    }
-
-    /** if the date of checkout of the service is null, it set one day later
-     * than date of checkin*/
-    public Service establecerEstadia(Service service){
-        LocalDateTime entrada=service.getFechaEntrada();
-        LocalDateTime salida=service.getFechaSalida();
-
-        service.setState(true);
-
-        if (entrada!=null&&salida!=null&& salida.isAfter(entrada)){
-            return service;
-        }else if (entrada!=null && salida==null){
-            service.setFechaEntrada(entrada);
-            service.setFechaSalida(
-                    LocalDateTime.now().plusDays(1)
-            );
-            return service;
-        }else {
-            service.setFechaEntrada(LocalDateTime.now());
-            service.setFechaSalida(
-                    LocalDateTime.now().plusDays(1)
-            );
-            return service;
-        }
+        return portOut.actualizarServicio(service);
     }
 
     public int determinarMinutosEstadia(LocalDateTime entrada, LocalDateTime salida){
         int horasEntrada,horasSalida;
         int minutosEntrada,minutosSalida;
-        int minutos=Period.between(entrada.toLocalDate(),salida.toLocalDate()).getDays()*1440;
+        int minutos= Period.between(entrada.toLocalDate(),salida.toLocalDate()).getDays()*1440;
         //return Period.between(entrada.toLocalDate(),salida.toLocalDate()).getDays();
 
         horasEntrada=entrada.getHour();
@@ -252,7 +263,20 @@ public class ServicioService implements ServicioPortIn {
 
         return minutos;
     }
+    public double cobrar(LocalDateTime entrada, LocalDateTime salida, double valorHabitacion, double tarifaDescuento){
+        double valor=0;
+        double desc=0;
 
+        int minutosEstadia=this.determinarMinutosEstadia(entrada,salida);
+
+        valor=(valorHabitacion/1440)*minutosEstadia;
+
+        desc=(valor*tarifaDescuento)/100;
+
+        valor-=desc;
+
+        return Math.round(valor);
+    }
     public LocalDateTime configurarDias(LocalDateTime fecha, int dia,int hora,int minuto){
         LocalDateTime salida=fecha
                 .plusDays(dia)
@@ -261,19 +285,24 @@ public class ServicioService implements ServicioPortIn {
 
         return salida;
     }
-
-    public double cobrar(LocalDateTime entrada, LocalDateTime salida, double tarifa, double descuento){
-        double valor=0;
-        double desc=0;
-
-        int minutosEstadia=this.determinarMinutosEstadia(entrada,salida);
-
-        valor=(tarifa/1440)*minutosEstadia;
-
-        desc=(valor*descuento)/100;
-
-        valor-=desc;
-
-        return Math.round(valor);
+    public boolean determinarOcupacionHabitacion(int idRoom) throws SearchItemNotFoundException {
+        Room room= habitacionPortIn.getRoomById(
+                idRoom
+        );
+        BusinessConfiguration config=configurationPortIn.getConfigurations().get(0);
+        int estado=room.getIdRoomStatus().getIdStatus();
+        if (estado==config.getIdStateDefaultToStartService()){
+            return true;
+        }else {
+            return false;
+        }
+    }
+    public boolean servicioPagado(int idService) throws SearchItemNotFoundException{
+        Service servicio=portOut.consultarServicioPorId(idService);
+        return servicio.isItsPaid();
+    }
+    public boolean peticionLegal(Service service) throws SearchItemNotFoundException{
+        Service srvc=portOut.consultarServicioPorId(service.getIdService());
+        return srvc.isItsPaid()==service.isItsPaid();
     }
 }
