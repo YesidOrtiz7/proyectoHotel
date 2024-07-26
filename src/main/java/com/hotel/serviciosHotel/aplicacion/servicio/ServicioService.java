@@ -16,7 +16,7 @@ import java.time.Period;
 import java.util.List;
 
 @org.springframework.stereotype.Service
-public class ServicioService2 implements ServicioPortIn {
+public class ServicioService implements ServicioPortIn {
     /*--------------------------Campos para inyeccion de dependencias-----------------------*/
     private ServicePortOut portOut;
     private HabitacionPortIn habitacionPortIn;

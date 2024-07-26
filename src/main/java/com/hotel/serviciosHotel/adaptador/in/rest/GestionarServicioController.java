@@ -25,9 +25,9 @@ import java.util.List;
 public class GestionarServicioController {
 
     private ServicioPortIn servicePortIn;
-    //@Qualifier("servicioImpl2")
+    //@Qualifier("ServicioService2")
     @Autowired
-    public void setServicePortIn(@Qualifier("ServicioService2") ServicioPortIn servicePortIn) {
+    public void setServicePortIn(ServicioPortIn servicePortIn) {
         this.servicePortIn = servicePortIn;
     }
 
