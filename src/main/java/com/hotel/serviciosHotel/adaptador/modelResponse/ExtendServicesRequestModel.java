@@ -3,7 +3,7 @@ package com.hotel.serviciosHotel.adaptador.modelResponse;
 import com.hotel.serviciosHotel.dominio.entidades.Service;
 
 public class ExtendServicesRequestModel {
-    private Service service;
+    private int service;
     private int dia;
     private int hora;
     private int minuto;
@@ -11,18 +11,18 @@ public class ExtendServicesRequestModel {
     public ExtendServicesRequestModel() {
     }
 
-    public ExtendServicesRequestModel(Service service, int dia, int hora, int minuto) {
+    public ExtendServicesRequestModel(int service, int dia, int hora, int minuto) {
         this.service = service;
         this.dia = dia;
         this.hora = hora;
         this.minuto = minuto;
     }
 
-    public Service getService() {
+    public int getService() {
         return service;
     }
 
-    public void setService(Service service) {
+    public void setService(int service) {
         this.service = service;
     }
 

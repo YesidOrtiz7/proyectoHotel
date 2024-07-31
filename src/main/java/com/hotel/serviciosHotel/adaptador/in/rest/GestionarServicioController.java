@@ -13,7 +13,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+//import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -140,16 +140,21 @@ public class GestionarServicioController {
     })
     public ResponseEntity ampliarServicio(@RequestBody ExtendServicesRequestModel request) {
         try {
-            Service response =servicePortIn.ampliarServicio(
-                    request.getService(),
-                    request.getDia(),
-                    request.getHora(),
-                    request.getMinuto()
-            );
-            if (response==null){
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            Service service=servicePortIn.consultarServicioPorId(request.getService());
+            if (service.getState()){
+                Service response =servicePortIn.ampliarServicio(
+                        service,
+                        request.getDia(),
+                        request.getHora(),
+                        request.getMinuto()
+                );
+                if (response==null){
+                    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                }else {
+                    return new ResponseEntity<>(response,HttpStatus.OK);
+                }
             }else {
-                return new ResponseEntity<>(response,HttpStatus.OK);
+                return new ResponseEntity<>("El servicio al que se le esta tratando de ampliar ya se encuentra cerrado",HttpStatus.BAD_REQUEST);
             }
         }catch (SearchItemNotFoundException | GenericException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);

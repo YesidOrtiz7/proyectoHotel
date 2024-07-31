@@ -119,7 +119,7 @@ public class ServicioService implements ServicioPortIn {
         }
         if (!this.determinarOcupacionHabitacion(service.getIdRoom().getIdRoom())){
             return null;
-        }
+        }//refactorizar
         return portOut.actualizarServicio(service);
     }
 
@@ -155,10 +155,10 @@ public class ServicioService implements ServicioPortIn {
     }
 
     @Override
-    public Service actualizarHabitacionServicio(int service, int numeroHabitacion) throws SearchItemNotFoundException {
+    public Service actualizarHabitacionServicio(int service, int idRoom) throws SearchItemNotFoundException {
         Service servicio=portOut.consultarServicioPorId(service);
         Room habitacionActual=servicio.getIdRoom();
-        Room habitacionTransferir=habitacionPortIn.getRoomByNumber(numeroHabitacion);
+        Room habitacionTransferir=habitacionPortIn.getRoomById(idRoom);
 
         BusinessConfiguration config=configurationPortIn.getConfigurations().get(0);
 
@@ -176,6 +176,14 @@ public class ServicioService implements ServicioPortIn {
         );
         habitacionPortIn.updateRoom(habitacionTransferir);
 
+        double cobro=this.cobrarAhora(
+                servicio.getFechaEntrada(),
+                habitacionActual.getRoomPrice24Hours(),
+                servicio.getIdRateType().getPorcentajeTarifa()
+        );
+        cobro+=this.cobrar(LocalDateTime.now(),servicio.getFechaSalida(),habitacionTransferir.getRoomPrice24Hours(),servicio.getIdRateType().getPorcentajeTarifa());
+
+        servicio.setPayment(cobro);
         servicio.setIdRoom(habitacionTransferir);
         return portOut.actualizarServicio(servicio);
     }
@@ -200,7 +208,7 @@ public class ServicioService implements ServicioPortIn {
     @Override
     public Service cerrarServicioPorIdServicio(int idService) throws SearchItemNotFoundException, GenericException {
         Service service=this.consultarServicioPorId(idService);
-        Room room=habitacionPortIn.getRoomById(service.getIdRoom().getIdRoom());
+        //Room room=habitacionPortIn.getRoomById(service.getIdRoom().getIdRoom());
         /*double valorRegistrado=service.getPayment();
         double valorACobrar=this.cobrar(service.getFechaEntrada()
                 ,service.getFechaSalida(),
@@ -223,14 +231,16 @@ public class ServicioService implements ServicioPortIn {
             );
             /*se podria refactorizar para retornar la diferencia entre
             * el valor a cobrar antiguo y el valor a cobrar actual*/
-            service.setPayment(
-                    this.cobrar(
-                            service.getFechaEntrada(),
-                            service.getFechaSalida(),
-                            service.getIdRoom().getRoomPrice24Hours(),
-                            service.getIdRateType().getPorcentajeTarifa()
-                    )
+            /*reconfigurar para que calcule bien el valor a cobrar en el caso de que se amplie un servicio en el que
+            * ya se ha hecho un cambio de habitacion */
+            double valorACobrar=service.getPayment();
+            valorACobrar+=this.cobrar(
+                    service.getFechaEntrada(),
+                    service.getFechaSalida(),
+                    service.getIdRoom().getRoomPrice24Hours(),
+                    service.getIdRateType().getPorcentajeTarifa()
             );
+            service.setPayment(valorACobrar);
             return this.actualizarServicioHabitacionOcupada(service);
         }else {
             return null;
@@ -264,6 +274,21 @@ public class ServicioService implements ServicioPortIn {
         return minutos;
     }
     public double cobrar(LocalDateTime entrada, LocalDateTime salida, double valorHabitacion, double tarifaDescuento){
+        double valor=0;
+        double desc=0;
+
+        int minutosEstadia=this.determinarMinutosEstadia(entrada,salida);
+
+        valor=(valorHabitacion/1440)*minutosEstadia;
+
+        desc=(valor*tarifaDescuento)/100;
+
+        valor-=desc;
+
+        return Math.round(valor);
+    }
+    public double cobrarAhora(LocalDateTime entrada, double valorHabitacion, double tarifaDescuento){
+        LocalDateTime salida=LocalDateTime.now();
         double valor=0;
         double desc=0;
 
