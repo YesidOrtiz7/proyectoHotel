@@ -37,13 +37,18 @@ public class GestionarServicioController {
             @ApiResponse(responseCode = "200",description = "OK"),
             @ApiResponse(responseCode = "400",description = "BAD_REQUEST")
     })
-    public ResponseEntity<Service> obtenerServicioPorId(@PathVariable("id")int id) throws SearchItemNotFoundException {
-        Service response=servicePortIn.consultarServicioPorId(id);
-        if (response==null){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }else {
-            return new ResponseEntity<>(response,HttpStatus.OK);
+    public ResponseEntity obtenerServicioPorId(@PathVariable("id")int id) {
+        try {
+            Service response=servicePortIn.consultarServicioPorId(id);
+            if (response==null){
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }else {
+                return new ResponseEntity<>(response,HttpStatus.OK);
+            }
+        }catch (SearchItemNotFoundException e){
+            return new ResponseEntity<>(e,HttpStatus.BAD_REQUEST);
         }
+
     }
     @GetMapping("/todos")
     @Operation(summary = "obtener todos los servicios", description = "retorna todos los servicios registrados en la base de datos")
@@ -101,7 +106,7 @@ public class GestionarServicioController {
             }else {
                 return new ResponseEntity<>(response,HttpStatus.OK);
             }
-        }catch (SearchItemNotFoundException e){
+        }catch (SearchItemNotFoundException | ItemAlreadyExistException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }

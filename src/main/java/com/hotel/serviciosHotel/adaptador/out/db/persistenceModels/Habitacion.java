@@ -2,6 +2,8 @@ package com.hotel.serviciosHotel.adaptador.out.db.persistenceModels;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "tblhabitacion")
 public class Habitacion {
@@ -25,6 +27,8 @@ public class Habitacion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idHabitacion;
+    @OneToMany(mappedBy = "idHabitacion",cascade = CascadeType.ALL)
+    private List<HistorialHabitaciones> historialHabitaciones;
 
     public Habitacion() {
     }

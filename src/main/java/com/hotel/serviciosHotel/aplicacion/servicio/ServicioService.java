@@ -2,10 +2,7 @@ package com.hotel.serviciosHotel.aplicacion.servicio;
 
 import com.hotel.serviciosHotel.aplicacion.puerto.in.*;
 import com.hotel.serviciosHotel.aplicacion.puerto.out.persistance.ServicePortOut;
-import com.hotel.serviciosHotel.dominio.entidades.BusinessConfiguration;
-import com.hotel.serviciosHotel.dominio.entidades.RateType;
-import com.hotel.serviciosHotel.dominio.entidades.Room;
-import com.hotel.serviciosHotel.dominio.entidades.Service;
+import com.hotel.serviciosHotel.dominio.entidades.*;
 import com.hotel.serviciosHotel.exceptionHandler.exceptions.GenericException;
 import com.hotel.serviciosHotel.exceptionHandler.exceptions.ItemAlreadyExistException;
 import com.hotel.serviciosHotel.exceptionHandler.exceptions.SearchItemNotFoundException;
@@ -24,6 +21,7 @@ public class ServicioService implements ServicioPortIn {
     private BusinessConfigurationPortIn configurationPortIn;
     private TarifaPortIn tarifaPortIn;
     private RecepcionistaPortIn recepcionistaService;
+    private RoomHistoryPortIn roomHistoryPortIn;
     /*--------------------------Inyeccion de dependencias-----------------------------------*/
     @Autowired
     public void setEstadoHabitacionPortIn(EstadoHabitacionPortIn estadoHabitacionPortIn) {
@@ -48,6 +46,10 @@ public class ServicioService implements ServicioPortIn {
     @Autowired
     public void setRecepcionistaService(RecepcionistaPortIn recepcionistaService) {
         this.recepcionistaService = recepcionistaService;
+    }
+    @Autowired
+    public void setRoomHistoryPortIn(RoomHistoryPortIn roomHistoryPortIn) {
+        this.roomHistoryPortIn = roomHistoryPortIn;
     }
 
     /*---------------------------metodos de la clase----------------------------------------*/
@@ -78,10 +80,15 @@ public class ServicioService implements ServicioPortIn {
         }
         BusinessConfiguration config=configurationPortIn.getConfigurations().get(0);
         Room habitacion=habitacionPortIn.getRoomById(service.getIdRoom().getIdRoom());
+        RoomHistory roomHistory=new RoomHistory(
+                habitacion,
+                service.getFechaEntrada(),
+                service.getFechaSalida());
         if (this.determinarOcupacionHabitacion(habitacion.getIdRoom())){
             throw new GenericException("la habitacion que esta tratando de registrar en este servicio tiene un estado"+
                     "que le impide ser asignada");
         }
+
         service.setPayment(
                 this.cobrar(
                         service.getFechaEntrada(),
@@ -96,13 +103,14 @@ public class ServicioService implements ServicioPortIn {
                         config.getIdStateDefaultToStartService()
                 )
         );
-        habitacionPortIn.updateRoom(
-                habitacion
-        );
+        habitacionPortIn.updateRoom(habitacion);
 
         service.setState(true);
+        Service response=portOut.registrarServicio(service);
+        roomHistory.setIdService(response);
+        roomHistoryPortIn.saveHistory(roomHistory);
 
-        return portOut.registrarServicio(service);
+        return response;
     }
 
     @Override
@@ -119,7 +127,10 @@ public class ServicioService implements ServicioPortIn {
         }
         if (!this.determinarOcupacionHabitacion(service.getIdRoom().getIdRoom())){
             return null;
-        }//refactorizar
+        }
+        this.actualizarHistorial(service,service.getFechaSalida());
+        double valorACobrar=this.generarCobroConBaseEnHistorial(service);
+        service.setPayment(valorACobrar);
         return portOut.actualizarServicio(service);
     }
 
@@ -155,13 +166,14 @@ public class ServicioService implements ServicioPortIn {
     }
 
     @Override
-    public Service actualizarHabitacionServicio(int service, int idRoom) throws SearchItemNotFoundException {
+    public Service actualizarHabitacionServicio(int service, int idRoom)
+            throws SearchItemNotFoundException, ItemAlreadyExistException {
         Service servicio=portOut.consultarServicioPorId(service);
         Room habitacionActual=servicio.getIdRoom();
         Room habitacionTransferir=habitacionPortIn.getRoomById(idRoom);
 
         BusinessConfiguration config=configurationPortIn.getConfigurations().get(0);
-
+        //asignar a la habitacino actual el estado predeterminado para el cierre del servicio
         habitacionActual.setIdRoomStatus(
                 estadoHabitacionPortIn.obtenerEstadoHabitacionPorId(
                         config.getIdStateDefaultToCloseService()
@@ -169,19 +181,16 @@ public class ServicioService implements ServicioPortIn {
         );
         habitacionPortIn.updateRoom(habitacionActual);
 
+        //asignar a la habitacion a transferir el estado predeterminado para el inicio del servicio
         habitacionTransferir.setIdRoomStatus(
                 estadoHabitacionPortIn.obtenerEstadoHabitacionPorId(
                         config.getIdStateDefaultToStartService()
                 )
         );
         habitacionPortIn.updateRoom(habitacionTransferir);
+        this.actualizarHistorialNuevaHabitacion(servicio,habitacionTransferir,servicio.getFechaSalida());
 
-        double cobro=this.cobrarAhora(
-                servicio.getFechaEntrada(),
-                habitacionActual.getRoomPrice24Hours(),
-                servicio.getIdRateType().getPorcentajeTarifa()
-        );
-        cobro+=this.cobrar(LocalDateTime.now(),servicio.getFechaSalida(),habitacionTransferir.getRoomPrice24Hours(),servicio.getIdRateType().getPorcentajeTarifa());
+        double cobro=this.generarCobroConBaseEnHistorial(servicio);
 
         servicio.setPayment(cobro);
         servicio.setIdRoom(habitacionTransferir);
@@ -195,12 +204,13 @@ public class ServicioService implements ServicioPortIn {
 
         servicio.setIdRateType(tarifaNueva);
         servicio.setPayment(
-                this.cobrar(
+                /*this.cobrar(
                         servicio.getFechaEntrada(),
                         servicio.getFechaSalida(),
                         servicio.getIdRoom().getRoomPrice24Hours(),
                         servicio.getIdRateType().getPorcentajeTarifa()
-                )
+                )*/
+                this.generarCobroConBaseEnHistorial(servicio)
         );
         return portOut.actualizarServicio(servicio);
     }
@@ -233,14 +243,7 @@ public class ServicioService implements ServicioPortIn {
             * el valor a cobrar antiguo y el valor a cobrar actual*/
             /*reconfigurar para que calcule bien el valor a cobrar en el caso de que se amplie un servicio en el que
             * ya se ha hecho un cambio de habitacion */
-            double valorACobrar=service.getPayment();
-            valorACobrar+=this.cobrar(
-                    service.getFechaEntrada(),
-                    service.getFechaSalida(),
-                    service.getIdRoom().getRoomPrice24Hours(),
-                    service.getIdRateType().getPorcentajeTarifa()
-            );
-            service.setPayment(valorACobrar);
+
             return this.actualizarServicioHabitacionOcupada(service);
         }else {
             return null;
@@ -287,21 +290,6 @@ public class ServicioService implements ServicioPortIn {
 
         return Math.round(valor);
     }
-    public double cobrarAhora(LocalDateTime entrada, double valorHabitacion, double tarifaDescuento){
-        LocalDateTime salida=LocalDateTime.now();
-        double valor=0;
-        double desc=0;
-
-        int minutosEstadia=this.determinarMinutosEstadia(entrada,salida);
-
-        valor=(valorHabitacion/1440)*minutosEstadia;
-
-        desc=(valor*tarifaDescuento)/100;
-
-        valor-=desc;
-
-        return Math.round(valor);
-    }
     public LocalDateTime configurarDias(LocalDateTime fecha, int dia,int hora,int minuto){
         LocalDateTime salida=fecha
                 .plusDays(dia)
@@ -329,5 +317,47 @@ public class ServicioService implements ServicioPortIn {
     public boolean peticionLegal(Service service) throws SearchItemNotFoundException{
         Service srvc=portOut.consultarServicioPorId(service.getIdService());
         return srvc.isItsPaid()==service.isItsPaid();
+    }
+    public double generarCobroConBaseEnHistorial(Service service){
+        List<RoomHistory> roomsInThisService=roomHistoryPortIn.getHistoryByIdService(service.getIdService());
+        double valorACobrar=0;
+        for (RoomHistory record: roomsInThisService) {
+            valorACobrar=this.cobrar(
+                    record.getSinceDate(),
+                    record.getTillDate(),
+                    record.getIdRoom().getRoomPrice24Hours(),
+                    service.getIdRateType().getPorcentajeTarifa()
+            );
+
+        }
+        return valorACobrar;
+    }
+    public void actualizarHistorialNuevaHabitacion(Service idService,
+                                                   Room habitacionFutura,
+                                                   LocalDateTime fechaSalida)
+            throws SearchItemNotFoundException, ItemAlreadyExistException{
+
+        /*seleccionamos el ultimo registro del historial, que seria el de la habitacion actual
+        * despues le asignamos como fecha de salida la fecha actual y al mismo tiempo creamos un
+        * nuevo registro con la nueva habitacion y asignamos como fecha de entrada la fecha actual
+        * y como fecha de salida le asignamos la fecha del parametro*/
+        LocalDateTime currentDate=LocalDateTime.now();
+
+        //actualizamos el registro de la habitacion actual
+        this.actualizarHistorial(idService,currentDate);
+
+
+        RoomHistory newRecord=new RoomHistory(habitacionFutura,currentDate,fechaSalida);
+        newRecord.setIdService(idService);
+        //guardamos el nuevo registro
+        roomHistoryPortIn.saveHistory(newRecord);
+    }
+    public void actualizarHistorial(Service idService,
+                                    LocalDateTime fechaSalida)
+            throws SearchItemNotFoundException{
+        List<RoomHistory> roomsInThisService= roomHistoryPortIn.getHistoryByIdService(idService.getIdService());
+        RoomHistory currentRecord=roomsInThisService.get(roomsInThisService.size()-1);
+        currentRecord.setTillDate(fechaSalida);
+        roomHistoryPortIn.updateHistory(currentRecord);
     }
 }

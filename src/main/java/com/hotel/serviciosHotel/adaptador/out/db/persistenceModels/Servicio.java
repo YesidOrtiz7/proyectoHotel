@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
 
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name="tblservicio")
@@ -66,13 +66,16 @@ public class Servicio {
     private LocalDateTime fechaSalida;
 
     private boolean estado;
+    /*@OneToMany(mappedBy = "idHabitacion",cascade = CascadeType.ALL)
+    private List<HistorialHabitaciones> historialHabitaciones;*/
 
     public Servicio() {
     }
 
     public Servicio(int idServicio, Recepcionista idRecep, Cliente idCliente, Habitacion idHabitacion,
                     TipoTarifa idTipoTarifa, Municipios cliProcedencia, Municipios cliDestino, TipoPago idTipoPago,
-                    double pago, LocalDateTime fechaEntrada, LocalDateTime fechaSalida, boolean estado, boolean pagado) {
+                    double pago, LocalDateTime fechaEntrada, LocalDateTime fechaSalida, boolean estado, boolean pagado)
+                     {//List<HistorialHabitaciones> historialHabitaciones)
         this.idServicio = idServicio;
         this.idRecep = idRecep;
         this.idCliente = idCliente;
@@ -86,6 +89,7 @@ public class Servicio {
         this.fechaSalida = fechaSalida;
         this.estado = estado;
         this.pagado=pagado;
+        //this.historialHabitaciones=historialHabitaciones;
     }
 
     public void setEstado(boolean estado) {
@@ -191,4 +195,12 @@ public class Servicio {
     public void setPagado(boolean pagado) {
         this.pagado = pagado;
     }
+/*
+    public List<HistorialHabitaciones> getHistorialHabitaciones() {
+        return historialHabitaciones;
+    }
+
+    public void setHistorialHabitaciones(List<HistorialHabitaciones> historialHabitaciones) {
+        this.historialHabitaciones = historialHabitaciones;
+    }*/
 }

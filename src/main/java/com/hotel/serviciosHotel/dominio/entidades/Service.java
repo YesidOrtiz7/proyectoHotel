@@ -2,6 +2,7 @@ package com.hotel.serviciosHotel.dominio.entidades;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 
 public class Service {
@@ -18,10 +19,12 @@ public class Service {
     private LocalDateTime fechaSalida;
     private boolean itsPaid;
     private boolean state;
+    //private List<RoomHistory> roomHistories;
 
     public Service(int idService, ReceptionistEntity idRecep, Client idClient, Room idRoom, RateType idRateType,
                    Municipios cliProcedencia, Municipios cliDestino, PaymentType idTipoPago, double payment,
-                   LocalDateTime fechaEntrada, LocalDateTime fechaSalida, boolean state, boolean itsPaid) {
+                   LocalDateTime fechaEntrada, LocalDateTime fechaSalida, boolean state, boolean itsPaid
+                   ) {//List<RoomHistory> roomHistories
         this.idService = idService;
         this.idRecep = idRecep;
         this.idClient = idClient;
@@ -35,6 +38,7 @@ public class Service {
         this.fechaSalida = fechaSalida;
         this.state = state;
         this.itsPaid=itsPaid;
+        //this.roomHistories=roomHistories;
     }
 
     public Service() {
@@ -143,4 +147,12 @@ public class Service {
     public void setItsPaid(boolean itsPaid) {
         this.itsPaid = itsPaid;
     }
+/*
+    public List<RoomHistory> getRoomHistories() {
+        return roomHistories;
+    }
+
+    public void setRoomHistories(List<RoomHistory> roomHistories) {
+        this.roomHistories = roomHistories;
+    }*/
 }
