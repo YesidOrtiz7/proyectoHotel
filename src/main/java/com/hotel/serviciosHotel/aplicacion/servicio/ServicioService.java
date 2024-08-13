@@ -112,7 +112,9 @@ public class ServicioService implements ServicioPortIn {
 
         return response;
     }
-
+    /**este metodo es usado cuando se requiere actualizar la duracion del servicio,
+     * este metodo realiza verificaciones al servicio que se va a registrar y actualiza
+     * el historial de habitaciones del servicio*/
     @Override
     public Service actualizarServicioHabitacionOcupada(Service service) throws SearchItemNotFoundException, GenericException {
         if (!this.peticionLegal(service)){
@@ -120,13 +122,15 @@ public class ServicioService implements ServicioPortIn {
                     "no concuerdan");
         }
         if (!portOut.servicioExiste(service)){
-            return null;
+            throw new SearchItemNotFoundException(
+                    "Peticion invalida: el servicio no existe");
         }
         if (!recepcionistaService.existenciaRecepcionista(service.getIdRecep().getIdRecep())){
-            return null;
+            throw new SearchItemNotFoundException(
+                    "Peticion invalida: la recepcionista que se esta tratando de asociar a este servicio no existe");
         }
         if (!this.determinarOcupacionHabitacion(service.getIdRoom().getIdRoom())){
-            return null;
+            throw new GenericException("Habitacion con un estado no valido");
         }
         this.actualizarHistorial(service,service.getFechaSalida());
         double valorACobrar=this.generarCobroConBaseEnHistorial(service);
@@ -141,28 +145,31 @@ public class ServicioService implements ServicioPortIn {
                     "no concuerdan");
         }
         if (!portOut.servicioExiste(service)){
-            return null;
+            throw new SearchItemNotFoundException(
+                    "Peticion invalida: el servicio no existe");
         }
         if (!this.servicioPagado(service.getIdService())){
             throw new GenericException("el servicio que se esta tratando de cancelar no esta pagado");
         }
-        if (recepcionistaService.existenciaRecepcionista(service.getIdRecep().getIdRecep())
-        && this.determinarOcupacionHabitacion(service.getIdRoom().getIdRoom())){
-
-            service.setState(false);
-
-            /*cambiar el estado a la habitacion*/
-
-            BusinessConfiguration configuration=configurationPortIn.getConfigurations().get(0);
-            service.setIdRoom(
-                    habitacionPortIn.changeRoomStatus(
-                            service.getIdRoom().getIdRoom(),
-                            configuration.getIdStateDefaultToCloseService()
-                    )
-            );
-            return portOut.actualizarServicio(service);
+        if (!recepcionistaService.existenciaRecepcionista(service.getIdRecep().getIdRecep())){
+            throw new SearchItemNotFoundException(
+                    "Peticion invalida: la recepcionista que se esta tratando de asociar a este servicio no existe");
         }
-        return null;
+        if (!this.determinarOcupacionHabitacion(service.getIdRoom().getIdRoom())){
+            throw new GenericException("Habitacion con un estado no valido");
+        }
+        service.setState(false);
+
+        /*cambiar el estado a la habitacion*/
+
+        BusinessConfiguration configuration=configurationPortIn.getConfigurations().get(0);
+        service.setIdRoom(
+                habitacionPortIn.changeRoomStatus(
+                        service.getIdRoom().getIdRoom(),
+                        configuration.getIdStateDefaultToCloseService()
+                )
+        );
+        return portOut.actualizarServicio(service);
     }
 
     @Override
@@ -290,6 +297,8 @@ public class ServicioService implements ServicioPortIn {
 
         return Math.round(valor);
     }
+    /**toma la fecha pasada como parametro y le suma los dias, horas o minutos que
+     * se le especifiquen*/
     public LocalDateTime configurarDias(LocalDateTime fecha, int dia,int hora,int minuto){
         LocalDateTime salida=fecha
                 .plusDays(dia)
@@ -298,17 +307,18 @@ public class ServicioService implements ServicioPortIn {
 
         return salida;
     }
-    public boolean determinarOcupacionHabitacion(int idRoom) throws SearchItemNotFoundException {
+    public boolean determinarOcupacionHabitacion(int idRoom) throws SearchItemNotFoundException, GenericException {
         Room room= habitacionPortIn.getRoomById(
                 idRoom
         );
-        BusinessConfiguration config=configurationPortIn.getConfigurations().get(0);
-        int estado=room.getIdRoomStatus().getIdStatus();
-        if (estado==config.getIdStateDefaultToStartService()){
-            return true;
-        }else {
-            return false;
+        BusinessConfiguration config;
+        try {
+            config=configurationPortIn.getConfigurations().get(0);
+        }catch (IndexOutOfBoundsException e){
+            throw new GenericException("No es posible completar la accion, no hay configuraciones en la base de datos");
         }
+        int estado=room.getIdRoomStatus().getIdStatus();
+        return estado == config.getIdStateDefaultToStartService();
     }
     public boolean servicioPagado(int idService) throws SearchItemNotFoundException{
         Service servicio=portOut.consultarServicioPorId(idService);
@@ -322,13 +332,12 @@ public class ServicioService implements ServicioPortIn {
         List<RoomHistory> roomsInThisService=roomHistoryPortIn.getHistoryByIdService(service.getIdService());
         double valorACobrar=0;
         for (RoomHistory record: roomsInThisService) {
-            valorACobrar=this.cobrar(
+            valorACobrar+=this.cobrar(
                     record.getSinceDate(),
                     record.getTillDate(),
                     record.getIdRoom().getRoomPrice24Hours(),
                     service.getIdRateType().getPorcentajeTarifa()
             );
-
         }
         return valorACobrar;
     }
@@ -352,6 +361,9 @@ public class ServicioService implements ServicioPortIn {
         //guardamos el nuevo registro
         roomHistoryPortIn.saveHistory(newRecord);
     }
+    /**esta funcion consulta todos los registros del historial de habitaciones
+     * y toma el ultimo (el registro actual del servicio) para actualizarlo
+     * actualizando la fecha de salida con la fecha pasada por parametro*/
     public void actualizarHistorial(Service idService,
                                     LocalDateTime fechaSalida)
             throws SearchItemNotFoundException{

@@ -30,7 +30,11 @@ class GestionarHabitacionesControllerTest {
 
         roomMock1=new Room(
                 302,
-                new RoomStatus(3,"ocupada"),
+                new RoomStatus(2,
+                        "ocupada",
+                        false,
+                        true,
+                        false),
                 new RoomType(1,"doble"),
                 100000,
                 4,
@@ -38,7 +42,11 @@ class GestionarHabitacionesControllerTest {
                 );
         roomMock2=new Room(
                 301,
-                new RoomStatus(1,"limpia"),
+                new RoomStatus(1,
+                        "limpia",
+                        false,
+                        true,
+                        false),
                 new RoomType(1,"doble"),
                 1000,
                 4,

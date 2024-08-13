@@ -23,7 +23,7 @@ public class Service {
 
     public Service(int idService, ReceptionistEntity idRecep, Client idClient, Room idRoom, RateType idRateType,
                    Municipios cliProcedencia, Municipios cliDestino, PaymentType idTipoPago, double payment,
-                   LocalDateTime fechaEntrada, LocalDateTime fechaSalida, boolean state, boolean itsPaid
+               LocalDateTime fechaEntrada, LocalDateTime fechaSalida, boolean state, boolean itsPaid
                    ) {//List<RoomHistory> roomHistories
         this.idService = idService;
         this.idRecep = idRecep;
@@ -39,6 +39,24 @@ public class Service {
         this.state = state;
         this.itsPaid=itsPaid;
         //this.roomHistories=roomHistories;
+    }
+    /**constructor para fines de pruebas unitarias*/
+    public Service(int idService, ReceptionistEntity idRecep, Client idClient, Room idRoom, RateType idRateType,
+                   Municipios cliProcedencia, Municipios cliDestino, PaymentType idTipoPago,
+                   LocalDateTime fechaEntrada, LocalDateTime fechaSalida, boolean state, boolean itsPaid
+    ) {
+        this.idService = idService;
+        this.idRecep = idRecep;
+        this.idClient = idClient;
+        this.idRoom = idRoom;
+        this.idRateType = idRateType;
+        this.cliProcedencia = cliProcedencia;
+        this.cliDestino = cliDestino;
+        this.idTipoPago = idTipoPago;
+        this.fechaEntrada = fechaEntrada;
+        this.fechaSalida = fechaSalida;
+        this.state = state;
+        this.itsPaid=itsPaid;
     }
 
     public Service() {
