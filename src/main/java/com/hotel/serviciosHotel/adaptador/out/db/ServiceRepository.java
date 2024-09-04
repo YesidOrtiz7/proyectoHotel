@@ -24,7 +24,7 @@ public class ServiceRepository implements ServicePortOut {
     @Override
     public Service consultarServicioPorId(int id) throws SearchItemNotFoundException {
         Optional<Servicio> query=repository.findById(id);
-        if (query.isEmpty()||query==null){
+        if (query.isEmpty()){
             throw new SearchItemNotFoundException("el servicio con el id "+id+" no existe");
         }else {
             return mapper.toService(

@@ -1,16 +1,18 @@
 package com.hotel.serviciosHotel.aplicacion.puerto.out.persistance;
 
 import com.hotel.serviciosHotel.dominio.entidades.Client;
+import com.hotel.serviciosHotel.exceptionHandler.exceptions.ItemAlreadyExistException;
+import com.hotel.serviciosHotel.exceptionHandler.exceptions.SearchItemNotFoundException;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.ArrayList;
 
 public interface ClientPortOut {
-    public Client saveClient(Client client);
-    public Client updateClient(Client client);
-    public Optional<Client> getClientById(Integer id);
-    public Optional<Client> getClientByDocument(String document);
-    public List<Client> getClients();
-    public boolean deleteClientById(Integer id);
-    public boolean deleteClient(Client cliente);
+    boolean clientExist(int id);
+    Client saveClient(Client client) throws ItemAlreadyExistException;
+    Client updateClient(Client client) throws SearchItemNotFoundException;
+    Client getClientById(Integer id) throws SearchItemNotFoundException;
+    Client getClientByDocument(String document) throws SearchItemNotFoundException;
+    ArrayList<Client> getClients();
+    boolean deleteClientById(Integer id) throws SearchItemNotFoundException;
+    boolean deleteClient(Client cliente) throws SearchItemNotFoundException;
 }

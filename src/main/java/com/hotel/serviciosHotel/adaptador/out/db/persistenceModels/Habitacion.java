@@ -33,6 +33,17 @@ public class Habitacion {
     public Habitacion() {
     }
 
+    public Habitacion(int numHabitacion, EstadosHabitacion idEstHab,
+                      TipoHabitacion tipoHabitacion, double precioHabitacion24Horas,
+                      int numeroCamas, int idHabitacion) {
+        this.numHabitacion = numHabitacion;
+        this.idEstHab = idEstHab;
+        this.tipoHabitacion = tipoHabitacion;
+        this.precioHabitacion24Horas = precioHabitacion24Horas;
+        this.numeroCamas = numeroCamas;
+        this.idHabitacion = idHabitacion;
+    }
+
     public void setIdHabitacion(int idHabitacion) {
         this.idHabitacion = idHabitacion;
     }

@@ -1,19 +1,22 @@
 package com.hotel.serviciosHotel.aplicacion.puerto.out.persistance;
 
 import com.hotel.serviciosHotel.dominio.entidades.Room;
+import com.hotel.serviciosHotel.exceptionHandler.exceptions.ItemAlreadyExistException;
+import com.hotel.serviciosHotel.exceptionHandler.exceptions.SearchItemNotFoundException;
 
 import java.util.ArrayList;
-import java.util.Optional;
 
 public interface RoomPortOut {
-    public boolean roomExist(int id);
-    public Room saveRoom(Room room);
-    public Room updateRoom(Room room);
-    public Optional<Room> getRoomByNumber(Integer number);
-    public Optional<Room> getRoomById(Integer id);
+    boolean roomExistById(int id);
+    boolean roomTypeExistById(int id);
+    boolean roomStatusExistById(int id);
+    Room saveRoom(Room room) throws ItemAlreadyExistException;
+    Room updateRoom(Room room) throws SearchItemNotFoundException;
+    public Room getRoomByNumber(Integer number) throws SearchItemNotFoundException;
+    public Room getRoomById(Integer id) throws SearchItemNotFoundException;
     public ArrayList<Room> getRooms();
-    public boolean deleteRoomById(Integer id);
-    public boolean deleteRoom(Room room);
-    public Room changeRoomType(int room,int roomType);
-    public Room changeStateRoom(int room,int state);
+    public boolean deleteRoomById(Integer id) throws SearchItemNotFoundException;
+    public boolean deleteRoom(Room room) throws SearchItemNotFoundException;
+    public Room changeRoomType(int room,int roomType) throws SearchItemNotFoundException;
+    public Room changeStateRoom(int room,int state) throws SearchItemNotFoundException;
 }

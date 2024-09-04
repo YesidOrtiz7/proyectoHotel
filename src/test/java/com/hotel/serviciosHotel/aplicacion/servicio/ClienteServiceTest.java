@@ -3,102 +3,253 @@ package com.hotel.serviciosHotel.aplicacion.servicio;
 import com.hotel.serviciosHotel.adaptador.out.db.ClientRepository;
 import com.hotel.serviciosHotel.aplicacion.puerto.out.persistance.ClientPortOut;
 import com.hotel.serviciosHotel.dominio.entidades.Client;
+import com.hotel.serviciosHotel.exceptionHandler.exceptions.InvalidCharacterException;
+import com.hotel.serviciosHotel.exceptionHandler.exceptions.ItemAlreadyExistException;
 import com.hotel.serviciosHotel.exceptionHandler.exceptions.SearchItemNotFoundException;
-import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.function.Executable;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
-class ClienteServiceTest {
+public class ClienteServiceTest {
+    private Client client;
+    private Client client2;
+    private ArrayList<Client> clientArrayList;
 
-    private ClientPortOut portOutMock;
-    private Client c1=new Client(1,"489984","primerNombre","segundoNombre","primerApellido","segundoApellido","1111");
-    private Client c2=new Client(2,"22585","primerNombre","segundoNombre","primerApellido","segundoApellido","2222");
-    private List<Client> mockResponse;
-
-    private ClienteService service;
-
+    private ClientPortOut repository;
+    private ClienteService service=new ClienteService();
     @BeforeEach
-    void setUp() {
-        portOutMock= Mockito.mock(ClientRepository.class);
-
-        mockResponse =new ArrayList<>();
-        mockResponse.add(c1);
-        mockResponse.add(c2);
-
-        service=new ClienteService();
-        service.setPortOut(portOutMock);
+    void setUp(){
+        repository= Mockito.mock(ClientRepository.class);
+        service.setPortOut(repository);
+        clientArrayList=new ArrayList<>();
+        client=new Client(
+                1,
+                "12345678",
+                "Juan",
+                "Carloss",
+                "García",
+                "Pérez",
+                "5551234567"
+        );
+        client2=new Client(
+                2,
+                "12345678",
+                "Juan",
+                "Carloss",
+                "García",
+                "Pérez",
+                "5551234567"
+        );
+        clientArrayList.add(client);
+        clientArrayList.add(client2);
     }
-
-    @AfterEach
-    void tearDown() {
-    }
-
     @Test
-    void obtenerClientes() {
-        Mockito.when(portOutMock.getClients()).thenReturn(mockResponse);
-
-        List<Client> responseQuery=service.obtenerClientes();
-
-        Assertions.assertEquals(mockResponse, responseQuery);
+    void obtenerClientes(){
+        Mockito.when(repository.getClients()).thenReturn(clientArrayList);
+        service.obtenerClientes();
+        Mockito.verify(repository,Mockito.times(1)).getClients();
     }
-
     @Test
-    void obtenerClientesConListadoNull() {
-        Mockito.when(portOutMock.getClients()).thenReturn(null);
-
-        Assertions.assertEquals(null, service.obtenerClientes());
+    void registrarCliente(){
+        try {
+            Mockito.when(repository.clientExist(1)).thenReturn(false);
+            Mockito.when(repository.saveClient(client)).thenReturn(client);
+            Assertions.assertEquals(client,service.registrarCliente(client));
+            Mockito.verify(repository,Mockito.times(1)).saveClient(client);
+        } catch (Exception e) {
+            Assertions.fail(e);
+        }
     }
-
     @Test
-    void registrarCliente() {
-        Mockito.when(portOutMock.saveClient(c1)).thenReturn(c1);
-
-        Assertions.assertEquals(c1, service.registrarCliente(c1));
+    void registrarCliente_ClientAlreadyExist(){
+        try {
+            Mockito.when(repository.clientExist(1)).thenReturn(true);
+            Mockito.when(repository.saveClient(client)).thenReturn(client);
+            Assertions.assertThrows(ItemAlreadyExistException.class,()->service.registrarCliente(client));
+            Mockito.verify(repository,Mockito.times(0)).saveClient(client);
+        } catch (Exception e) {
+            Assertions.fail(e);
+        }
     }
-
     @Test
-    void actualizarCliente() {
-        Mockito.when(portOutMock.updateClient(c1)).thenReturn(c1);
-
-        Assertions.assertEquals(c1,service.actualizarCliente(c1));
+    void registrarCliente_RepositoryThrowsItemAlreadyExistException(){
+        try {
+            Mockito.when(repository.clientExist(1)).thenReturn(false);
+            Mockito.when(repository.saveClient(client)).thenThrow(ItemAlreadyExistException.class);
+            Assertions.assertThrows(ItemAlreadyExistException.class,()->service.registrarCliente(client));
+            Mockito.verify(repository,Mockito.times(1)).saveClient(client);
+        } catch (Exception e) {
+            Assertions.fail(e);
+        }
     }
-
     @Test
-    void eliminarCliente() {
-        Mockito.when(portOutMock.deleteClientById(1)).thenReturn(true);
-        Assertions.assertEquals(true, service.eliminarCliente(1));
+    void registrarCliente_DocumentoInvalido(){
+        try {
+            client.setDocumentoCliente(client.getDocumentoCliente()+"A");
+            Mockito.when(repository.clientExist(1)).thenReturn(false);
+            Mockito.when(repository.saveClient(client)).thenReturn(client);
+            Assertions.assertThrows(InvalidCharacterException.class,()->service.registrarCliente(client));
+            Mockito.verify(repository,Mockito.times(0)).saveClient(client);
+        } catch (Exception e) {
+            Assertions.fail(e);
+        }
     }
-
     @Test
-    void consultarClientePorId() throws SearchItemNotFoundException {
-        Mockito.when(portOutMock.getClientById(1)).thenReturn(Optional.of(c1));
-
-        Assertions.assertEquals(c1,service.consultarClientePorId(1));
+    void registrarCliente_CelularInvalido(){
+        try {
+            client.setCelularCliente(client.getCelularCliente()+"A");
+            Mockito.when(repository.clientExist(1)).thenReturn(false);
+            Mockito.when(repository.saveClient(client)).thenReturn(client);
+            Assertions.assertThrows(InvalidCharacterException.class,()->service.registrarCliente(client));
+            Mockito.verify(repository,Mockito.times(0)).saveClient(client);
+        } catch (Exception e) {
+            Assertions.fail(e);
+        }
     }
-
     @Test
-    void consultarClientePorIdNull() {
-        Mockito.when(portOutMock.getClientById(1)).thenReturn(null);
-
-        Assertions.assertThrows(SearchItemNotFoundException.class, () ->{service.consultarClientePorId(1);});
-
+    void actualizarCliente(){
+        try {
+            Mockito.when(repository.clientExist(2)).thenReturn(true);
+            Mockito.when(repository.updateClient(client2)).thenReturn(client2);
+            Assertions.assertEquals(client2,service.actualizarCliente(client2));
+            Mockito.verify(repository,Mockito.times(1)).updateClient(client2);
+        } catch (Exception e) {
+            Assertions.fail(e);
+        }
     }
-
     @Test
-    void consultarClientePorDocumento() {
-        Mockito.when(portOutMock.getClientByDocument("489984")).thenReturn(Optional.of(c1));
-
-        Assertions.assertEquals(c1,service.consultarClientePorDocumento("489984"));
+    void actualizarCliente_ClientDontExist(){
+        try {
+            Mockito.when(repository.clientExist(2)).thenReturn(false);
+            Mockito.when(repository.updateClient(client2)).thenReturn(client2);
+            Assertions.assertThrows(SearchItemNotFoundException.class,()->service.actualizarCliente(client2));
+            Mockito.verify(repository,Mockito.times(0)).updateClient(client2);
+        } catch (Exception e) {
+            Assertions.fail(e);
+        }
     }
-
     @Test
-    void consultarClientePorDocumentoNull() {
-        Mockito.when(portOutMock.getClientByDocument("489984")).thenReturn(null);
-
-        Assertions.assertEquals(null,service.consultarClientePorDocumento("489984"));
+    void actualizarCliente_RepositoryThrowsSearchItemNotFoundException(){
+        try {
+            Mockito.when(repository.clientExist(2)).thenReturn(true);
+            Mockito.when(repository.updateClient(client2)).thenThrow(SearchItemNotFoundException.class);
+            Assertions.assertThrows(SearchItemNotFoundException.class,()->service.actualizarCliente(client2));
+            Mockito.verify(repository,Mockito.times(1)).updateClient(client2);
+        } catch (Exception e) {
+            Assertions.fail(e);
+        }
+    }
+    @Test
+    void actualizarCliente_DocumentoInvalido(){
+        try {
+            client.setDocumentoCliente(client.getDocumentoCliente()+"A");
+            Mockito.when(repository.clientExist(1)).thenReturn(false);
+            Mockito.when(repository.updateClient(client)).thenReturn(client);
+            Assertions.assertThrows(InvalidCharacterException.class,()->service.actualizarCliente(client));
+            Mockito.verify(repository,Mockito.times(0)).updateClient(client);
+        } catch (Exception e) {
+            Assertions.fail(e);
+        }
+    }
+    @Test
+    void actualizarCliente_CelularInvalido(){
+        try {
+            client.setCelularCliente(client.getCelularCliente()+"A");
+            Mockito.when(repository.clientExist(1)).thenReturn(false);
+            Mockito.when(repository.updateClient(client)).thenReturn(client);
+            Assertions.assertThrows(InvalidCharacterException.class,()->service.actualizarCliente(client));
+            Mockito.verify(repository,Mockito.times(0)).updateClient(client);
+        } catch (Exception e) {
+            Assertions.fail(e);
+        }
+    }
+    @Test
+    void eliminarCliente(){
+        try {
+            Mockito.when(repository.clientExist(1)).thenReturn(true);
+            Mockito.when(repository.deleteClientById(1)).thenReturn(true);
+            Assertions.assertTrue(service.eliminarCliente(1));
+            Mockito.verify(repository,Mockito.times(1)).deleteClientById(1);
+        } catch (Exception e) {
+            Assertions.fail(e);
+        }
+    }
+    @Test
+    void eliminarCliente_ClientDontExist(){
+        try {
+            Mockito.when(repository.clientExist(1)).thenReturn(false);
+            Mockito.when(repository.deleteClientById(1)).thenReturn(true);
+            Assertions.assertThrows(SearchItemNotFoundException.class,()->service.eliminarCliente(1));
+            Mockito.verify(repository,Mockito.times(0)).deleteClientById(1);
+        } catch (Exception e) {
+            Assertions.fail(e);
+        }
+    }
+    @Test
+    void eliminarCliente_RepositoryThrowsSearchItemNotFoundException(){
+        try {
+            Mockito.when(repository.clientExist(1)).thenReturn(true);
+            Mockito.when(repository.deleteClientById(1)).thenThrow(SearchItemNotFoundException.class);
+            Assertions.assertThrows(SearchItemNotFoundException.class,()->service.eliminarCliente(1));
+            Mockito.verify(repository,Mockito.times(1)).deleteClientById(1);
+        } catch (Exception e) {
+            Assertions.fail(e);
+        }
+    }
+    @Test
+    void consultarClientePorId(){
+        try {
+            Mockito.when(repository.clientExist(1)).thenReturn(true);
+            Mockito.when(repository.getClientById(1)).thenReturn(client);
+            Assertions.assertEquals(client,service.consultarClientePorId(1));
+            Mockito.verify(repository,Mockito.times(1)).getClientById(1);
+        } catch (Exception e) {
+            Assertions.fail(e);
+        }
+    }
+    @Test
+    void consultarClientePorId_ClientDontExist(){
+        try {
+            Mockito.when(repository.clientExist(1)).thenReturn(false);
+            Mockito.when(repository.getClientById(1)).thenReturn(client);
+            Assertions.assertThrows(SearchItemNotFoundException.class,()->service.consultarClientePorId(1));
+            Mockito.verify(repository,Mockito.times(0)).getClientById(1);
+        } catch (Exception e) {
+            Assertions.fail(e);
+        }
+    }
+    @Test
+    void consultarClientePorId_RepositoryThrowsSearchItemNotFoundException(){
+        try {
+            Mockito.when(repository.clientExist(1)).thenReturn(true);
+            Mockito.when(repository.getClientById(1)).thenThrow(SearchItemNotFoundException.class);
+            Assertions.assertThrows(SearchItemNotFoundException.class,()->service.consultarClientePorId(1));
+            Mockito.verify(repository,Mockito.times(1)).getClientById(1);
+        } catch (Exception e) {
+            Assertions.fail(e);
+        }
+    }
+    @Test
+    void consultarClientePorDocumento(){
+        try {
+            Mockito.when(repository.getClientByDocument("12345678")).thenReturn(client);
+            Assertions.assertEquals(client,service.consultarClientePorDocumento("12345678"));
+            Mockito.verify(repository,Mockito.times(1)).getClientByDocument("12345678");
+        } catch (Exception e) {
+            Assertions.fail(e);
+        }
+    }
+    @Test
+    void consultarClientePorDocumento_RepositoryThrowsSearchItemNotFoundException(){
+        try {
+            Mockito.when(repository.getClientByDocument("12345678")).thenThrow(SearchItemNotFoundException.class);
+            Assertions.assertThrows(SearchItemNotFoundException.class,()->service.consultarClientePorDocumento("12345678"));
+            Mockito.verify(repository,Mockito.times(1)).getClientByDocument("12345678");
+        } catch (Exception e) {
+            Assertions.fail(e);
+        }
     }
 }

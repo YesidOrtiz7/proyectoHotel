@@ -1,17 +1,20 @@
 package com.hotel.serviciosHotel.aplicacion.puerto.out.persistance;
 
 import com.hotel.serviciosHotel.dominio.entidades.ReceptionistEntity;
+import com.hotel.serviciosHotel.exceptionHandler.exceptions.ItemAlreadyExistException;
+import com.hotel.serviciosHotel.exceptionHandler.exceptions.SearchItemNotFoundException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public interface ReceptionistPortOut {
-    public boolean receptionistExist(int id);
-    public ReceptionistEntity saveRecepcionist(ReceptionistEntity receptionist);
-    public ReceptionistEntity updateRecepcionist(ReceptionistEntity receptionist);
-    public Optional<ReceptionistEntity> getRecepcionistById(Integer id);
-    public Optional<ReceptionistEntity> getRecepcionistByDocument(String document);
-    public List<ReceptionistEntity> getRecepcionist();
-    public boolean deleteRecepcionistById(Integer id);
-    public boolean deleteRecepcionist(ReceptionistEntity receptionist);
+    boolean receptionistExist(int id);
+    ReceptionistEntity saveRecepcionist(ReceptionistEntity receptionist) throws ItemAlreadyExistException;
+    ReceptionistEntity updateRecepcionist(ReceptionistEntity receptionist) throws SearchItemNotFoundException;
+    ReceptionistEntity getRecepcionistById(Integer id) throws SearchItemNotFoundException;
+    ReceptionistEntity getRecepcionistByDocument(String document) throws SearchItemNotFoundException;
+    ArrayList<ReceptionistEntity> getRecepcionist();
+    boolean deleteRecepcionistById(Integer id) throws SearchItemNotFoundException;
+    boolean deleteRecepcionist(ReceptionistEntity receptionist) throws SearchItemNotFoundException;
 }

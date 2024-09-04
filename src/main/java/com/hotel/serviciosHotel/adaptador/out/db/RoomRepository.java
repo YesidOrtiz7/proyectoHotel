@@ -11,6 +11,8 @@ import com.hotel.serviciosHotel.aplicacion.puerto.out.persistance.RoomPortOut;
 import com.hotel.serviciosHotel.dominio.entidades.Room;
 import com.hotel.serviciosHotel.dominio.entidades.RoomStatus;
 import com.hotel.serviciosHotel.dominio.entidades.RoomType;
+import com.hotel.serviciosHotel.exceptionHandler.exceptions.ItemAlreadyExistException;
+import com.hotel.serviciosHotel.exceptionHandler.exceptions.SearchItemNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,75 +21,90 @@ import java.util.Optional;
 
 @Component
 public class RoomRepository implements RoomPortOut {
-    @Autowired
     private HabitacionCrudRepository repository;
-    @Autowired
     private TipoHabCrudRepository repositoryTipoHab;
-    @Autowired
     private EstadoHabCrudRepository repositoryEstadoHab;
-    @Autowired
     private MapperRoom mapper;
-
-    @Autowired
     private MapperRoomType mapperRoomType;
-
-    @Autowired
     private MapperRoomStatus mapperRoomStatus;
 
+    /*--------------------------------------------------------------------*/
+    @Autowired
+    public void setRepository(HabitacionCrudRepository repository) {
+        this.repository = repository;
+    }
+    @Autowired
+    public void setRepositoryTipoHab(TipoHabCrudRepository repositoryTipoHab) {
+        this.repositoryTipoHab = repositoryTipoHab;
+    }
+    @Autowired
+    public void setRepositoryEstadoHab(EstadoHabCrudRepository repositoryEstadoHab) {
+        this.repositoryEstadoHab = repositoryEstadoHab;
+    }
+    @Autowired
+    public void setMapper(MapperRoom mapper) {
+        this.mapper = mapper;
+    }
+    @Autowired
+    public void setMapperRoomType(MapperRoomType mapperRoomType) {
+        this.mapperRoomType = mapperRoomType;
+    }
+    @Autowired
+    public void setMapperRoomStatus(MapperRoomStatus mapperRoomStatus) {
+        this.mapperRoomStatus = mapperRoomStatus;
+    }
+    /*--------------------------------------------------------------------*/
+
     @Override
-    public boolean roomExist(int id) {
+    public boolean roomExistById(int id) {
         return repository.existsById(id);
     }
 
     @Override
-    public Room saveRoom(Room room) {
-        if (repository.existsById(room.getIdRoom())||room.getIdRoom()==0){
+    public Room saveRoom(Room room) throws ItemAlreadyExistException {
+        if (!repository.existsById(room.getIdRoom())){
             Habitacion hab = mapper.toHabitacion(room);
-            //System.out.println(hab.toString());
             return mapper.toRoom(
                     repository.save(hab)
             );
         }else {
-            return null;
+            throw new ItemAlreadyExistException("la habitacion con el id "+room.getIdRoom()+
+                    " ya existe");
         }
     }
 
     @Override
-    public Room updateRoom(Room room) {
+    public Room updateRoom(Room room) throws SearchItemNotFoundException {
         if (repository.existsById(room.getIdRoom())){
-            //System.out.println(room.getIdRoom());
             Habitacion hab = mapper.toHabitacion(room);
             return mapper.toRoom(
                     repository.save(hab)
             );
         }else {
-            return null;
+            throw new SearchItemNotFoundException("la habitacion con el id "+room.getIdRoom()+
+                    " no existe");
         }
 
     }
 
     @Override
-    public Optional<Room> getRoomByNumber(Integer number) {
+    public Room getRoomByNumber(Integer number) throws SearchItemNotFoundException {
         Optional<Habitacion> habitacion=repository.findBynumHabitacion(number);
-        if (habitacion.isEmpty()){
-            return Optional.empty();
-        }else {
-            return Optional.of(
-                    mapper.toRoom(habitacion.get())
-            );
+        if (habitacion.isPresent()){
+            return mapper.toRoom(habitacion.get());
         }
+        throw new SearchItemNotFoundException("la habitacion con el numero "+number+
+                " no existe");
     }
 
     @Override
-    public Optional<Room> getRoomById(Integer id) {
+    public Room getRoomById(Integer id) throws SearchItemNotFoundException {
         Optional<Habitacion> habitacion=repository.findById(id);
-        if (habitacion.isEmpty()){
-            return Optional.empty();
-        }else {
-            return Optional.of(
-                    mapper.toRoom(habitacion.get())
-            );
+        if (habitacion.isPresent()){
+            return mapper.toRoom(habitacion.get());
         }
+        throw new SearchItemNotFoundException("la habitacion con el id "+id+
+                " no existe");
     }
 
     @Override
@@ -102,58 +119,64 @@ public class RoomRepository implements RoomPortOut {
     }
 
     @Override
-    public boolean deleteRoomById(Integer id) {
+    public boolean deleteRoomById(Integer id) throws SearchItemNotFoundException {
         if (repository.existsById(id)){
             repository.deleteById(id);
             return true;
-        }else {
-            return false;
         }
+        throw new SearchItemNotFoundException("la habitacion con el id "+id+
+                " no existe");
     }
 
     @Override
-    public boolean deleteRoom(Room room) {
+    public boolean deleteRoom(Room room) throws SearchItemNotFoundException {
         if (repository.existsById(room.getIdRoom())){
             repository.delete(
                     mapper.toHabitacion(room)
             );
             return true;
-        }else {
-            return false;
         }
+        throw new SearchItemNotFoundException("La habitacion con el id "+room.getIdRoom()+
+                " no existe");
     }
 
     @Override
-    public Room changeRoomType(int idroom, int idState) {
-        Optional<Room> roomByNumber=this.getRoomById(idroom);
+    public Room changeRoomType(int idroom, int idtype) throws SearchItemNotFoundException {
+        Room roomById=this.getRoomById(idroom);
 
-        Room room=(roomByNumber.isEmpty()||roomByNumber==null)?null:roomByNumber.get();
-
-        if (repositoryTipoHab.existsById(idState)&&room!=null){
+        if (repositoryTipoHab.existsById(idtype)){
             RoomType type=mapperRoomType.toRoomType(
-                    repositoryTipoHab.findByIdTipoHabitacion(idState)
+                    repositoryTipoHab.findByIdTipoHabitacion(idtype)
             );
-            room.setRoomType(type);
-            Room roomResponse=this.updateRoom(room);
-            return roomResponse;
-        }else {
-            return null;
+            roomById.setRoomType(type);
+            return this.updateRoom(roomById);
         }
+        throw new SearchItemNotFoundException("El estado con el id "+idtype+
+                " no existe");
     }
 
     @Override
-    public Room changeStateRoom(int idroom, int state) {
-        Optional<Room> roomByNumber=this.getRoomById(idroom);
-        Room room=(roomByNumber==null||roomByNumber.isEmpty())?null:roomByNumber.get();
-        if (repositoryEstadoHab.existsById(state)&&room!=null){
+    public Room changeStateRoom(int idroom, int idstate) throws SearchItemNotFoundException {
+        Room roomById=this.getRoomById(idroom);
+
+        if (repositoryEstadoHab.existsById(idstate)){
             RoomStatus roomStatus=mapperRoomStatus.toRoomStatus(
-                    repositoryEstadoHab.findByIdEstado(state)
+                    repositoryEstadoHab.findByIdEstado(idstate)
             );
-            room.setIdRoomStatus(roomStatus);
-            Room roomResponse=this.updateRoom(room);
-            return roomResponse;
-        }else {
-            return null;
+            roomById.setIdRoomStatus(roomStatus);
+            return this.updateRoom(roomById);
         }
+        throw new SearchItemNotFoundException("el estado con el id "+idstate+
+                " no existe");
+    }
+
+    @Override
+    public boolean roomTypeExistById(int id) {
+        return repositoryTipoHab.existsById(id);
+    }
+
+    @Override
+    public boolean roomStatusExistById(int id) {
+        return repositoryEstadoHab.existsById(id);
     }
 }

@@ -2,6 +2,8 @@ package com.hotel.serviciosHotel.adaptador.in.rest;
 
 import com.hotel.serviciosHotel.aplicacion.puerto.in.RecepcionistaPortIn;
 import com.hotel.serviciosHotel.dominio.entidades.ReceptionistEntity;
+import com.hotel.serviciosHotel.exceptionHandler.exceptions.InvalidCharacterException;
+import com.hotel.serviciosHotel.exceptionHandler.exceptions.ItemAlreadyExistException;
 import com.hotel.serviciosHotel.exceptionHandler.exceptions.SearchItemNotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -30,7 +32,7 @@ public class GestionarRecepcionistaController {
             @ApiResponse(responseCode = "200",description = "OK"),
             @ApiResponse(responseCode = "400",description = "BAD_REQUEST")
     })
-    public ResponseEntity<ReceptionistEntity> obtenerRecepcionistaPorDocumento(@PathVariable("documento") String documento){
+    public ResponseEntity<ReceptionistEntity> obtenerRecepcionistaPorDocumento(@PathVariable("documento") String documento) throws SearchItemNotFoundException{
         ReceptionistEntity recep=service.obtenerRecepcionistaPorDocumento(documento);
         if (recep==null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -78,7 +80,7 @@ public class GestionarRecepcionistaController {
             @ApiResponse(responseCode = "200",description = "OK"),
             @ApiResponse(responseCode = "400",description = "BAD_REQUEST")
     })
-    public ResponseEntity<ReceptionistEntity> actualizarRecepcionistas(@RequestBody ReceptionistEntity receptionist){
+    public ResponseEntity<ReceptionistEntity> actualizarRecepcionistas(@RequestBody ReceptionistEntity receptionist) throws SearchItemNotFoundException, InvalidCharacterException{
         ReceptionistEntity response=service.actualizarRecepcionista(receptionist);
         if (response==null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -95,7 +97,7 @@ public class GestionarRecepcionistaController {
             @ApiResponse(responseCode = "201",description = "CREATED"),
             @ApiResponse(responseCode = "400",description = "BAD_REQUEST")
     })
-    public ResponseEntity<ReceptionistEntity> registrarRecepcionista(@RequestBody ReceptionistEntity receptionist){
+    public ResponseEntity<ReceptionistEntity> registrarRecepcionista(@RequestBody ReceptionistEntity receptionist) throws ItemAlreadyExistException, InvalidCharacterException {
         ReceptionistEntity response=service.registrarRecepcionista(receptionist);
         if (response==null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

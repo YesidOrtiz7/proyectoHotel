@@ -17,7 +17,7 @@ public interface ServicioPortIn {
 
     Service actualizarServicioHabitacionOcupada(Service service) throws SearchItemNotFoundException, GenericException;
     Service actualizarServicioParaCerrarServicio(Service service) throws SearchItemNotFoundException, GenericException;
-    Service actualizarHabitacionServicio(int service, int numeroHabitacion) throws SearchItemNotFoundException, ItemAlreadyExistException;
+    Service actualizarHabitacionServicio(int service, int numeroHabitacion) throws SearchItemNotFoundException, ItemAlreadyExistException, GenericException;
     Service actualizarTarifaServicio(int service,int idTarifa) throws SearchItemNotFoundException;
 
     Service cerrarServicioPorIdServicio(int idService) throws SearchItemNotFoundException, GenericException;

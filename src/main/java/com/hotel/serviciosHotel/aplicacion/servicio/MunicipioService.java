@@ -3,6 +3,8 @@ package com.hotel.serviciosHotel.aplicacion.servicio;
 import com.hotel.serviciosHotel.aplicacion.puerto.in.MunicipioPortIn;
 import com.hotel.serviciosHotel.aplicacion.puerto.out.persistance.MunicipioPortOut;
 import com.hotel.serviciosHotel.dominio.entidades.Municipios;
+import com.hotel.serviciosHotel.exceptionHandler.exceptions.InvalidCharacterException;
+import com.hotel.serviciosHotel.exceptionHandler.exceptions.ItemAlreadyExistException;
 import com.hotel.serviciosHotel.exceptionHandler.exceptions.SearchItemNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +23,11 @@ public class MunicipioService implements MunicipioPortIn {
     }
 
     @Override
-    public Municipios registrarMunicipio(Municipios municipios) {
+    public Municipios registrarMunicipio(Municipios municipios)
+            throws InvalidCharacterException, ItemAlreadyExistException {
+        if (municipios.getNombreMun().isBlank()){
+            throw new InvalidCharacterException("El nombre del municipio no puede estar en blanco");
+        }
         return portOut.registrarMunicipio(municipios);
     }
 
@@ -32,21 +38,20 @@ public class MunicipioService implements MunicipioPortIn {
 
     @Override
     public Municipios obtenerMunicipioPorId(int id) throws SearchItemNotFoundException {
-        Optional<Municipios> response=portOut.obtenerMunicipioPorId(id);
-        if (response!=null){
-            return response.get();
-        }else {
-            throw new SearchItemNotFoundException("el municipio con el id "+id+" no existe");
-        }
+        return portOut.obtenerMunicipioPorId(id);
     }
 
     @Override
-    public Municipios actualizarMunicipio(Municipios municipio) {
+    public Municipios actualizarMunicipio(Municipios municipio) throws InvalidCharacterException,SearchItemNotFoundException {
+        if (municipio.getNombreMun().isBlank()){
+            throw new InvalidCharacterException("El nombre del municipio no puede estar en blanco");
+        }
         return portOut.actualizarMunicipios(municipio);
     }
 
     @Override
-    public boolean eliminarMunicipio(Municipios municipio) {
+    public boolean eliminarMunicipio(Municipios municipio)
+        throws SearchItemNotFoundException{
         return portOut.eliminarMunicipio(municipio);
     }
 }

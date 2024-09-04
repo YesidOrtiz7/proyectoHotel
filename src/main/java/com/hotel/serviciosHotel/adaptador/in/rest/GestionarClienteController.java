@@ -2,8 +2,11 @@ package com.hotel.serviciosHotel.adaptador.in.rest;
 
 import com.hotel.serviciosHotel.aplicacion.puerto.in.ClientePortIn;
 import com.hotel.serviciosHotel.dominio.entidades.Client;
+import com.hotel.serviciosHotel.exceptionHandler.exceptions.InvalidCharacterException;
+import com.hotel.serviciosHotel.exceptionHandler.exceptions.ItemAlreadyExistException;
 import com.hotel.serviciosHotel.exceptionHandler.exceptions.SearchItemNotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,18 +34,13 @@ public class GestionarClienteController {
             @ApiResponse(responseCode = "200",description = "OK"),
             @ApiResponse(responseCode = "400",description = "BAD REQUEST")
     })
-    public ResponseEntity<Client> obtenerClientePorDocumento(@PathVariable("documento") String documento) {
-        try{
-            Client cli = service.consultarClientePorDocumento(documento);
-            if (cli == null){
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }else{
-                return new ResponseEntity<>(cli, HttpStatus.OK);
-            }
-        }catch (NoSuchElementException e){
+    public ResponseEntity<Client> obtenerClientePorDocumento(@PathVariable("documento") String documento) throws SearchItemNotFoundException{
+        Client cli = service.consultarClientePorDocumento(documento);
+        if (cli == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }else{
+            return new ResponseEntity<>(cli, HttpStatus.OK);
         }
-
     }
 
     @GetMapping("/id/{id}")
@@ -81,7 +79,7 @@ public class GestionarClienteController {
             @ApiResponse(responseCode = "200",description = "OK"),
             @ApiResponse(responseCode = "400",description = "BAD REQUEST")
     })
-    public ResponseEntity<Client> actualizarCliente(@RequestBody Client client){
+    public ResponseEntity<Client> actualizarCliente(@RequestBody Client client) throws SearchItemNotFoundException, InvalidCharacterException{
         Client clientResponse=service.actualizarCliente(client);
         if (clientResponse==null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -97,7 +95,7 @@ public class GestionarClienteController {
             @ApiResponse(responseCode = "201",description = "CREATED"),
             @ApiResponse(responseCode = "400",description = "BAD REQUEST")
     })
-    public ResponseEntity<Client> registrarCliente(@RequestBody Client client){
+    public ResponseEntity<Client> registrarCliente(@RequestBody Client client) throws ItemAlreadyExistException, InvalidCharacterException {
         Client clientResponse=service.registrarCliente(client);
         if (clientResponse==null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -113,7 +111,7 @@ public class GestionarClienteController {
             @ApiResponse(responseCode = "200",description = "OK"),
             @ApiResponse(responseCode = "400",description = "BAD REQUEST")
     })
-    public ResponseEntity eliminarCliente(@PathVariable("id") int id){
+    public ResponseEntity eliminarCliente(@PathVariable("id") int id) throws SearchItemNotFoundException{
         return service.eliminarCliente(id)?new ResponseEntity<>(HttpStatus.OK):new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }

@@ -59,7 +59,7 @@ class ServicioServiceTest {
         ,new Municipios(2,"San Bernardo")
         ,new PaymentType(1,"efectivo")
         ,LocalDateTime.now()
-        ,LocalDateTime.now().plusDays(1)
+        ,LocalDateTime.now().plusDays(2)
         ,true
         ,false
     );
@@ -202,6 +202,16 @@ class ServicioServiceTest {
         service.setConfigurationPortIn(configurationPortInMock);
         service.setRoomHistoryPortIn(roomHistoryMock);
     }
+    @Test
+    void consultarServicios(){
+        try {
+            Mockito.when(portOutMock.consultarServicios()).thenReturn(listServiceMock);
+            service.consultarServicios();
+            Mockito.verify(portOutMock,Mockito.times(1)).consultarServicios();
+        } catch (Exception e) {
+            Assertions.fail(e);
+        }
+    }
 
     @Test
     void consultarServicioPorId() {
@@ -209,17 +219,16 @@ class ServicioServiceTest {
             Mockito.when(portOutMock.consultarServicioPorId(1)).thenReturn(responseMockHabOcupada);
             Assertions.assertEquals(responseMockHabOcupada, service.consultarServicioPorId(1));
         } catch (Exception e) {
-            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!> "+e.getMessage()+" <!!!!!!!!!!!!!!!!!!!!!!!!!");
-            //Assertions.assertEquals(SearchItemNotFoundException.class,e.getClass());
+            Assertions.fail(e);
         }
     }
     @Test
     void consultarServicioPorId_ServicioNoExiste() {
         try {
             Mockito.when(portOutMock.consultarServicioPorId(0)).thenReturn(responseMockHabOcupada);
-            service.consultarServicioPorId(1);
+            Assertions.assertThrows(SearchItemNotFoundException.class,()->service.consultarServicioPorId(1));
         } catch (Exception e) {
-            Assertions.assertEquals(SearchItemNotFoundException.class,e.getClass());
+            Assertions.fail(e);
         }
     }
     @Test
@@ -232,7 +241,7 @@ class ServicioServiceTest {
             Mockito.when(portOutMock.registrarServicio(responseMockHabLimpia)).thenReturn(responseMockHabOcupada);
             Assertions.assertEquals(responseMockHabOcupada,service.registrarServicio(responseMockHabLimpia));
         }catch (Exception e){
-            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!> "+e.getMessage()+" <!!!!!!!!!!!!!!!!!!!!!!!!!");
+            Assertions.fail(e);
         }
     }
     @Test
@@ -246,7 +255,7 @@ class ServicioServiceTest {
             //Assertions.assertEquals(responseMockHabOcupada,service.registrarServicio(responseMockHabLimpia));
             Assertions.assertThrows(SearchItemNotFoundException.class, ()-> service.registrarServicio(responseMockHabLimpia));
         }catch (Exception e){
-            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!> "+e.getMessage()+" <!!!!!!!!!!!!!!!!!!!!!!!!!");
+            Assertions.fail(e);
         }
     }
     @Test
@@ -259,7 +268,7 @@ class ServicioServiceTest {
             Mockito.when(portOutMock.registrarServicio(responseMockHabLimpia)).thenReturn(responseMockHabOcupada);
             Assertions.assertThrows(SearchItemNotFoundException.class, ()-> service.registrarServicio(responseMockHabLimpia));
         }catch (Exception e){
-            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!> "+e.getMessage()+" <!!!!!!!!!!!!!!!!!!!!!!!!!");
+            Assertions.fail(e);
         }
     }
     @Test
@@ -272,7 +281,7 @@ class ServicioServiceTest {
             Mockito.when(portOutMock.registrarServicio(responseMockHabLimpia)).thenReturn(responseMockHabOcupada);
             Assertions.assertThrows(GenericException.class, ()-> service.registrarServicio(responseMockHabLimpia));
         }catch (Exception e){
-            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!> "+e.getMessage()+" <!!!!!!!!!!!!!!!!!!!!!!!!!");
+            Assertions.fail(e);
         }
     }
     @Test
@@ -289,7 +298,7 @@ class ServicioServiceTest {
 
             Assertions.assertEquals(responseMockHabOcupada,service.actualizarServicioHabitacionOcupada(responseMockHabOcupada));
         }catch (Exception e){
-            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!> "+e.getMessage()+" <!!!!!!!!!!!!!!!!!!!!!!!!!");
+            Assertions.fail(e);
         }
     }
     @Test
@@ -306,7 +315,7 @@ class ServicioServiceTest {
 
             Assertions.assertThrows(GenericException.class,()->service.actualizarServicioHabitacionOcupada(responseMockHabOcupada));
         }catch (Exception e){
-            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!> "+e.getMessage()+" <!!!!!!!!!!!!!!!!!!!!!!!!!");
+            Assertions.fail(e);
         }
     }
     @Test
@@ -323,7 +332,7 @@ class ServicioServiceTest {
 
             Assertions.assertThrows(SearchItemNotFoundException.class,()->service.actualizarServicioHabitacionOcupada(responseMockHabOcupada));
         }catch (Exception e){
-            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!> "+e.getMessage()+" <!!!!!!!!!!!!!!!!!!!!!!!!!");
+            Assertions.fail(e);
         }
     }
     @Test
@@ -340,7 +349,7 @@ class ServicioServiceTest {
 
             Assertions.assertThrows(SearchItemNotFoundException.class,()->service.actualizarServicioHabitacionOcupada(responseMockHabOcupada));
         }catch (Exception e){
-            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!> "+e.getMessage()+" <!!!!!!!!!!!!!!!!!!!!!!!!!");
+            Assertions.fail(e);
         }
     }
     @Test
@@ -357,7 +366,7 @@ class ServicioServiceTest {
 
             Assertions.assertThrows(GenericException.class,()->service.actualizarServicioHabitacionOcupada(responseMockHabOcupada));
         }catch (Exception e){
-            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!> "+e.getMessage()+" <!!!!!!!!!!!!!!!!!!!!!!!!!");
+            Assertions.fail(e);
         }
     }
     @Test
@@ -376,7 +385,7 @@ class ServicioServiceTest {
 
             Assertions.assertEquals(responseMockHabOcupada,service.actualizarServicioParaCerrarServicio(responseMockHabOcupada));
         }catch (Exception e){
-            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!> "+e.getMessage()+" <!!!!!!!!!!!!!!!!!!!!!!!!!");
+            Assertions.fail(e);
         }
     }
     @Test
@@ -395,7 +404,7 @@ class ServicioServiceTest {
 
             Assertions.assertThrows(GenericException.class,()->service.actualizarServicioParaCerrarServicio(responseMockHabOcupada));
         }catch (Exception e){
-            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!> "+e.getMessage()+" <!!!!!!!!!!!!!!!!!!!!!!!!!");
+            Assertions.fail(e);
         }
     }
     @Test
@@ -414,7 +423,7 @@ class ServicioServiceTest {
 
             Assertions.assertThrows(SearchItemNotFoundException.class,()->service.actualizarServicioParaCerrarServicio(responseMockHabOcupada));
         }catch (Exception e){
-            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!> "+e.getMessage()+" <!!!!!!!!!!!!!!!!!!!!!!!!!");
+            Assertions.fail(e);
         }
     }
     @Test
@@ -433,7 +442,7 @@ class ServicioServiceTest {
 
             Assertions.assertThrows(GenericException.class,()->service.actualizarServicioParaCerrarServicio(responseMockHabOcupada));
         }catch (Exception e){
-            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!> "+e.getMessage()+" <!!!!!!!!!!!!!!!!!!!!!!!!!");
+            Assertions.fail(e);
         }
     }
     @Test
@@ -452,7 +461,7 @@ class ServicioServiceTest {
 
             Assertions.assertThrows(SearchItemNotFoundException.class,()->service.actualizarServicioParaCerrarServicio(responseMockHabOcupada));
         }catch (Exception e){
-            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!> "+e.getMessage()+" <!!!!!!!!!!!!!!!!!!!!!!!!!");
+            Assertions.fail(e);
         }
     }
     @Test
@@ -471,31 +480,9 @@ class ServicioServiceTest {
 
             Assertions.assertThrows(GenericException.class,()->service.actualizarServicioParaCerrarServicio(responseMockHabOcupada));
         }catch (Exception e){
-            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!> "+e.getMessage()+" <!!!!!!!!!!!!!!!!!!!!!!!!!");
+            Assertions.fail(e);
         }
     }
-    /*-------------------------------------------------------------------------*/
-    @Test
-    void actualizarHabitacionServicio(){
-        try {
-            Mockito.when(portOutMock.consultarServicioPorId(1)).thenReturn(responseMockHabOcupada);
-            Mockito.when(habitacionServiceMock.getRoomById(2)).thenReturn(roomInUse);
-            Mockito.when(configurationPortInMock.getConfigurations()).thenReturn(configurationsListMock);
-            Mockito.when(portOutMock.actualizarServicio(responseMockHabOcupada)).thenReturn(responseMockHabOcupada);
-            listRoomHistoryRecords.add(roomHistoryRecord);
-            Mockito.when(roomHistoryMock.getHistoryByIdService(1)).thenReturn(listRoomHistoryRecords);
-
-            Assertions.assertEquals(responseMockHabOcupada,service.actualizarHabitacionServicio(1,2));
-        }catch (Exception e){
-            System.err.println("!!!!!!!!!!!!!!!!!!!!!!!!!> "+e.getMessage()+" <!!!!!!!!!!!!!!!!!!!!!!!!!");
-        }
-    }
-    /*-------------------------------------------------------------------------*/
-    @Test
-    void actualizarTarifaServicio(){}
-    //cerrarServicioPorIdServicio
-    //ampliarServicio
-    //pagarServicio
     @Test
     void determinarMinutosEstadia(){
         int minutos=service.determinarMinutosEstadia(LocalDateTime.now(),LocalDateTime.now().plusDays(1).plusHours(1));
@@ -516,7 +503,6 @@ class ServicioServiceTest {
         LocalDateTime resultado=service.configurarDias(ahora,1,1,1);
         Assertions.assertEquals(ahora.plusDays(1).plusHours(1).plusMinutes(1),resultado);
     }
-    //determinarOcupacionHabitacion //<-hacer que arroje un error personalizado en caso de que la lista de configuraciones este vacia
     @Test
     void determinarOcupacionHabitacion(){
         try {
@@ -525,7 +511,7 @@ class ServicioServiceTest {
 
             Assertions.assertTrue(service.determinarOcupacionHabitacion(2));
         }catch (Exception e){
-            System.err.println("!!!!!!!!!!!!!!!!!!!!!!!!!> "+e.getMessage()+" <!!!!!!!!!!!!!!!!!!!!!!!!!");
+            Assertions.fail(e);
         }
     }
     @Test
@@ -536,11 +522,9 @@ class ServicioServiceTest {
 
             Assertions.assertThrows(GenericException.class,()->service.determinarOcupacionHabitacion(2));
         }catch (Exception e){
-            System.err.println("!!!!!!!!!!!!!!!!!!!!!!!!!> "+e+" <!!!!!!!!!!!!!!!!!!!!!!!!!");
+            Assertions.fail(e);
         }
     }
-    //servicioPagado
-    //peticionLegal
     @Test
     void generarCobroConBaseEnHistorial(){
         listRoomHistoryRecords.add(roomHistoryRecord);
@@ -548,61 +532,4 @@ class ServicioServiceTest {
         Mockito.when(roomHistoryMock.getHistoryByIdService(1)).thenReturn(listRoomHistoryRecords);
         Assertions.assertEquals(4000,service.generarCobroConBaseEnHistorial(responseMockHabOcupada));
     }
-    /*{
-        "idService": 1,
-        "idRecep": {
-            "idRecep": 1,
-            "docRecep": "11111",
-            "receptionistNames": "Juana",
-            "receptionistLastNames": "Ordonez"
-        },
-        "idClient": {
-            "idCliente": 1,
-            "documentoCliente": "12345678",
-            "primerNombreCliente": "Juan",
-            "segundoNombreCliente": "Carloss",
-            "primerApellidoCliente": "García",
-            "segundoApellidoCliente": "Pérez",
-            "celularCliente": "5551234567"
-        },
-        "idRoom": {
-            "roomNumber": 102,
-            "idRoomStatus": {
-                "idStatus": 3,
-                "statusName": "sucia",
-                "visibleOnSelection": false,
-                "defaultForServiceStart": false,
-                "defaultForServiceShutdown": true
-            },
-            "roomType": {
-                "idRoomType": 1,
-                "roomTypeDescription": "normal"
-            },
-            "roomPrice24Hours": 2000.0,
-            "bedsNumber": 1,
-            "idRoom": 2
-        },
-        "idRateType": {
-            "idTipoTarifa": 1,
-            "descripcionTarifa": "cliente normal",
-            "porcentajeTarifa": 0
-        },
-        "cliProcedencia": {
-            "idMunicipios": 1,
-            "nombreMun": "Fusagasuga"
-        },
-        "cliDestino": {
-            "idMunicipios": 2,
-            "nombreMun": "San Bernardo"
-        },
-        "idTipoPago": {
-            "idPago": 1,
-            "descripcionPago": "efectivo"
-        },
-        "payment": 1980.0,
-        "fechaEntrada": "2024-07-19T17:36:00",
-        "fechaSalida": "2024-07-20T17:36:00",
-        "itsPaid": true,
-        "state": false
-    }*/
 }

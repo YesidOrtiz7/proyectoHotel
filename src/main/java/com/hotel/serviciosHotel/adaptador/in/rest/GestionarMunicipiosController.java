@@ -2,6 +2,8 @@ package com.hotel.serviciosHotel.adaptador.in.rest;
 
 import com.hotel.serviciosHotel.aplicacion.puerto.in.MunicipioPortIn;
 import com.hotel.serviciosHotel.dominio.entidades.Municipios;
+import com.hotel.serviciosHotel.exceptionHandler.exceptions.InvalidCharacterException;
+import com.hotel.serviciosHotel.exceptionHandler.exceptions.ItemAlreadyExistException;
 import com.hotel.serviciosHotel.exceptionHandler.exceptions.SearchItemNotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -48,7 +50,7 @@ public class GestionarMunicipiosController {
             @ApiResponse(responseCode = "201",description = "CREATED"),
             @ApiResponse(responseCode = "400",description = "BAD_REQUEST")
     })
-    public ResponseEntity<Municipios> registrarMunicipio(@RequestBody Municipios municipios){
+    public ResponseEntity<Municipios> registrarMunicipio(@RequestBody Municipios municipios) throws ItemAlreadyExistException, InvalidCharacterException {
         Municipios response=service.registrarMunicipio(municipios);
         if (response==null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -80,7 +82,7 @@ public class GestionarMunicipiosController {
             @ApiResponse(responseCode = "200",description = "OK"),
             @ApiResponse(responseCode = "400",description = "BAD_REQUEST")
     })
-    public ResponseEntity<Municipios> actualizarMunicipio(@RequestBody Municipios municipios){
+    public ResponseEntity<Municipios> actualizarMunicipio(@RequestBody Municipios municipios)throws SearchItemNotFoundException,InvalidCharacterException{
         Municipios response=service.actualizarMunicipio(municipios);
         if (response==null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -95,7 +97,7 @@ public class GestionarMunicipiosController {
             @ApiResponse(responseCode = "200",description = "OK"),
             @ApiResponse(responseCode = "400",description = "BAD_REQUEST")
     })
-    public ResponseEntity eliminarMunicipio(@RequestBody Municipios municipio){
+    public ResponseEntity eliminarMunicipio(@RequestBody Municipios municipio) throws SearchItemNotFoundException{
         if (service.eliminarMunicipio(municipio)){
             return new ResponseEntity(HttpStatus.OK);
         }else {

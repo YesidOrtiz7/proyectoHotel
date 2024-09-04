@@ -37,18 +37,13 @@ public class GestionarServicioController {
             @ApiResponse(responseCode = "200",description = "OK"),
             @ApiResponse(responseCode = "400",description = "BAD_REQUEST")
     })
-    public ResponseEntity obtenerServicioPorId(@PathVariable("id")int id) {
-        try {
-            Service response=servicePortIn.consultarServicioPorId(id);
-            if (response==null){
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }else {
-                return new ResponseEntity<>(response,HttpStatus.OK);
-            }
-        }catch (SearchItemNotFoundException e){
-            return new ResponseEntity<>(e,HttpStatus.BAD_REQUEST);
+    public ResponseEntity<Service> obtenerServicioPorId(@PathVariable("id")int id) throws SearchItemNotFoundException{
+        Service response=servicePortIn.consultarServicioPorId(id);
+        if (response==null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }else {
+            return new ResponseEntity<>(response,HttpStatus.OK);
         }
-
     }
     @GetMapping("/todos")
     @Operation(summary = "obtener todos los servicios", description = "retorna todos los servicios registrados en la base de datos")
@@ -59,7 +54,7 @@ public class GestionarServicioController {
     public ResponseEntity<List<Service>> obtenerTodosLosServicios(){
         List<Service> response=servicePortIn.consultarServicios();
         if (response==null){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }else {
             return new ResponseEntity<>(response,HttpStatus.OK);
         }
@@ -78,16 +73,12 @@ public class GestionarServicioController {
             @ApiResponse(responseCode = "201",description = "CREATED"),
             @ApiResponse(responseCode = "400",description = "BAD REQUEST")
     })
-    public ResponseEntity crearServicio(@RequestBody Service service) {
-        try {
-            Service response=servicePortIn.registrarServicio(service);
-            if (response==null){
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }else {
-                return new ResponseEntity<>(response,HttpStatus.CREATED);
-            }
-        }catch (SearchItemNotFoundException | GenericException | ItemAlreadyExistException e){
-            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
+    public ResponseEntity<Service> crearServicio(@RequestBody Service service) throws SearchItemNotFoundException,GenericException,ItemAlreadyExistException {
+        Service response=servicePortIn.registrarServicio(service);
+        if (response==null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }else {
+            return new ResponseEntity<>(response,HttpStatus.CREATED);
         }
     }
     @PutMapping("/nuevaHabitacion")
@@ -98,16 +89,12 @@ public class GestionarServicioController {
             @ApiResponse(responseCode = "200",description = "OK"),
             @ApiResponse(responseCode = "400",description = "BAD REQUEST")
     })
-    public ResponseEntity actualizarHabitacionServicio(@RequestBody UpdateRoomServiceRequest request) {
-        try {
-            Service response=servicePortIn.actualizarHabitacionServicio(request.getIdService(),request.getRoomNumber());
-            if (response==null){
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }else {
-                return new ResponseEntity<>(response,HttpStatus.OK);
-            }
-        }catch (SearchItemNotFoundException | ItemAlreadyExistException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    public ResponseEntity<Service> actualizarHabitacionServicio(@RequestBody UpdateRoomServiceRequest request) throws SearchItemNotFoundException,ItemAlreadyExistException,GenericException {
+        Service response=servicePortIn.actualizarHabitacionServicio(request.getIdService(),request.getRoomNumber());
+        if (response==null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }else {
+            return new ResponseEntity<>(response,HttpStatus.OK);
         }
     }
     @PutMapping("/cambiarTarifa")
@@ -118,16 +105,12 @@ public class GestionarServicioController {
             @ApiResponse(responseCode = "200",description = "OK"),
             @ApiResponse(responseCode = "400",description = "BAD REQUEST")
     })
-    public ResponseEntity actualizarTarifaServicio(@RequestBody UpdateRateServiceRequest request) {
-        try {
-            Service response=servicePortIn.actualizarTarifaServicio(request.getIdService(),request.getRateId());
-            if (response==null){
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }else {
-                return new ResponseEntity<>(response,HttpStatus.OK);
-            }
-        }catch (SearchItemNotFoundException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    public ResponseEntity<Service> actualizarTarifaServicio(@RequestBody UpdateRateServiceRequest request) throws SearchItemNotFoundException {
+        Service response=servicePortIn.actualizarTarifaServicio(request.getIdService(),request.getRateId());
+        if (response==null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }else {
+            return new ResponseEntity<>(response,HttpStatus.OK);
         }
     }
 
@@ -143,26 +126,25 @@ public class GestionarServicioController {
             @ApiResponse(responseCode = "200",description = "OK"),
             @ApiResponse(responseCode = "400",description = "BAD REQUEST")
     })
-    public ResponseEntity ampliarServicio(@RequestBody ExtendServicesRequestModel request) {
-        try {
-            Service service=servicePortIn.consultarServicioPorId(request.getService());
-            if (service.getState()){
-                Service response =servicePortIn.ampliarServicio(
-                        service,
-                        request.getDia(),
-                        request.getHora(),
-                        request.getMinuto()
-                );
-                if (response==null){
-                    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-                }else {
-                    return new ResponseEntity<>(response,HttpStatus.OK);
-                }
+    public ResponseEntity<Service> ampliarServicio(@RequestBody ExtendServicesRequestModel request) throws SearchItemNotFoundException,GenericException{
+        Service service=servicePortIn.consultarServicioPorId(request.getService());
+        if (service==null){
+            throw new GenericException("Servicio no valido");
+        }
+        if (service.getState()){
+            Service response =servicePortIn.ampliarServicio(
+                    service,
+                    request.getDia(),
+                    request.getHora(),
+                    request.getMinuto()
+            );
+            if (response==null){
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }else {
-                return new ResponseEntity<>("El servicio al que se le esta tratando de ampliar ya se encuentra cerrado",HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(response,HttpStatus.OK);
             }
-        }catch (SearchItemNotFoundException | GenericException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }else {
+            throw new GenericException("El servicio al que se le esta tratando de ampliar ya se encuentra cerrado");
         }
     }
     @PostMapping("/cerrarServicio")
@@ -173,31 +155,21 @@ public class GestionarServicioController {
             @ApiResponse(responseCode = "200",description = "OK"),
             @ApiResponse(responseCode = "400",description = "BAD REQUEST")
     })
-    public ResponseEntity cerrarServicioPorId(@RequestBody OnlyId id){
-        //System.out.println(id.getId());
-        try {
-            Service response = servicePortIn.cerrarServicioPorIdServicio(id.getId());
-            if (response == null) {
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            } else {
-                return new ResponseEntity<>(response, HttpStatus.OK);
-            }
-        }catch (SearchItemNotFoundException | GenericException e){
-            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
+    public ResponseEntity<Service> cerrarServicioPorId(@RequestBody OnlyId id) throws SearchItemNotFoundException, GenericException{
+        Service response = servicePortIn.cerrarServicioPorIdServicio(id.getId());
+        if (response == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
     @PostMapping("/pagarServicio")
-    public ResponseEntity pagarServicioPorId(@RequestBody OnlyId id){
-        System.out.println(id.getId());
-        try {
-            Service res = servicePortIn.pagarServicio(id.getId());
-            if (res !=null){
-                return new ResponseEntity(res,HttpStatus.ACCEPTED);
-            }else {
-                return new ResponseEntity("No ha sido posible pagar",HttpStatus.BAD_REQUEST);
-            }
-        }catch (SearchItemNotFoundException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    public ResponseEntity<Service> pagarServicioPorId(@RequestBody OnlyId id) throws SearchItemNotFoundException,GenericException{
+        Service res = servicePortIn.pagarServicio(id.getId());
+        if (res !=null){
+            return new ResponseEntity<>(res,HttpStatus.ACCEPTED);
+        }else {
+            throw new GenericException("No ha sido posible pagar");
         }
     }
 }
