@@ -10,7 +10,7 @@ public interface ServicePortOut {
     Service consultarServicioPorId(int id) throws SearchItemNotFoundException;
     List<Service> consultarServicios();
     Service registrarServicio(Service service) throws ItemAlreadyExistException;
-    Service actualizarServicio(Service service);
+    Service actualizarServicio(Service service) throws SearchItemNotFoundException;
 
     boolean servicioExiste(Service service);
 }

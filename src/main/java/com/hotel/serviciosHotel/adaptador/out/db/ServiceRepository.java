@@ -65,14 +65,14 @@ public class ServiceRepository implements ServicePortOut {
     }
 
     @Override
-    public Service actualizarServicio(Service service) {
+    public Service actualizarServicio(Service service) throws SearchItemNotFoundException {
         if (repository.existsById(service.getIdService())){
             Servicio query=repository.save(
                     mapper.toServicio(service)
             );
             return mapper.toService(query);
         }else {
-            return null;
+            throw new SearchItemNotFoundException("El servicio no existe");
         }
     }
 }

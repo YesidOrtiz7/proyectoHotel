@@ -60,7 +60,7 @@ public class ReceptionistRepository implements ReceptionistPortOut {
                     recepcionista.get()
             );
         }
-        throw new SearchItemNotFoundException("El cliente no existe");
+        throw new SearchItemNotFoundException("La recepcionista no existe");
     }
 
     @Override
