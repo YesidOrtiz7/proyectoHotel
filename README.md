@@ -27,5 +27,8 @@ http://localhost:63342/demo/build/reports/tests/test/index.html?_ijt=dg8od33ldj9
 Documentación disponible en la ruta: 
 http://localhost:8080/swagger-ui.html
 
+## Interfaz grafica
+https://github.com/YesidOrtiz7/HotelFrontEnd
+
 ## Autor 
 Yesid Ortiz
